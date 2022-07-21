@@ -1,0 +1,1031 @@
+openapi: 3.0.0
+info:
+  title: Password manager
+  description: API methods for clients.
+  version: 0.1.0
+
+servers:
+  - url: http://api.example.com/v1
+    description: A description will be here...
+
+components:
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Conflict:
+      description: Resource Already Exist
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    NoContent:
+      description: No user content
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    InternalError:
+      description: Internal Server Error
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+        developer_message:
+          type: string
+      required:
+        - error_code
+        - message
+        - developer_message
+
+    UserData:
+      type: object
+      properties:
+        login_password_collection: {
+          type: array,
+          items: {
+            $ref: '#/components/schemas/LoginPassword'
+          }
+        }
+        credit_card_collection: {
+          type: array,
+          items: {
+            $ref: '#/components/schemas/CreditCard'
+          }
+        }
+        text_record_collection: {
+          type: array,
+          items: {
+            $ref: '#/components/schemas/TextRecord'
+          }
+        }
+        binary_record_collection: {
+          type: array,
+          items: {
+            $ref: '#/components/schemas/BinaryRecord'
+          }
+        }
+
+    LoginPassword:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          readOnly: true
+          required: true
+        name:
+          type: string
+          nullable: false
+          required: true
+        login:
+          type: string
+          nullable: false
+          required: true
+        password:
+          type: string
+          nullable: false
+          required: true
+        created_date:
+          type: string
+          nullable: false
+          required: true
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+        last_access:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          nullable: true
+          required: true
+        note:
+          type: string
+          nullable: true
+
+    CreateLoginPassword:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+          required: true
+        login:
+          type: string
+          nullable: false
+          required: true
+        password:
+          type: string
+          nullable: false
+          required: true
+        note:
+          type: string
+          nullable: true
+
+    CreditCard:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          readOnly: true
+          required: true
+        name:
+          type: string
+          nullable: false
+          required: true
+        number:
+          type: string
+          nullable: false
+          required: true
+        expiration:
+          type: string
+          nullable: true
+        cvv:
+          type: string
+          nullable: true
+        owner:
+          type: string
+          nullable: true
+        created_date:
+          type: string
+          nullable: false
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          required: true
+        last_access:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          nullable: true
+        note:
+          type: string
+          nullable: true
+
+    CreateCreditCard:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+          required: true
+        number:
+          type: string
+          nullable: false
+          required: true
+        expiration:
+          type: string
+          nullable: true
+        cvv:
+          type: string
+          nullable: true
+        owner:
+          type: string
+          nullable: true
+        note:
+          type: string
+          nullable: true
+
+    TextRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          readOnly: true
+          required: true
+        name:
+          type: string
+          nullable: false
+          required: true
+        text:
+          type: string
+          nullable: false
+          required: true
+        created_date:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          nullable: false
+          required: true
+        last_access:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          nullable: true
+        note:
+          type: string
+          nullable: true
+
+    CreateTextRecord:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+          required: true
+        text:
+          type: string
+          nullable: false
+          required: true
+        note:
+          type: string
+          nullable: true
+
+    BinaryRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          readOnly: true
+          required: true
+        name:
+          type: string
+          nullable: false
+          required: true
+        binary:
+          type: string
+          nullable: false
+          required: true
+        created_date:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          nullable: false
+          required: true
+        last_access:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          nullable: true
+        note:
+          type: string
+          nullable: true
+
+    CreateBinaryRecord:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+          required: true
+        binary:
+          type: string
+          nullable: false
+          required: true
+        note:
+          type: string
+          nullable: true
+
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+        refresh_token:
+          type: string
+
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    CreateUser:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+  securitySchemes:
+    ApiToken:
+      type: http
+      scheme: bearer
+      description: User token authorization
+
+paths:
+  /api/v1/health/check:
+    get:
+      tags:
+        - 'Service  API'
+      summary: 'Checking the service'
+      operationId: healthCheck
+      responses:
+        '200':
+          description: 'Service running successfully'
+        '500':
+          description: 'Service not available'
+  /api/v1/auth:
+    post:
+      summary: "auth by username and password and get access and refresh tokens"
+      tags:
+        - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      description: "User authorization, getting an access token to an API method."
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    put:
+      summary: "get access using refresh token"
+      tags:
+        - Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Token"
+                - required:
+                    - refresh_token
+      description: "Exchange refresh_token for access_token to access API methods"
+      responses:
+        '201':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalError"
+  /api/v1/signup:
+      post:
+        summary: "create new user"
+        tags:
+          - Authorization
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CreateUser"
+        description: "User registering, getting an access token to an API method."
+        responses:
+          '201':
+            description: "OK"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Token"
+          '401':
+            $ref: "#/components/responses/Unauthorized"
+          '400':
+            $ref: "#/components/responses/BadRequest"
+          '500':
+            $ref: "#/components/responses/InternalError"
+  /api/v1/data/all:
+    get:
+      summary: "get all user records"
+      tags:
+        - Get list of all user records
+      security:
+        - ApiToken: [ ]
+      description: "Retrieving all saved records of a user:
+          logins-passwords, credit cards, binary and text data."
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserData"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '500':
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/data/login-password:
+    get:
+      summary: "get list of login-password"
+      tags:
+        - Login-password
+      security:
+        - ApiToken: [ ]
+      description: "Getting all of login-password user records"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: {
+                    type: array,
+                    items: {
+                      $ref: '#/components/schemas/LoginPassword'
+                    }
+                  }
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    post:
+      summary: "create login password"
+      tags:
+        - Login-password
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLoginPassword"
+      description: "Creating a new entry for a login-password pair"
+      responses:
+        '201':
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri of new object
+          description: 'Created'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '409':
+          $ref: "#/components/responses/Conflict"
+        '500':
+          $ref: "#/components/responses/InternalError"
+  /api/v1/data/login-password/{id}:
+    get:
+      summary: "get login-password by id"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      tags:
+        - Login-password
+      security:
+        - ApiToken: [ ]
+      description: "Getting a login-password pair by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginPassword"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    patch:
+      summary: "partially update login-password by ID"
+      tags:
+        - Login-password
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLoginPassword"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      description: "Updates an existing login-password pair by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginPassword"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    delete:
+      summary: "delete login-password by ID"
+      tags:
+        - Login-password
+      security:
+        - ApiToken: [ ]
+      description: "Removing an existing login-password pair by ID"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/data/credit-card:
+    get:
+      summary: "get list of credit card"
+      tags:
+        - Credit card
+      security:
+        - ApiToken: [ ]
+      description: "Getting all of credit card user records"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: {
+                    type: array,
+                    items: {
+                      $ref: '#/components/schemas/CreditCard'
+                    }
+                  }
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    post:
+      summary: "create credit card"
+      tags:
+        - Credit card
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCreditCard"
+      description: "Creating a new credit card"
+      responses:
+        '201':
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri of new object
+          description: 'Created'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '409':
+          $ref: "#/components/responses/Conflict"
+        '500':
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/data/credit-card/{id}:
+    get:
+      summary: "get credit card by id"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      tags:
+        - Credit card
+      security:
+        - ApiToken: [ ]
+      description: "Getting a credit card by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreditCard"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    patch:
+      summary: "partially update credit card by ID"
+      tags:
+        - Credit card
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCreditCard"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      description: "Updates an existing credit card by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreditCard"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    delete:
+      summary: "delete credit card by ID"
+      tags:
+        - Credit card
+      security:
+        - ApiToken: [ ]
+      description: "Removing an existing credit card by ID"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/data/text-record:
+    get:
+      summary: "get list of text record"
+      tags:
+        - Text record
+      security:
+        - ApiToken: [ ]
+      description: "Getting all of user text records"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: {
+                    type: array,
+                    items: {
+                      $ref: '#/components/schemas/TextRecord'
+                    }
+                  }
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    post:
+      summary: "create text record"
+      tags:
+        - Text record
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTextRecord"
+      description: "Creating a new text record"
+      responses:
+        '201':
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri of new object
+          description: 'Created'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '409':
+          $ref: "#/components/responses/Conflict"
+        '500':
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/data/text-record/{id}:
+    get:
+      summary: "get text record by id"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      tags:
+        - Text record
+      security:
+        - ApiToken: [ ]
+      description: "Getting a text record by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextRecord"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    patch:
+      summary: "partially update text record by ID"
+      tags:
+        - Text record
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTextRecord"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      description: "Updates an existing text record by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextRecord"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    delete:
+      summary: "delete text record by ID"
+      tags:
+        - Text record
+      security:
+        - ApiToken: [ ]
+      description: "Removing an existing text record by ID"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/data/binary-record:
+    get:
+      summary: "get list of binary record"
+      tags:
+        - Binary record
+      security:
+        - ApiToken: [ ]
+      description: "Getting all of user binary records"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  data: {
+                    type: array,
+                    items: {
+                      $ref: '#/components/schemas/BinaryRecord'
+                    }
+                  }
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    post:
+      summary: "create binary record"
+      tags:
+        - Binary record
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBinaryRecord"
+      description: "Creating a new binary record"
+      responses:
+        '201':
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri of new object
+          description: 'Created'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '409':
+          $ref: "#/components/responses/Conflict"
+        '500':
+          $ref: "#/components/responses/InternalError"
+
+  /api/v1/data/binary-record/{id}:
+    get:
+      summary: "get binary record by id"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      tags:
+        - Binary record
+      security:
+        - ApiToken: [ ]
+      description: "Getting a binary record by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BinaryRecord"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    patch:
+      summary: "partially update binary record by ID"
+      tags:
+        - Binary record
+      security:
+        - ApiToken: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBinaryRecord"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      description: "Updates an existing binary record by ID"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BinaryRecord"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
+    delete:
+      summary: "delete binary record by ID"
+      tags:
+        - Binary record
+      security:
+        - ApiToken: [ ]
+      description: "Removing an existing binary record by ID"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          $ref: "#/components/responses/NoContent"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '404':
+          $ref: "#/components/responses/NotFound"
+        '500':
+          $ref: "#/components/responses/InternalError"
