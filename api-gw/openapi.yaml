@@ -67,27 +67,52 @@ components:
         login_password_collection: {
           type: array,
           items: {
-            $ref: '#/components/schemas/LoginPassword'
+            $ref: '#/components/schemas/ProtectedItem'
           }
         }
         credit_card_collection: {
           type: array,
           items: {
-            $ref: '#/components/schemas/CreditCard'
+            $ref: '#/components/schemas/ProtectedItem'
           }
         }
         text_record_collection: {
           type: array,
           items: {
-            $ref: '#/components/schemas/TextRecord'
+            $ref: '#/components/schemas/ProtectedItem'
           }
         }
         binary_record_collection: {
           type: array,
           items: {
-            $ref: '#/components/schemas/BinaryRecord'
+            $ref: '#/components/schemas/ProtectedItem'
           }
         }
+
+    ProtectedItem:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          readOnly: true
+          required: true
+        name:
+          type: string
+          nullable: false
+          required: true
+        created_date:
+          type: string
+          nullable: false
+          required: true
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+        last_access:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+          nullable: true
+          required: true
 
     LoginPassword:
       type: object
@@ -427,8 +452,9 @@ paths:
         - Get list of all user records
       security:
         - ApiToken: [ ]
-      description: "Retrieving all saved records of a user:
-          logins-passwords, credit cards, binary and text data."
+      description: "Retrieving all names of saved user records:
+          logins-passwords, credit cards, binary and text data.
+          This method does not return protected information."
       responses:
         '200':
           description: "OK"
@@ -450,7 +476,7 @@ paths:
         - Login-password
       security:
         - ApiToken: [ ]
-      description: "Getting all of login-password user records"
+      description: "Getting all of login-password user records. This method does not return protected information."
       responses:
         '200':
           description: "OK"
@@ -461,7 +487,7 @@ paths:
                   data: {
                     type: array,
                     items: {
-                      $ref: '#/components/schemas/LoginPassword'
+                      $ref: '#/components/schemas/ProtectedItem'
                     }
                   }
         '204':
@@ -596,7 +622,7 @@ paths:
         - Credit card
       security:
         - ApiToken: [ ]
-      description: "Getting all of credit card user records"
+      description: "Getting all of credit card user records. This method does not return protected information."
       responses:
         '200':
           description: "OK"
@@ -607,7 +633,7 @@ paths:
                   data: {
                     type: array,
                     items: {
-                      $ref: '#/components/schemas/CreditCard'
+                      $ref: '#/components/schemas/ProtectedItem'
                     }
                   }
         '204':
@@ -743,7 +769,7 @@ paths:
         - Text record
       security:
         - ApiToken: [ ]
-      description: "Getting all of user text records"
+      description: "Getting all of user text records. This method does not return protected information."
       responses:
         '200':
           description: "OK"
@@ -754,7 +780,7 @@ paths:
                   data: {
                     type: array,
                     items: {
-                      $ref: '#/components/schemas/TextRecord'
+                      $ref: '#/components/schemas/ProtectedItem'
                     }
                   }
         '204':
@@ -890,7 +916,7 @@ paths:
         - Binary record
       security:
         - ApiToken: [ ]
-      description: "Getting all of user binary records"
+      description: "Getting all of user binary records. This method does not return protected information."
       responses:
         '200':
           description: "OK"
@@ -901,7 +927,7 @@ paths:
                   data: {
                     type: array,
                     items: {
-                      $ref: '#/components/schemas/BinaryRecord'
+                      $ref: '#/components/schemas/ProtectedItem'
                     }
                   }
         '204':
