@@ -1,0 +1,77 @@
+syntax = "proto3";
+package user_data_manager;
+option go_package = "pkg/user_data_manager_grpc";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service UserDataManager {
+  rpc GetLoginPasswordList(GetLoginPasswordListRequest) returns(GetLoginPasswordListResponse);
+  rpc CreateLoginPassword(CreateLoginPasswordRequest) returns(CreateLoginPasswordResponse);
+  rpc GetLoginPasswordById(GetLoginPasswordByIdRequest) returns(GetLoginPasswordByIdResponse);
+  rpc PatchLoginPasswordById(PatchLoginPasswordByIdRequest) returns(PatchLoginPasswordByIdResponse);
+  rpc DeleteLoginPasswordById(DeleteLoginPasswordByIdRequest) returns(google.protobuf.Empty);
+}
+
+message ProtectedItem {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+}
+
+message LoginPassword {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string login = 5;
+  string password = 6;
+  string note = 7;
+}
+
+message CreateLoginPassword {
+  string name = 1;
+  string login = 2;
+  string password = 3;
+  string note = 4;
+}
+
+message GetLoginPasswordListRequest {
+  string userId = 1;
+}
+
+message GetLoginPasswordListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateLoginPasswordRequest{
+  string userId = 1;
+  CreateLoginPassword CreateLoginPassword = 2;
+}
+
+message CreateLoginPasswordResponse{
+  LoginPassword LoginPassword = 1;
+}
+
+message GetLoginPasswordByIdRequest{
+  string id = 1;
+}
+
+message GetLoginPasswordByIdResponse{
+  LoginPassword LoginPassword = 1;
+}
+
+message PatchLoginPasswordByIdRequest{
+  string userId = 1;
+  CreateLoginPassword CreateLoginPassword = 2;
+}
+
+message PatchLoginPasswordByIdResponse{
+  LoginPassword LoginPassword = 1;
+}
+
+message DeleteLoginPasswordByIdRequest{
+  string userId = 1;
+  string id = 2;
+}
