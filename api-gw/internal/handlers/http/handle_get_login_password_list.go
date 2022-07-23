@@ -18,6 +18,8 @@ func (h *httpHandler) HandleGetLoginPasswordList(w http.ResponseWriter, r *http.
 
 	if err != nil {
 		h.logger.Error("error getting login-password list: "+err.Error(), userId)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	h.logger.Info("successful getting login-password list by user id ", userId, response)
@@ -25,6 +27,8 @@ func (h *httpHandler) HandleGetLoginPasswordList(w http.ResponseWriter, r *http.
 
 	if err != nil {
 		h.logger.Error("error marshalling login-password list: "+err.Error(), userId, response)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)
