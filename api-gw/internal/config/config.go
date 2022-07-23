@@ -1,6 +1,11 @@
 package config
 
-import "os"
+import (
+	"github.com/joho/godotenv"
+	"log"
+	"os"
+	"strconv"
+)
 
 var configSingleton *Config
 
@@ -11,6 +16,10 @@ type Config struct {
 }
 
 func New() Config {
+	if err := godotenv.Load(); err != nil {
+		log.Printf("error loading env variables: %s", err.Error())
+	}
+
 	if configSingleton == nil {
 		config := Config{}
 		config = initConfigByEnv(config)
@@ -35,9 +44,10 @@ func (c Config) GetUserDataManagerGRPCServerAddress() string {
 }
 
 func initConfigByEnv(config Config) Config {
-	config.applicationName = getEnv("APPLICATION_NAME")
-	config.serverAddress = getEnv("SERVER_ADDRESS")
-	config.userDataManagerGRPCAddress = getEnv("SERVICE_USER_DATA_MANAGER_GRPC_ADDRESS")
+	config.applicationName = getEnv("GW_APPLICATION_NAME")
+	config.serverAddress = getEnv("GW_SERVER_ADDRESS")
+	config.userDataManagerGRPCAddress = getEnv("GW_SERVICE_USER_DATA_MANAGER_GRPC_ADDRESS")
+
 
 	return config
 }
