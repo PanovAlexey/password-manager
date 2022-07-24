@@ -3,22 +3,17 @@ package servers
 import (
 	"google.golang.org/grpc"
 	"net"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	grpcService "user-data-manager/internal/application/service/grpc"
 	"user-data-manager/internal/config"
+	grpcHandler "user-data-manager/internal/handlers/grpc"
 	pb "user-data-manager/pkg/user_data_manager_grpc"
 )
 
 type Logger interface {
 	Error(args ...interface{})
 	Info(args ...interface{})
-}
-
-type mainGrpcServer struct {
-	httpServer *http.Server
 }
 
 func RunGrpcServer(config config.Config, logger Logger) {
@@ -30,7 +25,7 @@ func RunGrpcServer(config config.Config, logger Logger) {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterUserDataManagerServer(s, grpcService.GetUserDataManagerServer())
+	pb.RegisterUserDataManagerServer(s, grpcHandler.GetUserDataManagerHandler(logger))
 
 	logger.Info(config.GetApplicationName() + " grpc server started")
 
