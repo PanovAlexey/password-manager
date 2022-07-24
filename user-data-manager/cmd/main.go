@@ -1,26 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"google.golang.org/grpc"
-	"log"
-	"net"
-	grpcServer "user-data-manager/internal/servers/grpc"
-	pb "user-data-manager/pkg/user_data_manager_grpc"
+	"user-data-manager/internal/config"
+	"user-data-manager/internal/infrastructure/logging"
+	"user-data-manager/internal/servers"
 )
 
 func main() {
-	listen, err := net.Listen("tcp", ":3200")
-	if err != nil {
-		log.Fatal(err)
-	}
+	config := config.New()
+	logger := logging.GetLogger(config)
 
-	s := grpc.NewServer()
-	pb.RegisterUserDataManagerServer(s, grpcServer.GetUserDataManagerServer())
+	defer logger.Sync()
 
-	fmt.Println("Server gRPC started...")
-
-	if err := s.Serve(listen); err != nil {
-		log.Fatal(err)
-	}
+	servers.RunGrpcServer(config, logger)
 }
