@@ -8,12 +8,18 @@ import (
 	pb "user-data-manager/pkg/user_data_manager_grpc"
 )
 
+type Logger interface {
+	Error(args ...interface{})
+	Info(args ...interface{})
+}
+
 type UserDataManagerServer struct {
+	logger Logger
 	pb.UnimplementedUserDataManagerServer
 }
 
-func GetUserDataManagerServer() *UserDataManagerServer {
-	return &UserDataManagerServer{}
+func GetUserDataManagerServer(logger Logger) *UserDataManagerServer {
+	return &UserDataManagerServer{logger: logger}
 }
 
 func (s *UserDataManagerServer) GetLoginPasswordList(ctx context.Context, request *pb.GetLoginPasswordListRequest) (*pb.GetLoginPasswordListResponse, error) {
@@ -27,6 +33,8 @@ func (s *UserDataManagerServer) GetLoginPasswordList(ctx context.Context, reques
 	protectedItem.Id = "77-88-99"
 	protectedItem.Name = "Stub 2 login password for google.com"
 	response.ProtectedItemList = append(response.ProtectedItemList, &protectedItem)
+
+	s.logger.Info("successful got login-password list. ", request)
 
 	return &response, nil
 }
@@ -45,6 +53,8 @@ func (s *UserDataManagerServer) CreateLoginPassword(ctx context.Context, request
 	loginPassword.LastAccess = &timestamp.Timestamp{}
 	response.LoginPassword = &loginPassword
 
+	s.logger.Info("successful created login-password. ", request)
+
 	return &response, nil
 }
 
@@ -61,6 +71,8 @@ func (s *UserDataManagerServer) GetLoginPasswordById(ctx context.Context, reques
 	loginPassword.CreatedDate = &timestamp.Timestamp{}
 	loginPassword.LastAccess = &timestamp.Timestamp{}
 	response.LoginPassword = &loginPassword
+
+	s.logger.Info("successful got login-password by id. ", request)
 
 	return &response, nil
 }
@@ -79,10 +91,13 @@ func (s *UserDataManagerServer) PatchLoginPasswordById(ctx context.Context, requ
 	loginPassword.LastAccess = &timestamp.Timestamp{}
 	response.LoginPassword = &loginPassword
 
+	s.logger.Info("successful patched login-password by id ", request)
+
 	return &response, nil
 }
 
 func (s *UserDataManagerServer) DeleteLoginPasswordById(ctx context.Context, request *pb.DeleteLoginPasswordByIdRequest) (*emptypb.Empty, error) {
+	s.logger.Info("successful deleted login-password by id. ", request)
 	// @ToDo handle error
 	return &emptypb.Empty{}, errors.New("test error")
 }
