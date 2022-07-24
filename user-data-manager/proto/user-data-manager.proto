@@ -11,6 +11,24 @@ service UserDataManager {
   rpc GetLoginPasswordById(GetLoginPasswordByIdRequest) returns(GetLoginPasswordByIdResponse);
   rpc PatchLoginPasswordById(PatchLoginPasswordByIdRequest) returns(PatchLoginPasswordByIdResponse);
   rpc DeleteLoginPasswordById(DeleteLoginPasswordByIdRequest) returns(google.protobuf.Empty);
+
+  rpc GetCreditCardList(GetCreditCardListRequest) returns(GetCreditCardListResponse);
+  rpc CreateCreditCard(CreateCreditCardRequest) returns(CreateCreditCardResponse);
+  rpc GetCreditCardById(GetCreditCardByIdRequest) returns(GetCreditCardByIdResponse);
+  rpc PatchCreditCardById(PatchCreditCardByIdRequest) returns(PatchCreditCardByIdResponse);
+  rpc DeleteCreditCardById(DeleteCreditCardByIdRequest) returns(google.protobuf.Empty);
+
+  rpc GetTextRecordList(GetTextRecordListRequest) returns(GetTextRecordListResponse);
+  rpc CreateTextRecord(CreateTextRecordRequest) returns(CreateTextRecordResponse);
+  rpc GetTextRecordById(GetTextRecordByIdRequest) returns(GetTextRecordByIdResponse);
+  rpc PatchTextRecordById(PatchTextRecordByIdRequest) returns(PatchTextRecordByIdResponse);
+  rpc DeleteTextRecordById(DeleteTextRecordByIdRequest) returns(google.protobuf.Empty);
+
+  rpc GetBinaryRecordList(GetBinaryRecordListRequest) returns(GetBinaryRecordListResponse);
+  rpc CreateBinaryRecord(CreateBinaryRecordRequest) returns(CreateBinaryRecordResponse);
+  rpc GetBinaryRecordById(GetBinaryRecordByIdRequest) returns(GetBinaryRecordByIdResponse);
+  rpc PatchBinaryRecordById(PatchBinaryRecordByIdRequest) returns(PatchBinaryRecordByIdResponse);
+  rpc DeleteBinaryRecordById(DeleteBinaryRecordByIdRequest) returns(google.protobuf.Empty);
 }
 
 message ProtectedItem {
@@ -73,6 +91,180 @@ message PatchLoginPasswordByIdResponse{
 }
 
 message DeleteLoginPasswordByIdRequest{
+  string userId = 1;
+  string id = 2;
+}
+
+
+message CreditCard {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string number = 5;
+  string expiration = 6;
+  string cvv = 7;
+  string owner = 8;
+  string note = 9;
+}
+
+message CreateCreditCard {
+  string name = 1;
+  string number = 2;
+  string expiration = 3;
+  string cvv = 4;
+  string owner = 5;
+  string note = 6;
+}
+
+message GetCreditCardListRequest {
+  string userId = 1;
+}
+
+message GetCreditCardListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateCreditCardRequest{
+  string userId = 1;
+  CreateCreditCard CreateCreditCard = 2;
+}
+
+message CreateCreditCardResponse{
+  CreditCard CreditCard = 1;
+}
+
+message GetCreditCardByIdRequest{
+  string id = 1;
+  string userId = 2;
+}
+
+message GetCreditCardByIdResponse{
+  CreditCard CreditCard = 1;
+}
+
+message PatchCreditCardByIdRequest{
+  string userId = 1;
+  CreateCreditCard CreateCreditCard = 2;
+}
+
+message PatchCreditCardByIdResponse{
+  CreditCard CreditCard = 1;
+}
+
+message DeleteCreditCardByIdRequest{
+  string userId = 1;
+  string id = 2;
+}
+
+
+message TextRecord {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string text = 5;
+  string note = 6;
+}
+
+message CreateTextRecord {
+  string name = 1;
+  string text = 2;
+  string note = 3;
+}
+
+message GetTextRecordListRequest {
+  string userId = 1;
+}
+
+message GetTextRecordListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateTextRecordRequest{
+  string userId = 1;
+  CreateTextRecord CreateTextRecord = 2;
+}
+
+message CreateTextRecordResponse{
+  TextRecord TextRecord = 1;
+}
+
+message GetTextRecordByIdRequest{
+  string id = 1;
+  string userId = 2;
+}
+
+message GetTextRecordByIdResponse{
+  TextRecord TextRecord = 1;
+}
+
+message PatchTextRecordByIdRequest{
+  string userId = 1;
+  CreateTextRecord CreateTextRecord = 2;
+}
+
+message PatchTextRecordByIdResponse{
+  TextRecord TextRecord = 1;
+}
+
+message DeleteTextRecordByIdRequest{
+  string userId = 1;
+  string id = 2;
+}
+
+
+message BinaryRecord {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string binary = 5;
+  string note = 6;
+}
+
+message CreateBinaryRecord {
+  string name = 1;
+  string binary = 2;
+  string note = 3;
+}
+
+message GetBinaryRecordListRequest {
+  string userId = 1;
+}
+
+message GetBinaryRecordListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateBinaryRecordRequest{
+  string userId = 1;
+  CreateBinaryRecord CreateBinaryRecord = 2;
+}
+
+message CreateBinaryRecordResponse{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message GetBinaryRecordByIdRequest{
+  string id = 1;
+  string userId = 2;
+}
+
+message GetBinaryRecordByIdResponse{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message PatchBinaryRecordByIdRequest{
+  string userId = 1;
+  CreateBinaryRecord CreateBinaryRecord = 2;
+}
+
+message PatchBinaryRecordByIdResponse{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message DeleteBinaryRecordByIdRequest{
   string userId = 1;
   string id = 2;
 }
