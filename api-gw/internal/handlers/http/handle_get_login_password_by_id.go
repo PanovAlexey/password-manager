@@ -26,7 +26,7 @@ func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.
 		return
 	}
 
-	h.logger.Info("successful getting login-password by id successful ", id, userId, response.LoginPassword.Name)
+	h.logger.Info("successful getting login-password by id ", id, userId, response.LoginPassword.Name)
 	result, err := json.Marshal(response)
 
 	if err != nil {
