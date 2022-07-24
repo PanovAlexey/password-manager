@@ -4,7 +4,6 @@ import (
 	"api-gw/internal/config"
 	"context"
 	"github.com/go-chi/chi/v5"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -53,7 +52,7 @@ func RunHttpServer(handler HandlerInterface, config config.Config, logger Logger
 	logger.Info(config.GetApplicationName() + " http server is shutdowning...")
 
 	if err != nil {
-		log.Println(err)
+		logger.Info(config.GetApplicationName() + " http server shutdowning error: " + err.Error())
 	}
 
 	logger.Info(config.GetApplicationName() + " http server has been stopped.")
