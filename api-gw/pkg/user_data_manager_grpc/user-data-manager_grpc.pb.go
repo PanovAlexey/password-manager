@@ -28,6 +28,21 @@ type UserDataManagerClient interface {
 	GetLoginPasswordById(ctx context.Context, in *GetLoginPasswordByIdRequest, opts ...grpc.CallOption) (*GetLoginPasswordByIdResponse, error)
 	PatchLoginPasswordById(ctx context.Context, in *PatchLoginPasswordByIdRequest, opts ...grpc.CallOption) (*PatchLoginPasswordByIdResponse, error)
 	DeleteLoginPasswordById(ctx context.Context, in *DeleteLoginPasswordByIdRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetCreditCardList(ctx context.Context, in *GetCreditCardListRequest, opts ...grpc.CallOption) (*GetCreditCardListResponse, error)
+	CreateCreditCard(ctx context.Context, in *CreateCreditCardRequest, opts ...grpc.CallOption) (*CreateCreditCardResponse, error)
+	GetCreditCardById(ctx context.Context, in *GetCreditCardByIdRequest, opts ...grpc.CallOption) (*GetCreditCardByIdResponse, error)
+	PatchCreditCardById(ctx context.Context, in *PatchCreditCardByIdRequest, opts ...grpc.CallOption) (*PatchCreditCardByIdResponse, error)
+	DeleteCreditCardById(ctx context.Context, in *DeleteCreditCardByIdRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetTextRecordList(ctx context.Context, in *GetTextRecordListRequest, opts ...grpc.CallOption) (*GetTextRecordListResponse, error)
+	CreateTextRecord(ctx context.Context, in *CreateTextRecordRequest, opts ...grpc.CallOption) (*CreateTextRecordResponse, error)
+	GetTextRecordById(ctx context.Context, in *GetTextRecordByIdRequest, opts ...grpc.CallOption) (*GetTextRecordByIdResponse, error)
+	PatchTextRecordById(ctx context.Context, in *PatchTextRecordByIdRequest, opts ...grpc.CallOption) (*PatchTextRecordByIdResponse, error)
+	DeleteTextRecordById(ctx context.Context, in *DeleteTextRecordByIdRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetBinaryRecordList(ctx context.Context, in *GetBinaryRecordListRequest, opts ...grpc.CallOption) (*GetBinaryRecordListResponse, error)
+	CreateBinaryRecord(ctx context.Context, in *CreateBinaryRecordRequest, opts ...grpc.CallOption) (*CreateBinaryRecordResponse, error)
+	GetBinaryRecordById(ctx context.Context, in *GetBinaryRecordByIdRequest, opts ...grpc.CallOption) (*GetBinaryRecordByIdResponse, error)
+	PatchBinaryRecordById(ctx context.Context, in *PatchBinaryRecordByIdRequest, opts ...grpc.CallOption) (*PatchBinaryRecordByIdResponse, error)
+	DeleteBinaryRecordById(ctx context.Context, in *DeleteBinaryRecordByIdRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type userDataManagerClient struct {
@@ -83,6 +98,141 @@ func (c *userDataManagerClient) DeleteLoginPasswordById(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *userDataManagerClient) GetCreditCardList(ctx context.Context, in *GetCreditCardListRequest, opts ...grpc.CallOption) (*GetCreditCardListResponse, error) {
+	out := new(GetCreditCardListResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/GetCreditCardList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) CreateCreditCard(ctx context.Context, in *CreateCreditCardRequest, opts ...grpc.CallOption) (*CreateCreditCardResponse, error) {
+	out := new(CreateCreditCardResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/CreateCreditCard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) GetCreditCardById(ctx context.Context, in *GetCreditCardByIdRequest, opts ...grpc.CallOption) (*GetCreditCardByIdResponse, error) {
+	out := new(GetCreditCardByIdResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/GetCreditCardById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) PatchCreditCardById(ctx context.Context, in *PatchCreditCardByIdRequest, opts ...grpc.CallOption) (*PatchCreditCardByIdResponse, error) {
+	out := new(PatchCreditCardByIdResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/PatchCreditCardById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) DeleteCreditCardById(ctx context.Context, in *DeleteCreditCardByIdRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/DeleteCreditCardById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) GetTextRecordList(ctx context.Context, in *GetTextRecordListRequest, opts ...grpc.CallOption) (*GetTextRecordListResponse, error) {
+	out := new(GetTextRecordListResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/GetTextRecordList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) CreateTextRecord(ctx context.Context, in *CreateTextRecordRequest, opts ...grpc.CallOption) (*CreateTextRecordResponse, error) {
+	out := new(CreateTextRecordResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/CreateTextRecord", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) GetTextRecordById(ctx context.Context, in *GetTextRecordByIdRequest, opts ...grpc.CallOption) (*GetTextRecordByIdResponse, error) {
+	out := new(GetTextRecordByIdResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/GetTextRecordById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) PatchTextRecordById(ctx context.Context, in *PatchTextRecordByIdRequest, opts ...grpc.CallOption) (*PatchTextRecordByIdResponse, error) {
+	out := new(PatchTextRecordByIdResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/PatchTextRecordById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) DeleteTextRecordById(ctx context.Context, in *DeleteTextRecordByIdRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/DeleteTextRecordById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) GetBinaryRecordList(ctx context.Context, in *GetBinaryRecordListRequest, opts ...grpc.CallOption) (*GetBinaryRecordListResponse, error) {
+	out := new(GetBinaryRecordListResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/GetBinaryRecordList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) CreateBinaryRecord(ctx context.Context, in *CreateBinaryRecordRequest, opts ...grpc.CallOption) (*CreateBinaryRecordResponse, error) {
+	out := new(CreateBinaryRecordResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/CreateBinaryRecord", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) GetBinaryRecordById(ctx context.Context, in *GetBinaryRecordByIdRequest, opts ...grpc.CallOption) (*GetBinaryRecordByIdResponse, error) {
+	out := new(GetBinaryRecordByIdResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/GetBinaryRecordById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) PatchBinaryRecordById(ctx context.Context, in *PatchBinaryRecordByIdRequest, opts ...grpc.CallOption) (*PatchBinaryRecordByIdResponse, error) {
+	out := new(PatchBinaryRecordByIdResponse)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/PatchBinaryRecordById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userDataManagerClient) DeleteBinaryRecordById(ctx context.Context, in *DeleteBinaryRecordByIdRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/user_data_manager.UserDataManager/DeleteBinaryRecordById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserDataManagerServer is the server API for UserDataManager service.
 // All implementations must embed UnimplementedUserDataManagerServer
 // for forward compatibility
@@ -92,6 +242,21 @@ type UserDataManagerServer interface {
 	GetLoginPasswordById(context.Context, *GetLoginPasswordByIdRequest) (*GetLoginPasswordByIdResponse, error)
 	PatchLoginPasswordById(context.Context, *PatchLoginPasswordByIdRequest) (*PatchLoginPasswordByIdResponse, error)
 	DeleteLoginPasswordById(context.Context, *DeleteLoginPasswordByIdRequest) (*empty.Empty, error)
+	GetCreditCardList(context.Context, *GetCreditCardListRequest) (*GetCreditCardListResponse, error)
+	CreateCreditCard(context.Context, *CreateCreditCardRequest) (*CreateCreditCardResponse, error)
+	GetCreditCardById(context.Context, *GetCreditCardByIdRequest) (*GetCreditCardByIdResponse, error)
+	PatchCreditCardById(context.Context, *PatchCreditCardByIdRequest) (*PatchCreditCardByIdResponse, error)
+	DeleteCreditCardById(context.Context, *DeleteCreditCardByIdRequest) (*empty.Empty, error)
+	GetTextRecordList(context.Context, *GetTextRecordListRequest) (*GetTextRecordListResponse, error)
+	CreateTextRecord(context.Context, *CreateTextRecordRequest) (*CreateTextRecordResponse, error)
+	GetTextRecordById(context.Context, *GetTextRecordByIdRequest) (*GetTextRecordByIdResponse, error)
+	PatchTextRecordById(context.Context, *PatchTextRecordByIdRequest) (*PatchTextRecordByIdResponse, error)
+	DeleteTextRecordById(context.Context, *DeleteTextRecordByIdRequest) (*empty.Empty, error)
+	GetBinaryRecordList(context.Context, *GetBinaryRecordListRequest) (*GetBinaryRecordListResponse, error)
+	CreateBinaryRecord(context.Context, *CreateBinaryRecordRequest) (*CreateBinaryRecordResponse, error)
+	GetBinaryRecordById(context.Context, *GetBinaryRecordByIdRequest) (*GetBinaryRecordByIdResponse, error)
+	PatchBinaryRecordById(context.Context, *PatchBinaryRecordByIdRequest) (*PatchBinaryRecordByIdResponse, error)
+	DeleteBinaryRecordById(context.Context, *DeleteBinaryRecordByIdRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedUserDataManagerServer()
 }
 
@@ -113,6 +278,51 @@ func (UnimplementedUserDataManagerServer) PatchLoginPasswordById(context.Context
 }
 func (UnimplementedUserDataManagerServer) DeleteLoginPasswordById(context.Context, *DeleteLoginPasswordByIdRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteLoginPasswordById not implemented")
+}
+func (UnimplementedUserDataManagerServer) GetCreditCardList(context.Context, *GetCreditCardListRequest) (*GetCreditCardListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCreditCardList not implemented")
+}
+func (UnimplementedUserDataManagerServer) CreateCreditCard(context.Context, *CreateCreditCardRequest) (*CreateCreditCardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCreditCard not implemented")
+}
+func (UnimplementedUserDataManagerServer) GetCreditCardById(context.Context, *GetCreditCardByIdRequest) (*GetCreditCardByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCreditCardById not implemented")
+}
+func (UnimplementedUserDataManagerServer) PatchCreditCardById(context.Context, *PatchCreditCardByIdRequest) (*PatchCreditCardByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PatchCreditCardById not implemented")
+}
+func (UnimplementedUserDataManagerServer) DeleteCreditCardById(context.Context, *DeleteCreditCardByIdRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCreditCardById not implemented")
+}
+func (UnimplementedUserDataManagerServer) GetTextRecordList(context.Context, *GetTextRecordListRequest) (*GetTextRecordListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTextRecordList not implemented")
+}
+func (UnimplementedUserDataManagerServer) CreateTextRecord(context.Context, *CreateTextRecordRequest) (*CreateTextRecordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTextRecord not implemented")
+}
+func (UnimplementedUserDataManagerServer) GetTextRecordById(context.Context, *GetTextRecordByIdRequest) (*GetTextRecordByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTextRecordById not implemented")
+}
+func (UnimplementedUserDataManagerServer) PatchTextRecordById(context.Context, *PatchTextRecordByIdRequest) (*PatchTextRecordByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PatchTextRecordById not implemented")
+}
+func (UnimplementedUserDataManagerServer) DeleteTextRecordById(context.Context, *DeleteTextRecordByIdRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTextRecordById not implemented")
+}
+func (UnimplementedUserDataManagerServer) GetBinaryRecordList(context.Context, *GetBinaryRecordListRequest) (*GetBinaryRecordListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBinaryRecordList not implemented")
+}
+func (UnimplementedUserDataManagerServer) CreateBinaryRecord(context.Context, *CreateBinaryRecordRequest) (*CreateBinaryRecordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBinaryRecord not implemented")
+}
+func (UnimplementedUserDataManagerServer) GetBinaryRecordById(context.Context, *GetBinaryRecordByIdRequest) (*GetBinaryRecordByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBinaryRecordById not implemented")
+}
+func (UnimplementedUserDataManagerServer) PatchBinaryRecordById(context.Context, *PatchBinaryRecordByIdRequest) (*PatchBinaryRecordByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PatchBinaryRecordById not implemented")
+}
+func (UnimplementedUserDataManagerServer) DeleteBinaryRecordById(context.Context, *DeleteBinaryRecordByIdRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBinaryRecordById not implemented")
 }
 func (UnimplementedUserDataManagerServer) mustEmbedUnimplementedUserDataManagerServer() {}
 
@@ -217,6 +427,276 @@ func _UserDataManager_DeleteLoginPasswordById_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserDataManager_GetCreditCardList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCreditCardListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).GetCreditCardList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/GetCreditCardList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).GetCreditCardList(ctx, req.(*GetCreditCardListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_CreateCreditCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateCreditCardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).CreateCreditCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/CreateCreditCard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).CreateCreditCard(ctx, req.(*CreateCreditCardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_GetCreditCardById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCreditCardByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).GetCreditCardById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/GetCreditCardById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).GetCreditCardById(ctx, req.(*GetCreditCardByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_PatchCreditCardById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchCreditCardByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).PatchCreditCardById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/PatchCreditCardById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).PatchCreditCardById(ctx, req.(*PatchCreditCardByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_DeleteCreditCardById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCreditCardByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).DeleteCreditCardById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/DeleteCreditCardById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).DeleteCreditCardById(ctx, req.(*DeleteCreditCardByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_GetTextRecordList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTextRecordListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).GetTextRecordList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/GetTextRecordList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).GetTextRecordList(ctx, req.(*GetTextRecordListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_CreateTextRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTextRecordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).CreateTextRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/CreateTextRecord",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).CreateTextRecord(ctx, req.(*CreateTextRecordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_GetTextRecordById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTextRecordByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).GetTextRecordById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/GetTextRecordById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).GetTextRecordById(ctx, req.(*GetTextRecordByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_PatchTextRecordById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchTextRecordByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).PatchTextRecordById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/PatchTextRecordById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).PatchTextRecordById(ctx, req.(*PatchTextRecordByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_DeleteTextRecordById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTextRecordByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).DeleteTextRecordById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/DeleteTextRecordById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).DeleteTextRecordById(ctx, req.(*DeleteTextRecordByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_GetBinaryRecordList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBinaryRecordListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).GetBinaryRecordList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/GetBinaryRecordList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).GetBinaryRecordList(ctx, req.(*GetBinaryRecordListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_CreateBinaryRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBinaryRecordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).CreateBinaryRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/CreateBinaryRecord",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).CreateBinaryRecord(ctx, req.(*CreateBinaryRecordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_GetBinaryRecordById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBinaryRecordByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).GetBinaryRecordById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/GetBinaryRecordById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).GetBinaryRecordById(ctx, req.(*GetBinaryRecordByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_PatchBinaryRecordById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PatchBinaryRecordByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).PatchBinaryRecordById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/PatchBinaryRecordById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).PatchBinaryRecordById(ctx, req.(*PatchBinaryRecordByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserDataManager_DeleteBinaryRecordById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBinaryRecordByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataManagerServer).DeleteBinaryRecordById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_data_manager.UserDataManager/DeleteBinaryRecordById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataManagerServer).DeleteBinaryRecordById(ctx, req.(*DeleteBinaryRecordByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserDataManager_ServiceDesc is the grpc.ServiceDesc for UserDataManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -243,6 +723,66 @@ var UserDataManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteLoginPasswordById",
 			Handler:    _UserDataManager_DeleteLoginPasswordById_Handler,
+		},
+		{
+			MethodName: "GetCreditCardList",
+			Handler:    _UserDataManager_GetCreditCardList_Handler,
+		},
+		{
+			MethodName: "CreateCreditCard",
+			Handler:    _UserDataManager_CreateCreditCard_Handler,
+		},
+		{
+			MethodName: "GetCreditCardById",
+			Handler:    _UserDataManager_GetCreditCardById_Handler,
+		},
+		{
+			MethodName: "PatchCreditCardById",
+			Handler:    _UserDataManager_PatchCreditCardById_Handler,
+		},
+		{
+			MethodName: "DeleteCreditCardById",
+			Handler:    _UserDataManager_DeleteCreditCardById_Handler,
+		},
+		{
+			MethodName: "GetTextRecordList",
+			Handler:    _UserDataManager_GetTextRecordList_Handler,
+		},
+		{
+			MethodName: "CreateTextRecord",
+			Handler:    _UserDataManager_CreateTextRecord_Handler,
+		},
+		{
+			MethodName: "GetTextRecordById",
+			Handler:    _UserDataManager_GetTextRecordById_Handler,
+		},
+		{
+			MethodName: "PatchTextRecordById",
+			Handler:    _UserDataManager_PatchTextRecordById_Handler,
+		},
+		{
+			MethodName: "DeleteTextRecordById",
+			Handler:    _UserDataManager_DeleteTextRecordById_Handler,
+		},
+		{
+			MethodName: "GetBinaryRecordList",
+			Handler:    _UserDataManager_GetBinaryRecordList_Handler,
+		},
+		{
+			MethodName: "CreateBinaryRecord",
+			Handler:    _UserDataManager_CreateBinaryRecord_Handler,
+		},
+		{
+			MethodName: "GetBinaryRecordById",
+			Handler:    _UserDataManager_GetBinaryRecordById_Handler,
+		},
+		{
+			MethodName: "PatchBinaryRecordById",
+			Handler:    _UserDataManager_PatchBinaryRecordById_Handler,
+		},
+		{
+			MethodName: "DeleteBinaryRecordById",
+			Handler:    _UserDataManager_DeleteBinaryRecordById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
