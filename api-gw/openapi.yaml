@@ -413,10 +413,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Token"
-        '401':
-          $ref: "#/components/responses/Unauthorized"
         '400':
           $ref: "#/components/responses/BadRequest"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
         '500':
           $ref: "#/components/responses/InternalError"
   /api/v1/signup:
@@ -439,10 +439,10 @@ paths:
               application/json:
                 schema:
                   $ref: "#/components/schemas/Token"
-          '401':
-            $ref: "#/components/responses/Unauthorized"
           '400':
             $ref: "#/components/responses/BadRequest"
+          '401':
+            $ref: "#/components/responses/Unauthorized"
           '500':
             $ref: "#/components/responses/InternalError"
   /api/v1/data/all:
@@ -608,6 +608,8 @@ paths:
       responses:
         '204':
           $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
         '401':
           $ref: "#/components/responses/Unauthorized"
         '404':
@@ -755,6 +757,8 @@ paths:
       responses:
         '204':
           $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
         '401':
           $ref: "#/components/responses/Unauthorized"
         '404':
@@ -902,6 +906,8 @@ paths:
       responses:
         '204':
           $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
         '401':
           $ref: "#/components/responses/Unauthorized"
         '404':
@@ -1049,6 +1055,8 @@ paths:
       responses:
         '204':
           $ref: "#/components/responses/NoContent"
+        '400':
+          $ref: "#/components/responses/BadRequest"
         '401':
           $ref: "#/components/responses/Unauthorized"
         '404':
