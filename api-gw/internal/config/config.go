@@ -83,5 +83,9 @@ func initConfigByDefault(config Config) Config {
 		config.userDataManagerGRPCAddress = "localhost:3200"
 	}
 
+	if config.timeoutHttpShutdown == 0 {
+		config.timeoutHttpShutdown = 10
+	}
+
 	return config
 }
