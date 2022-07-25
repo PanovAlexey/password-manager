@@ -39,7 +39,7 @@ func (c Config) GetGrpcServerAddress() string {
 
 func initConfigByEnv(config Config) Config {
 	config.applicationName = getEnv("STORAGE_APPLICATION_NAME")
-	config.grpcServerAddress = getEnv("STORAGE_GRPC_SERVER_ADDRESS_ADDRESS")
+	config.grpcServerAddress = getEnv("STORAGE_GRPC_SERVER_ADDRESS")
 
 	return config
 }
