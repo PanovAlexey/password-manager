@@ -36,40 +36,45 @@ func (h *httpHandler) NewRouter() chi.Router {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 	router.Use(middleware_custom.Trace(h.logger))
-	router.Use(middleware_custom.JSON)
-	router.Use(middleware_custom.Authorization)
+	router.Use(json.JSON)
+	router.Use(authorization_by_token.AuthorizationByToken(h.userAuthorizationService, h.logger))
+	router.Use(middleware.Timeout(60 * time.Second)) // @ToDo move 60 to conf
+
+	router.Route("/api/v1/data", func(r chi.Router) {
+		r.Use(closed_by_authorization.ClosedByAuthorization)
+
+		r.Get("/all", h.HandleGetUserAllData)
+
+		r.Get("/login-password", h.HandleGetLoginPasswordList)
+		r.Post("/login-password", h.HandleCreateLoginPassword)
+		r.Get("/login-password/{id}", h.HandleGetLoginPasswordById)
+		r.Patch("/login-password/{id}", h.HandlePatchLoginPasswordById)
+		r.Delete("/login-password/{id}", h.HandleDeleteLoginPasswordById)
+
+		r.Get("/credit-card", h.HandleGetCreditCardList)
+		r.Post("/credit-card", h.HandleCreateCreditCard)
+		r.Get("/credit-card/{id}", h.HandleGetCreditCardById)
+		r.Patch("/credit-card/{id}", h.HandlePatchCreditCardById)
+		r.Delete("/credit-card/{id}", h.HandleDeleteCreditCardById)
+
+		r.Get("/text-record", h.HandleGetTextRecordList)
+		r.Post("/text-record", h.HandleCreateTextRecord)
+		r.Get("/text-record/{id}", h.HandleGetTextRecordById)
+		r.Patch("/text-record/{id}", h.HandlePatchTextRecordById)
+		r.Delete("/text-record/{id}", h.HandleDeleteTextRecordById)
+
+		r.Get("/binary-record", h.HandleGetBinaryRecordList)
+		r.Post("/binary-record", h.HandleCreateBinaryRecord)
+		r.Get("/binary-record/{id}", h.HandleGetBinaryRecordById)
+		r.Patch("/binary-record/{id}", h.HandlePatchBinaryRecordById)
+		r.Delete("/binary-record/{id}", h.HandleDeleteBinaryRecordById)
+	})
 
 	router.Get("/api/v1/health/check", h.HandleHealthCheck)
 
 	router.Post("/api/v1/auth", h.HandleAuth)
 	router.Put("/api/v1/auth", h.HandleRefreshAuthToken)
 	router.Post("/api/v1/signup", h.HandleSignUp)
-
-	router.Get("/api/v1/data/all", h.HandleGetUserAllData)
-
-	router.Get("/api/v1/data/login-password", h.HandleGetLoginPasswordList)
-	router.Post("/api/v1/data/login-password", h.HandleCreateLoginPassword)
-	router.Get("/api/v1/data/login-password/{id}", h.HandleGetLoginPasswordById)
-	router.Patch("/api/v1/data/login-password/{id}", h.HandlePatchLoginPasswordById)
-	router.Delete("/api/v1/data/login-password/{id}", h.HandleDeleteLoginPasswordById)
-
-	router.Get("/api/v1/data/credit-card", h.HandleGetCreditCardList)
-	router.Post("/api/v1/data/credit-card", h.HandleCreateCreditCard)
-	router.Get("/api/v1/data/credit-card/{id}", h.HandleGetCreditCardById)
-	router.Patch("/api/v1/data/credit-card/{id}", h.HandlePatchCreditCardById)
-	router.Delete("/api/v1/data/credit-card/{id}", h.HandleDeleteCreditCardById)
-
-	router.Get("/api/v1/data/text-record", h.HandleGetTextRecordList)
-	router.Post("/api/v1/data/text-record", h.HandleCreateTextRecord)
-	router.Get("/api/v1/data/text-record/{id}", h.HandleGetTextRecordById)
-	router.Patch("/api/v1/data/text-record/{id}", h.HandlePatchTextRecordById)
-	router.Delete("/api/v1/data/text-record/{id}", h.HandleDeleteTextRecordById)
-
-	router.Get("/api/v1/data/binary-record", h.HandleGetBinaryRecordList)
-	router.Post("/api/v1/data/binary-record", h.HandleCreateBinaryRecord)
-	router.Get("/api/v1/data/binary-record/{id}", h.HandleGetBinaryRecordById)
-	router.Patch("/api/v1/data/binary-record/{id}", h.HandlePatchBinaryRecordById)
-	router.Delete("/api/v1/data/binary-record/{id}", h.HandleDeleteBinaryRecordById)
 
 	router.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain;charset=utf-8")
