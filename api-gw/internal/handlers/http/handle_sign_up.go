@@ -3,17 +3,17 @@ package http
 import (
 	"api-gw/internal/handlers/http/dto"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
 
 func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
-	userId := fmt.Sprintf("%v", r.Context().Value("token"))
+	userId := h.userAuthorizationService.GetUserIdFromContext(r.Context())
 
-	// @ToDO: disable re-registration if userId exists and correct.
-	if len(userId) > 0 {
-
+	if !h.userAuthorizationService.IsUserIdEmpty(userId) {
+		h.logger.Debug("error registration: already logged in. ", userId)
+		w.WriteHeader(http.StatusForbidden)
+		return
 	}
 
 	defer r.Body.Close()

@@ -27,24 +27,17 @@ func GetUserAuthorizationService(logger logger, userAuthorizationClient grpc.Use
 }
 
 func (u UserAuthorization) GetTokenFromHeader(r *http.Request) string {
-	userToken := ``
-	userTokenCookie, err := r.Cookie(userTokenKey)
+	userTokenHeader := r.Header.Get(userTokenKey)
 
-	if err != nil {
-		if err != http.ErrNoCookie {
-			u.logger.Error("error with getting token from cookie: " + err.Error())
-		}
-
-		return userToken
-	}
-
-	userToken = (*userTokenCookie).Value
-
-	return userToken
+	return userTokenHeader
 }
 
 func (u UserAuthorization) IsUserTokenEmpty(userToken string) bool {
 	return len(userToken) == 0
+}
+
+func (u UserAuthorization) IsUserIdEmpty(userId string) bool {
+	return len(userId) == 0
 }
 
 func (u UserAuthorization) GetUserIdByToken(tokenInput string, ctx context.Context) (string, error) {
@@ -90,6 +83,15 @@ func (u UserAuthorization) Register(ctx context.Context, userEmail, userPassword
 	)
 
 	return response.User.Token.Token, err
+}
+
+func (u UserAuthorization) GetUserIdFromContext(ctx context.Context) string {
+	userToken := ""
+	if ctx.Value(userIdKey) != nil {
+		userToken = ctx.Value(userIdKey).(string)
+	}
+
+	return userToken
 }
 
 func (u UserAuthorization) SetUserIdInContext(userId string, ctx context.Context) context.Context {

@@ -46,7 +46,7 @@ func (h *httpHandler) NewRouter() chi.Router {
 	router.Use(middleware.Timeout(60 * time.Second)) // @ToDo move 60 to conf
 
 	router.Route("/api/v1/data", func(r chi.Router) {
-		r.Use(closed_by_authorization.ClosedByAuthorization)
+		r.Use(closed_by_authorization.ClosedByAuthorization(h.userAuthorizationService))
 
 		r.Get("/all", h.HandleGetUserAllData)
 
