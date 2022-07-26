@@ -15,7 +15,7 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	
+
 	defer r.Body.Close()
 	bodyJSON, err := io.ReadAll(r.Body)
 
