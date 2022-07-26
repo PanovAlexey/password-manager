@@ -3,7 +3,6 @@ package http
 import (
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_authorization_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -45,7 +44,8 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := (*h.gRPCUserAuthorizationClient.GetClient()).Auth(
-		context.Background(), &pb.AuthRequest{
+		r.Context(),
+		&pb.AuthRequest{
 			AuthUser: &authUser,
 		},
 	)

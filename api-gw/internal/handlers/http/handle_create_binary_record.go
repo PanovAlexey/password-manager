@@ -3,7 +3,6 @@ package http
 import (
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -43,7 +42,8 @@ func (h *httpHandler) HandleCreateBinaryRecord(w http.ResponseWriter, r *http.Re
 	}
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).CreateBinaryRecord(
-		context.Background(), &pb.CreateBinaryRecordRequest{
+		r.Context(),
+		&pb.CreateBinaryRecordRequest{
 			CreateBinaryRecord: &createBinaryRecord,
 			UserId:             userId,
 		},

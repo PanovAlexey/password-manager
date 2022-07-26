@@ -3,7 +3,6 @@ package http
 import (
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_authorization_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -47,7 +46,8 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := (*h.gRPCUserAuthorizationClient.GetClient()).Register(
-		context.Background(), &pb.RegisterRequest{
+		r.Context(),
+		&pb.RegisterRequest{
 			RegisterUser: &registerUser,
 		},
 	)

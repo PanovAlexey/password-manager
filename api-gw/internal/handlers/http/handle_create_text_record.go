@@ -3,7 +3,6 @@ package http
 import (
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -43,7 +42,8 @@ func (h *httpHandler) HandleCreateTextRecord(w http.ResponseWriter, r *http.Requ
 	}
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).CreateTextRecord(
-		context.Background(), &pb.CreateTextRecordRequest{
+		r.Context(),
+		&pb.CreateTextRecordRequest{
 			CreateTextRecord: &createTextRecord,
 			UserId:           userId,
 		},

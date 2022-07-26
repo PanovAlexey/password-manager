@@ -2,7 +2,6 @@ package http
 
 import (
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -14,7 +13,8 @@ func (h *httpHandler) HandleGetBinaryRecordById(w http.ResponseWriter, r *http.R
 	id := chi.URLParam(r, "id")
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetBinaryRecordById(
-		context.Background(), &pb.GetBinaryRecordByIdRequest{
+		r.Context(),
+		&pb.GetBinaryRecordByIdRequest{
 			Id:     id,
 			UserId: userId,
 		},

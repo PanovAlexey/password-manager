@@ -2,7 +2,6 @@ package http
 
 import (
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -13,7 +12,8 @@ func (h *httpHandler) HandleDeleteTextRecordById(w http.ResponseWriter, r *http.
 	id := chi.URLParam(r, "id")
 
 	_, err := (*h.gRPCUserDataManagerClient.GetClient()).DeleteTextRecordById(
-		context.Background(), &pb.DeleteTextRecordByIdRequest{
+		r.Context(),
+		&pb.DeleteTextRecordByIdRequest{
 			Id:     id,
 			UserId: userId,
 		},

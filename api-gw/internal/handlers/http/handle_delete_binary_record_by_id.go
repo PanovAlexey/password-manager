@@ -2,7 +2,6 @@ package http
 
 import (
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -13,7 +12,8 @@ func (h *httpHandler) HandleDeleteBinaryRecordById(w http.ResponseWriter, r *htt
 	id := chi.URLParam(r, "id")
 
 	_, err := (*h.gRPCUserDataManagerClient.GetClient()).DeleteBinaryRecordById(
-		context.Background(), &pb.DeleteBinaryRecordByIdRequest{
+		r.Context(),
+		&pb.DeleteBinaryRecordByIdRequest{
 			Id:     id,
 			UserId: userId,
 		},

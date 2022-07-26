@@ -2,7 +2,6 @@ package http
 
 import (
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -14,7 +13,8 @@ func (h *httpHandler) HandleGetTextRecordById(w http.ResponseWriter, r *http.Req
 	id := chi.URLParam(r, "id")
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetTextRecordById(
-		context.Background(), &pb.GetTextRecordByIdRequest{
+		r.Context(),
+		&pb.GetTextRecordByIdRequest{
 			Id:     id,
 			UserId: userId,
 		},

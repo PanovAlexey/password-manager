@@ -2,7 +2,6 @@ package http
 
 import (
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,7 +11,7 @@ func (h *httpHandler) HandleGetBinaryRecordList(w http.ResponseWriter, r *http.R
 	userId := fmt.Sprintf("%v", r.Context().Value("token"))
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetBinaryRecordList(
-		context.Background(),
+		r.Context(),
 		&pb.GetBinaryRecordListRequest{UserId: userId},
 	)
 

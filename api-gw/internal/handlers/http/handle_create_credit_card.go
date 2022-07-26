@@ -3,7 +3,6 @@ package http
 import (
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -46,7 +45,8 @@ func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Requ
 	}
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).CreateCreditCard(
-		context.Background(), &pb.CreateCreditCardRequest{
+		r.Context(),
+		&pb.CreateCreditCardRequest{
 			CreateCreditCard: &createCreditCard,
 			UserId:           userId,
 		},

@@ -3,7 +3,6 @@ package http
 import (
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -45,7 +44,8 @@ func (h *httpHandler) HandlePatchLoginPasswordById(w http.ResponseWriter, r *htt
 	}
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).PatchLoginPasswordById(
-		context.Background(), &pb.PatchLoginPasswordByIdRequest{
+		r.Context(),
+		&pb.PatchLoginPasswordByIdRequest{
 			CreateLoginPassword: &createLoginPassword,
 			UserId:              userId,
 		},

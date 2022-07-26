@@ -2,7 +2,6 @@ package http
 
 import (
 	pb "api-gw/pkg/user_data_manager_grpc"
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,7 +11,7 @@ func (h *httpHandler) HandleGetTextRecordList(w http.ResponseWriter, r *http.Req
 	userId := fmt.Sprintf("%v", r.Context().Value("token"))
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetTextRecordList(
-		context.Background(),
+		r.Context(),
 		&pb.GetTextRecordListRequest{UserId: userId},
 	)
 
