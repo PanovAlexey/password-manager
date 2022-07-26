@@ -13,6 +13,13 @@ func main() {
 	logger := logging.GetLogger(config)
 	defer logger.Sync()
 
+	userAuthorizationClient, err := grpc.GetUserAuthorizationClient(config)
+	defer userAuthorizationClient.GetConnection().Close()
+
+	if err != nil {
+		logger.Error("error getting user authorization client: " + err.Error())
+	}
+
 	userDataManagerClient, err := grpc.GetUserDataManagerClient(config)
 	defer userDataManagerClient.GetConnection().Close()
 
@@ -20,7 +27,7 @@ func main() {
 		logger.Error("error getting user data manager client: " + err.Error())
 	}
 
-	httpHandler := http.GetHTTPHandler(userDataManagerClient, logger)
+	httpHandler := http.GetHTTPHandler(userAuthorizationClient, userDataManagerClient, logger)
 
 	servers.RunHttpServer(httpHandler, config, logger)
 }

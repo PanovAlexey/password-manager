@@ -15,12 +15,21 @@ type Logger interface {
 }
 
 type httpHandler struct {
-	gRPCUserDataManagerClient grpc.UserDataManagerClient
-	logger                    Logger
+	gRPCUserAuthorizationClient grpc.UserAuthorizationClient
+	gRPCUserDataManagerClient   grpc.UserDataManagerClient
+	logger                      Logger
 }
 
-func GetHTTPHandler(userDataManagerClient grpc.UserDataManagerClient, logger Logger) *httpHandler {
-	return &httpHandler{gRPCUserDataManagerClient: userDataManagerClient, logger: logger}
+func GetHTTPHandler(
+	userAuthorizationClient grpc.UserAuthorizationClient,
+	userDataManagerClient grpc.UserDataManagerClient,
+	logger Logger,
+) *httpHandler {
+	return &httpHandler{
+		gRPCUserAuthorizationClient: userAuthorizationClient,
+		gRPCUserDataManagerClient:   userDataManagerClient,
+		logger:                      logger,
+	}
 }
 
 func (h *httpHandler) NewRouter() chi.Router {
