@@ -2,7 +2,6 @@ package http
 
 import (
 	"api-gw/internal/handlers/http/dto"
-	pb "api-gw/pkg/user_authorization_grpc"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -29,25 +28,25 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	authUserDto := dto.AuthUser{}
 	err = json.Unmarshal(bodyJSON, &authUserDto)
 
-	if err != nil || // @ToDo: move validation from handler
-		len(authUserDto.Email) == 0 ||
-		len(authUserDto.Password) == 0 {
-
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error("error user auth by wrong request: "+err.Error(), bodyJSON)
+		h.logger.Error("error user auth by wrong request: "+err.Error(), string(bodyJSON))
 		return
 	}
 
-	authUser := pb.AuthUser{
-		Email:    authUserDto.Email,
-		Password: authUserDto.Password,
+	// @ToDo: move validation from handler
+	if len(authUserDto.Email) == 0 ||
+		len(authUserDto.Password) == 0 {
+
+		w.WriteHeader(http.StatusBadRequest)
+		h.logger.Error("error user auth by wrong request: fields values are incorrect.", string(bodyJSON))
+		return
 	}
 
-	response, err := (*h.gRPCUserAuthorizationClient.GetClient()).Auth(
+	userToken, err := h.userAuthorizationService.Auth(
 		r.Context(),
-		&pb.AuthRequest{
-			AuthUser: &authUser,
-		},
+		authUserDto.Email,
+		authUserDto.Password,
 	)
 
 	if err != nil {
@@ -56,11 +55,11 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.logger.Info("successful user auth ", response.User.Id, response.User.Email)
-	result, err := json.Marshal(response)
+	h.logger.Info("successful user auth ", userToken)
+	result, err := json.Marshal(userToken)
 
 	if err != nil {
-		h.logger.Error("error marshalling user: "+err.Error(), response.User.Id, response.User.Email)
+		h.logger.Error("error marshalling user: "+err.Error(), userToken)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

@@ -1,11 +1,16 @@
 package http
 
 import (
-	middleware_custom "api-gw/internal/handlers/http/middleware"
+	"api-gw/internal/application/service"
+	"api-gw/internal/handlers/http/middleware/authorization_by_token"
+	"api-gw/internal/handlers/http/middleware/closed_by_authorization"
+	"api-gw/internal/handlers/http/middleware/json"
+	middleware_custom "api-gw/internal/handlers/http/middleware/trace"
 	"api-gw/internal/infrastructure/clients/grpc"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
+	"time"
 )
 
 type Logger interface {
@@ -15,20 +20,20 @@ type Logger interface {
 }
 
 type httpHandler struct {
-	gRPCUserAuthorizationClient grpc.UserAuthorizationClient
-	gRPCUserDataManagerClient   grpc.UserDataManagerClient
-	logger                      Logger
+	gRPCUserDataManagerClient grpc.UserDataManagerClient
+	logger                    Logger
+	userAuthorizationService  service.UserAuthorization
 }
 
 func GetHTTPHandler(
-	userAuthorizationClient grpc.UserAuthorizationClient,
 	userDataManagerClient grpc.UserDataManagerClient,
 	logger Logger,
+	userAuthorizationService service.UserAuthorization,
 ) *httpHandler {
 	return &httpHandler{
-		gRPCUserAuthorizationClient: userAuthorizationClient,
-		gRPCUserDataManagerClient:   userDataManagerClient,
-		logger:                      logger,
+		gRPCUserDataManagerClient: userDataManagerClient,
+		logger:                    logger,
+		userAuthorizationService:  userAuthorizationService,
 	}
 }
 

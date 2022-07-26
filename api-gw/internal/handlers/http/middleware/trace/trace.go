@@ -1,4 +1,4 @@
-package middleware
+package trace
 
 import (
 	"context"

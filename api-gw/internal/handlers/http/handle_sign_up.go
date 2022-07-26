@@ -2,7 +2,6 @@ package http
 
 import (
 	"api-gw/internal/handlers/http/dto"
-	pb "api-gw/pkg/user_authorization_grpc"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -29,27 +28,27 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	registerUserDto := dto.RegisterUser{}
 	err = json.Unmarshal(bodyJSON, &registerUserDto)
 
-	if err != nil || // @ToDo: move validation from handler
-		len(registerUserDto.Email) == 0 ||
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		h.logger.Error("error user registration by wrong request: ", err, string(bodyJSON))
+		return
+	}
+
+	// @ToDo: move validation from handler
+	if len(registerUserDto.Email) == 0 ||
 		len(registerUserDto.Password) == 0 ||
 		len(registerUserDto.RepeatPassword) == 0 {
 
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error("error user registration by wrong request: "+err.Error(), bodyJSON)
+		h.logger.Error("error user registration by wrong request: incorrect fields value", string(bodyJSON))
 		return
 	}
 
-	registerUser := pb.RegisterUser{
-		Email:          registerUserDto.Email,
-		Password:       registerUserDto.Password,
-		RepeatPassword: registerUserDto.RepeatPassword,
-	}
-
-	response, err := (*h.gRPCUserAuthorizationClient.GetClient()).Register(
+	userToken, err := h.userAuthorizationService.Register(
 		r.Context(),
-		&pb.RegisterRequest{
-			RegisterUser: &registerUser,
-		},
+		registerUserDto.Email,
+		registerUserDto.Password,
+		registerUserDto.RepeatPassword,
 	)
 
 	if err != nil {
@@ -58,11 +57,11 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.logger.Info("successful user registration ", response.User.Id, response.User.Email)
-	result, err := json.Marshal(response)
+	h.logger.Info("successful user registration ", userToken)
+	result, err := json.Marshal(userToken)
 
 	if err != nil {
-		h.logger.Error("error marshalling user: "+err.Error(), response.User.Id, response.User.Email)
+		h.logger.Error("error marshalling user: "+err.Error(), userToken)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

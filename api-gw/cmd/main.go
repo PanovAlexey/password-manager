@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api-gw/internal/application/service"
 	"api-gw/internal/config"
 	"api-gw/internal/handlers/http"
 	"api-gw/internal/infrastructure/clients/grpc"
@@ -27,7 +28,9 @@ func main() {
 		logger.Error("error getting user data manager client: " + err.Error())
 	}
 
-	httpHandler := http.GetHTTPHandler(userAuthorizationClient, userDataManagerClient, logger)
+	userAuthorizationService := service.GetUserAuthorizationService(logger, userAuthorizationClient)
+
+	httpHandler := http.GetHTTPHandler(userDataManagerClient, logger, userAuthorizationService)
 
 	servers.RunHttpServer(httpHandler, config, logger)
 }
