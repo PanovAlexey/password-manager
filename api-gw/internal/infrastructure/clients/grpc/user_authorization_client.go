@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"api-gw/internal/config"
+	"api-gw/internal/infrastructure/clients/grpc/interceptors"
 	pb "api-gw/pkg/user_authorization_grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -17,6 +18,7 @@ func GetUserAuthorizationClient(config config.Config) (UserAuthorizationClient, 
 
 	connection, err := grpc.Dial(
 		config.GetUserAuthorizationGRPCServerAddress(),
+		grpc.WithUnaryInterceptor(interceptors.AccessLogInterceptor),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 
