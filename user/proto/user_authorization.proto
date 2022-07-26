@@ -8,6 +8,7 @@ service UserAuthorization {
   rpc Auth(AuthRequest) returns(AuthResponse);
   rpc Register(RegisterRequest) returns(RegisterResponse);
   rpc GetUserByLogin(GetUserByLoginRequest) returns(GetUserByLoginResponse);
+  rpc GetUserIdByJWT(GetUserIdByJWTRequest) returns(GetUserIdByJWTResponse);
 }
 
 message User {
@@ -55,4 +56,12 @@ message GetUserByLoginRequest {
 
 message GetUserByLoginResponse {
   User user = 1;
+}
+
+message GetUserIdByJWTRequest {
+  Token token = 1;
+}
+
+message GetUserIdByJWTResponse {
+  string userId = 1;
 }
