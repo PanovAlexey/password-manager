@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type UserAuthorizationClient interface {
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	GetUserByLogin(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	GetUserByLogin(ctx context.Context, in *GetUserByLoginRequest, opts ...grpc.CallOption) (*GetUserByLoginResponse, error)
 }
 
 type userAuthorizationClient struct {
@@ -53,8 +53,8 @@ func (c *userAuthorizationClient) Register(ctx context.Context, in *RegisterRequ
 	return out, nil
 }
 
-func (c *userAuthorizationClient) GetUserByLogin(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
-	out := new(RegisterResponse)
+func (c *userAuthorizationClient) GetUserByLogin(ctx context.Context, in *GetUserByLoginRequest, opts ...grpc.CallOption) (*GetUserByLoginResponse, error) {
+	out := new(GetUserByLoginResponse)
 	err := c.cc.Invoke(ctx, "/user_authorization.UserAuthorization/GetUserByLogin", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (c *userAuthorizationClient) GetUserByLogin(ctx context.Context, in *Regist
 type UserAuthorizationServer interface {
 	Auth(context.Context, *AuthRequest) (*AuthResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	GetUserByLogin(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	GetUserByLogin(context.Context, *GetUserByLoginRequest) (*GetUserByLoginResponse, error)
 	mustEmbedUnimplementedUserAuthorizationServer()
 }
 
@@ -82,7 +82,7 @@ func (UnimplementedUserAuthorizationServer) Auth(context.Context, *AuthRequest) 
 func (UnimplementedUserAuthorizationServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserAuthorizationServer) GetUserByLogin(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+func (UnimplementedUserAuthorizationServer) GetUserByLogin(context.Context, *GetUserByLoginRequest) (*GetUserByLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserByLogin not implemented")
 }
 func (UnimplementedUserAuthorizationServer) mustEmbedUnimplementedUserAuthorizationServer() {}
@@ -135,7 +135,7 @@ func _UserAuthorization_Register_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _UserAuthorization_GetUserByLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
+	in := new(GetUserByLoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func _UserAuthorization_GetUserByLogin_Handler(srv interface{}, ctx context.Cont
 		FullMethod: "/user_authorization.UserAuthorization/GetUserByLogin",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserAuthorizationServer).GetUserByLogin(ctx, req.(*RegisterRequest))
+		return srv.(UserAuthorizationServer).GetUserByLogin(ctx, req.(*GetUserByLoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
