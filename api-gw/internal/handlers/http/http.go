@@ -34,8 +34,8 @@ func GetHTTPHandler(
 
 func (h *httpHandler) NewRouter() chi.Router {
 	router := chi.NewRouter()
-	router.Use(middleware.RequestID)
 	router.Use(middleware.Logger)
+	router.Use(middleware_custom.Trace(h.logger))
 	router.Use(middleware_custom.JSON)
 	router.Use(middleware_custom.Authorization)
 
