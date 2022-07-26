@@ -11,10 +11,8 @@ func (s *UserAuthorizationHandler) Register(ctx context.Context, request *pb.Reg
 
 	// @ToDo: replace stub data for real data
 	var user pb.User
-	var token pb.Token
 	user.Id = "123"
-	token.Token = "bearer token 234324324"
-	user.Token = &token
+	user.Token = "bearer token 234324324"
 	user.RegistrationDate = &timestamp.Timestamp{}
 	user.LastLogin = &timestamp.Timestamp{}
 	user.Email = "test@ya.ru"

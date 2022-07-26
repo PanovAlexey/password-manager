@@ -14,7 +14,7 @@ service UserAuthorization {
 message User {
   string id = 1;
   string email = 2;
-  Token token = 3;
+  string token = 3;
   google.protobuf.Timestamp registration_date = 4;
   google.protobuf.Timestamp last_login = 5;
 }
@@ -32,10 +32,6 @@ message AuthUser {
 
 message AuthRequest {
   AuthUser authUser = 1;
-}
-
-message Token {
-  string token = 1;
 }
 
 message AuthResponse {
@@ -59,7 +55,7 @@ message GetUserByLoginResponse {
 }
 
 message GetUserIdByJWTRequest {
-  Token token = 1;
+  string token = 1;
 }
 
 message GetUserIdByJWTResponse {

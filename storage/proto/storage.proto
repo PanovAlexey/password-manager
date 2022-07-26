@@ -212,13 +212,9 @@ message DeleteBinaryRecordByIdRequest{
 message User {
   string id = 1;
   string email = 2;
-  Token token = 3;
+  string token = 3;
   google.protobuf.Timestamp registration_date = 4;
   google.protobuf.Timestamp last_login = 5;
-}
-
-message Token {
-  string token = 1;
 }
 
 message CreateUser {

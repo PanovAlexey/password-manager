@@ -11,11 +11,9 @@ func (s *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserR
 
 	// @ToDo: replace stub data for real data
 	var user pb.User
-	var token pb.Token
 	user.Id = "1234567890"
 	user.Email = "test@gmail.com"
-	token.Token = "token-temporary-stub-jsldfjsldkfj-token"
-	user.Token = &token
+	user.Token = "token-temporary-stub-jsldfjsldkfj-token"
 	user.RegistrationDate = &timestamp.Timestamp{}
 	user.LastLogin = &timestamp.Timestamp{}
 	response.User = &user

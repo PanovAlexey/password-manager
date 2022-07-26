@@ -41,11 +41,10 @@ func (u UserAuthorization) IsUserIdEmpty(userId string) bool {
 }
 
 func (u UserAuthorization) GetUserIdByToken(tokenInput string, ctx context.Context) (string, error) {
-	token := pb.Token{Token: tokenInput}
 	response, err := (*u.userAuthorizationClient.GetClient()).GetUserIdByJWT(
 		ctx,
 		&pb.GetUserIdByJWTRequest{
-			Token: &token,
+			Token: tokenInput,
 		},
 	)
 
@@ -65,7 +64,7 @@ func (u UserAuthorization) Auth(ctx context.Context, userEmail, userPassword str
 		},
 	)
 
-	return response.User.Token.Token, err
+	return response.User.Token, err
 }
 
 func (u UserAuthorization) Register(ctx context.Context, userEmail, userPassword, repeatUserPassword string) (string, error) {
@@ -82,7 +81,7 @@ func (u UserAuthorization) Register(ctx context.Context, userEmail, userPassword
 		},
 	)
 
-	return response.User.Token.Token, err
+	return response.User.Token, err
 }
 
 func (u UserAuthorization) GetUserIdFromContext(ctx context.Context) string {
