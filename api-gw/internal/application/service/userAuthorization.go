@@ -41,6 +41,8 @@ func (u UserAuthorization) IsUserIdEmpty(userId string) bool {
 }
 
 func (u UserAuthorization) GetUserIdByToken(tokenInput string, ctx context.Context) (string, error) {
+	userId := ""
+
 	response, err := (*u.userAuthorizationClient.GetClient()).GetUserIdByJWT(
 		ctx,
 		&pb.GetUserIdByJWTRequest{
@@ -48,7 +50,13 @@ func (u UserAuthorization) GetUserIdByToken(tokenInput string, ctx context.Conte
 		},
 	)
 
-	return response.UserId, err
+	if err != nil {
+		return userId, err
+	}
+
+	userId = response.UserId
+
+	return userId, err
 }
 
 func (u UserAuthorization) Auth(ctx context.Context, userEmail, userPassword string) (string, error) {

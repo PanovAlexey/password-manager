@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"syscall"
 	"user-auth/internal/config"
-	grpcHandler "user-auth/internal/handlers/grpc"
 	pb "user-auth/pkg/user_authorization_grpc"
 )
 
@@ -16,7 +15,7 @@ type Logger interface {
 	Info(args ...interface{})
 }
 
-func RunGrpcServer(config config.Config, logger Logger) {
+func RunGrpcServer(config config.Config, logger Logger, handler pb.UserAuthorizationServer) {
 	logger.Info(config.GetApplicationName() + " grpc server starting...")
 	listen, err := net.Listen("tcp", config.GetGrpcServerAddress())
 
@@ -25,7 +24,7 @@ func RunGrpcServer(config config.Config, logger Logger) {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterUserAuthorizationServer(s, grpcHandler.GetUserAuthorizationHandler(logger))
+	pb.RegisterUserAuthorizationServer(s, handler)
 
 	logger.Info(config.GetApplicationName() + " grpc server started")
 

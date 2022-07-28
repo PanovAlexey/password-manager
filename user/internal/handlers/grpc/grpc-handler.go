@@ -1,6 +1,7 @@
 package grpc
 
 import (
+	"user-auth/internal/application/service"
 	pb "user-auth/pkg/user_authorization_grpc"
 )
 
@@ -10,10 +11,14 @@ type Logger interface {
 }
 
 type UserAuthorizationHandler struct {
-	logger Logger
+	logger                  Logger
+	jwtAuthorizationService service.JWTAuthorization
 	pb.UnimplementedUserAuthorizationServer
 }
 
-func GetUserAuthorizationHandler(logger Logger) *UserAuthorizationHandler {
-	return &UserAuthorizationHandler{logger: logger}
+func GetUserAuthorizationHandler(logger Logger, jwtAuthorizationService service.JWTAuthorization) *UserAuthorizationHandler {
+	return &UserAuthorizationHandler{
+		logger:                  logger,
+		jwtAuthorizationService: jwtAuthorizationService,
+	}
 }
