@@ -1,0 +1,36 @@
+version: "3.7"
+
+services:
+  password-manager-storage-master-postgres:
+    container_name: password-manager-storage-master-postgres
+    build:
+      context: .
+      dockerfile: storage/.docker/postgresql/master/Dockerfile
+    restart: always
+    environment:
+      POSTGRES_DB: ${STORAGE_DB_MASTER_DATABASE}
+      POSTGRES_USER: ${STORAGE_DB_USERNAME}
+      POSTGRES_PASSWORD: ${STORAGE_DB_PASSWORD}
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./storage/.docker/postgresql/master/pgdata:/var/lib/postgresql/data
+      - ./storage/.docker/postgresql/master/init:/docker-entrypoint-initdb.d
+    ports:
+      - "${STORAGE_DB_MASTER_PORT}:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${STORAGE_DB_USERNAME} -p ${STORAGE_DB_PASSWORD} -d ${STORAGE_DB_MASTER_DATABASE}" ]
+      timeout: 45s
+      interval: 2s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+    networks:
+      - password_manager_network
+
+networks:
+  password_manager_network:
+    name: password_manager_network
+    driver: bridge
