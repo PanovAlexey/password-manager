@@ -13,7 +13,6 @@ func (s *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserR
 	var user pb.User
 	user.Id = "1234567890"
 	user.Email = "test@gmail.com"
-	user.Token = "token-temporary-stub-jsldfjsldkfj-token"
 	user.RegistrationDate = &timestamp.Timestamp{}
 	user.LastLogin = &timestamp.Timestamp{}
 	response.User = &user
