@@ -9,8 +9,9 @@ import (
 var configSingleton *Config
 
 type Config struct {
-	applicationName   string
-	grpcServerAddress string
+	applicationName    string
+	grpcServerAddress  string
+	storageGrpcAddress string
 }
 
 func New() Config {
@@ -37,9 +38,14 @@ func (c Config) GetGrpcServerAddress() string {
 	return c.grpcServerAddress
 }
 
+func (c Config) GetStorageGRPCServerAddress() string {
+	return c.storageGrpcAddress
+}
+
 func initConfigByEnv(config Config) Config {
 	config.applicationName = getEnv("UA_APPLICATION_NAME")
 	config.grpcServerAddress = getEnv("UA_GRPC_SERVER_ADDRESS")
+	config.storageGrpcAddress = getEnv("GW_SERVICE_STORAGE_GRPC_ADDRESS")
 
 	return config
 }
@@ -59,6 +65,10 @@ func initConfigByDefault(config Config) Config {
 
 	if len(config.grpcServerAddress) < 1 {
 		config.grpcServerAddress = "localhost:3202"
+	}
+
+	if len(config.storageGrpcAddress) < 1 {
+		config.storageGrpcAddress = "localhost:3205"
 	}
 
 	return config

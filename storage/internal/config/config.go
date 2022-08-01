@@ -62,7 +62,7 @@ func initConfigByDefault(config Config) Config {
 	}
 
 	if len(config.grpcServerAddress) < 1 {
-		config.grpcServerAddress = "localhost:3201"
+		config.grpcServerAddress = "localhost:3205"
 	}
 
 	return config
