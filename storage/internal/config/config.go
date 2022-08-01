@@ -14,8 +14,12 @@ type Config struct {
 }
 
 func New() Config {
-	if err := godotenv.Load(); err != nil {
-		log.Printf("error loading env variables: %s", err.Error())
+	if err := godotenv.Load("../.env"); err != nil {
+		log.Printf("error loading global env variables: %s", err.Error())
+	}
+
+	if err := godotenv.Load("./.env"); err != nil {
+		log.Printf("error loading personal env variables: %s", err.Error())
 	}
 
 	if configSingleton == nil {
