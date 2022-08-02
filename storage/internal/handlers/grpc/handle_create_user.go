@@ -2,19 +2,21 @@ package grpc
 
 import (
 	"context"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"storage/internal/domain"
 	pb "storage/pkg/storage_grpc"
 	"strconv"
+	"time"
 )
 
 func (h *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	var response pb.CreateUserResponse
 
-	userInput := domain.User{
+	userInput := domain.UserLogin{
 		Email:    request.CreateUser.Email,
 		Password: request.CreateUser.Password,
 	}
-	id, err := h.userService.SaveUser(userInput)
+	userEntity, err := h.userService.SaveUser(userInput)
 
 	if err != nil {
 		h.logger.Error("user dit not save to database: " + err.Error())
@@ -22,13 +24,20 @@ func (h *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserR
 	}
 
 	var user pb.User
-	user.Id = strconv.Itoa(id)
-	user.Email = userInput.Email
+	user.Id = strconv.FormatInt(userEntity.Id.Int64, 10)
+	user.Email = userEntity.Email
 
-	/* @ToDo: add
-	user.RegistrationDate = &timestamp.Timestamp{}
-	user.LastLogin = &timestamp.Timestamp{}
-	*/
+	regDateTime, err := time.Parse(time.RFC3339, userEntity.CreatedAt)
+	user.RegistrationDate = timestamppb.New(regDateTime)
+
+	if userEntity.LastAccessAt.Valid {
+		lastAccessAtTime, err := time.Parse(time.RFC3339, userEntity.LastAccessAt.String)
+		user.LastLogin = timestamppb.New(lastAccessAtTime)
+
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	response.User = &user
 

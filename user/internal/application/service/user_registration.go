@@ -31,6 +31,37 @@ func (s UserRegistration) Validate(user pb.RegisterUser) error {
 	return nil
 }
 
+func (s UserRegistration) Auth(login, password string, ctx context.Context) (*domain.User, error) {
+	passwordHash, err := s.generatePasswordHash(password)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user := grpcClient.LoginUser{
+		Email:    login,
+		Password: passwordHash,
+	}
+
+	getUserResponse, err := (*s.storage.GetClient()).GetUser(
+		ctx,
+		&grpcClient.GetUserRequest{
+			GetUser: &user,
+		},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.User{
+		Id:               getUserResponse.User.Id,
+		Email:            getUserResponse.User.Email,
+		LastLogin:        getUserResponse.User.LastLogin,
+		RegistrationDate: getUserResponse.User.RegistrationDate,
+	}, nil
+}
+
 func (s UserRegistration) Register(user pb.RegisterUser, ctx context.Context) (*domain.User, error) {
 	passwordHash, err := s.generatePasswordHash(user.Password)
 
@@ -38,7 +69,7 @@ func (s UserRegistration) Register(user pb.RegisterUser, ctx context.Context) (*
 		return nil, err
 	}
 
-	createUser := grpcClient.CreateUser{
+	createUser := grpcClient.LoginUser{
 		Email:    user.Email,
 		Password: passwordHash,
 	}

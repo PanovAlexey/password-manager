@@ -2,30 +2,33 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"errors"
 	pb "user-auth/pkg/user_authorization_grpc"
 )
 
 func (h *UserAuthorizationHandler) Auth(ctx context.Context, request *pb.AuthRequest) (*pb.AuthResponse, error) {
-	var response pb.AuthResponse
-
-	// @ToDo: replace stub data for real data from storage
-	var user pb.User
-	user.Id = "1231488"
-	user.RegistrationDate = &timestamp.Timestamp{}
-	user.LastLogin = &timestamp.Timestamp{}
-	user.Email = "test@ya.ru"
-	response.User = &user
-
-	token, err := h.jwtAuthorizationService.GetJWTToken(user.Id)
+	authUser, err := h.userRegistrationService.Auth(request.AuthUser.Email, request.AuthUser.Password, ctx)
 
 	if err != nil {
-		h.logger.Error("getting JWT token by user id error: "+err.Error(), user.Id)
+		return nil, err
 	}
 
-	user.Token = token
+	token, err := h.jwtAuthorizationService.GetJWTToken(authUser.Id)
 
-	h.logger.Info("successful auth. ", request)
+	if err != nil {
+		h.logger.Error("getting JWT token by user id error: "+err.Error(), authUser.Id)
+		return nil, errors.New("getting JWT token by user id error: " + err.Error())
+	}
 
-	return &response, nil
+	user := pb.User{
+		Id:               authUser.Id,
+		Email:            authUser.Email,
+		Token:            token,
+		RegistrationDate: authUser.RegistrationDate,
+		LastLogin:        authUser.LastLogin,
+	}
+
+	h.logger.Info("successful auth. ", user, request)
+
+	return &pb.AuthResponse{User: &user}, nil
 }

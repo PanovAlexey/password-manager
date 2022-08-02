@@ -72,6 +72,10 @@ func (u UserAuthorization) Auth(ctx context.Context, userEmail, userPassword str
 		},
 	)
 
+	if err != nil {
+		return "", err
+	}
+
 	return response.User.Token, err
 }
 

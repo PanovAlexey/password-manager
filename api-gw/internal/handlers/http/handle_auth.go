@@ -11,8 +11,10 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	userId := h.userAuthorizationService.GetUserIdFromContext(r.Context())
 
 	if !h.userAuthorizationService.IsUserIdEmpty(userId) {
-		h.logger.Debug("error registration: already logged in. ", userId)
+		info := "error authorization: already logged in. "
+		h.logger.Debug(info, userId)
 		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -21,7 +23,9 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		h.logger.Error("error auth: " + err.Error())
+		info := "error auth: " + err.Error()
+		h.logger.Error(info)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -30,16 +34,20 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error("error user auth by wrong request: "+err.Error(), string(bodyJSON))
+		info := "error user auth by wrong request: " + err.Error()
+		h.logger.Error(info, string(bodyJSON))
+		w.Write([]byte(info))
 		return
 	}
 
-	// @ToDo: move validation from handler
+	// @ToDo: move validation to user service
 	if len(authUserDto.Email) == 0 ||
 		len(authUserDto.Password) == 0 {
 
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error("error user auth by wrong request: fields values are incorrect.", string(bodyJSON))
+		info := "error user auth by wrong request: fields values are incorrect. "
+		h.logger.Error(info, string(bodyJSON))
+		w.Write([]byte(info))
 		return
 	}
 
@@ -50,8 +58,10 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		h.logger.Error("error user auth: " + err.Error())
+		info := "error user auth: " + err.Error()
+		h.logger.Error(info)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -59,8 +69,10 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	result, err := json.Marshal(userToken)
 
 	if err != nil {
-		h.logger.Error("error marshalling user: "+err.Error(), userToken)
+		info := "error marshalling user: " + err.Error()
+		h.logger.Error(info, userToken)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
