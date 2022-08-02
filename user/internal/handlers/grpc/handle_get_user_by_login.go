@@ -6,7 +6,7 @@ import (
 	pb "user-auth/pkg/user_authorization_grpc"
 )
 
-func (s *UserAuthorizationHandler) GetUserByLogin(
+func (h *UserAuthorizationHandler) GetUserByLogin(
 	ctx context.Context, request *pb.GetUserByLoginRequest,
 ) (*pb.GetUserByLoginResponse, error) {
 	var response pb.GetUserByLoginResponse
@@ -20,7 +20,7 @@ func (s *UserAuthorizationHandler) GetUserByLogin(
 	user.Email = "test@ya.ru"
 	response.User = &user
 
-	s.logger.Info("successful got user by login. ", request)
+	h.logger.Info("successful got user by login. ", request)
 
 	return &response, nil
 }

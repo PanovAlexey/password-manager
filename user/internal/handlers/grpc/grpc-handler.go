@@ -2,7 +2,6 @@ package grpc
 
 import (
 	"user-auth/internal/application/service"
-	"user-auth/internal/infrastructure/clients/grpc"
 	pb "user-auth/pkg/user_authorization_grpc"
 )
 
@@ -14,18 +13,18 @@ type Logger interface {
 type UserAuthorizationHandler struct {
 	logger                  Logger
 	jwtAuthorizationService service.JWTAuthorization
-	storageClient           grpc.StorageClient
+	userRegistrationService service.UserRegistration
 	pb.UnimplementedUserAuthorizationServer
 }
 
 func GetUserAuthorizationHandler(
 	logger Logger,
 	jwtAuthorizationService service.JWTAuthorization,
-	storageClient grpc.StorageClient,
+	userRegistrationService service.UserRegistration,
 ) *UserAuthorizationHandler {
 	return &UserAuthorizationHandler{
 		logger:                  logger,
 		jwtAuthorizationService: jwtAuthorizationService,
-		storageClient:           storageClient,
+		userRegistrationService: userRegistrationService,
 	}
 }

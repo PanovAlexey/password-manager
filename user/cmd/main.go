@@ -12,17 +12,19 @@ import (
 func main() {
 	config := config.New()
 	logger := logging.GetLogger(config)
+	defer logger.Sync()
+
 	jwtAuthorizationService := service.GetJWTAuthorizationService()
 	storageClient, err := clientsGrpc.GetStorageClient(config)
-	defer storageClient.GetConnection().Close()
 
 	if err != nil {
 		logger.Error("error getting storage client: " + err.Error())
 	}
 
-	handler := grpc.GetUserAuthorizationHandler(logger, jwtAuthorizationService, storageClient)
+	defer storageClient.GetConnection().Close()
 
-	defer logger.Sync()
+	userRegistrationService := service.GetUserRegistrationService(storageClient)
+	handler := grpc.GetUserAuthorizationHandler(logger, jwtAuthorizationService, userRegistrationService)
 
 	servers.RunGrpcServer(config, logger, handler)
 }

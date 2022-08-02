@@ -89,7 +89,11 @@ func (u UserAuthorization) Register(ctx context.Context, userEmail, userPassword
 		},
 	)
 
-	return response.User.Token, err
+	if err != nil {
+		return "", err
+	}
+
+	return response.User.Token, nil
 }
 
 func (u UserAuthorization) GetUserIdFromContext(ctx context.Context) string {
