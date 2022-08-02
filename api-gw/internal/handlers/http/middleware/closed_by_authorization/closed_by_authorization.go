@@ -11,7 +11,8 @@ func ClosedByAuthorization(userAuthorizationService service.UserAuthorization) f
 			userId := userAuthorizationService.GetUserIdFromContext(r.Context())
 
 			if userAuthorizationService.IsUserIdEmpty(userId) {
-				http.Error(w, "it is forbidden", http.StatusForbidden)
+				w.WriteHeader(http.StatusForbidden)
+				w.Write([]byte("it is forbidden"))
 				return
 			}
 
