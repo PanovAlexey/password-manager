@@ -25,6 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 type StorageClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	GetLoginPasswordList(ctx context.Context, in *GetLoginPasswordListRequest, opts ...grpc.CallOption) (*GetLoginPasswordListResponse, error)
 	CreateLoginPassword(ctx context.Context, in *CreateLoginPasswordRequest, opts ...grpc.CallOption) (*CreateLoginPasswordResponse, error)
 	GetLoginPasswordById(ctx context.Context, in *GetLoginPasswordByIdRequest, opts ...grpc.CallOption) (*GetLoginPasswordByIdResponse, error)
@@ -67,6 +68,15 @@ func (c *storageClient) CreateUser(ctx context.Context, in *CreateUserRequest, o
 func (c *storageClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
 	out := new(UpdateUserResponse)
 	err := c.cc.Invoke(ctx, "/storage.Storage/UpdateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	out := new(GetUserResponse)
+	err := c.cc.Invoke(ctx, "/storage.Storage/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -259,6 +269,7 @@ func (c *storageClient) DeleteBinaryRecordById(ctx context.Context, in *DeleteBi
 type StorageServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	GetLoginPasswordList(context.Context, *GetLoginPasswordListRequest) (*GetLoginPasswordListResponse, error)
 	CreateLoginPassword(context.Context, *CreateLoginPasswordRequest) (*CreateLoginPasswordResponse, error)
 	GetLoginPasswordById(context.Context, *GetLoginPasswordByIdRequest) (*GetLoginPasswordByIdResponse, error)
@@ -291,6 +302,9 @@ func (UnimplementedStorageServer) CreateUser(context.Context, *CreateUserRequest
 }
 func (UnimplementedStorageServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedStorageServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedStorageServer) GetLoginPasswordList(context.Context, *GetLoginPasswordListRequest) (*GetLoginPasswordListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLoginPasswordList not implemented")
@@ -397,6 +411,24 @@ func _Storage_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(StorageServer).UpdateUser(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Storage_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/storage.Storage/GetUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServer).GetUser(ctx, req.(*GetUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -775,6 +807,10 @@ var Storage_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUser",
 			Handler:    _Storage_UpdateUser_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _Storage_GetUser_Handler,
 		},
 		{
 			MethodName: "GetLoginPasswordList",

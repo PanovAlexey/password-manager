@@ -8,6 +8,7 @@ import "google/protobuf/timestamp.proto";
 service Storage {
   rpc CreateUser(CreateUserRequest) returns(CreateUserResponse);
   rpc UpdateUser(UpdateUserRequest) returns(UpdateUserResponse);
+  rpc GetUser(GetUserRequest) returns(GetUserResponse);
 
   rpc GetLoginPasswordList(GetLoginPasswordListRequest) returns(GetLoginPasswordListResponse);
   rpc CreateLoginPassword(CreateLoginPasswordRequest) returns(CreateLoginPasswordResponse);
@@ -35,15 +36,23 @@ service Storage {
 }
 
 message CreateUserRequest {
-  CreateUser createUser = 1;
+  LoginUser createUser = 1;
 }
 
 message CreateUserResponse {
   User user = 1;
 }
 
+message GetUserRequest {
+  LoginUser getUser = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
 message UpdateUserRequest {
-  CreateUser createUser = 1;
+  LoginUser createUser = 1;
 }
 
 message UpdateUserResponse {
@@ -216,7 +225,12 @@ message User {
   google.protobuf.Timestamp last_login = 4;
 }
 
-message CreateUser {
+message LoginUser {
+  string email = 1;
+  string password = 2;
+}
+
+message GetUser {
   string email = 1;
   string password = 2;
 }
