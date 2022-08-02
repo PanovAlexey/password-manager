@@ -219,7 +219,6 @@ message User {
 message CreateUser {
   string email = 1;
   string password = 2;
-  string repeat_password = 3;
 }
 
 message LoginPassword {
