@@ -4,6 +4,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"user-auth/internal/config"
+	"user-auth/internal/infrastructure/clients/grpc/interceptors"
 	pb "user-auth/pkg/storage_grpc"
 )
 
@@ -17,7 +18,7 @@ func GetStorageClient(config config.Config) (StorageClient, error) {
 
 	connection, err := grpc.Dial(
 		config.GetStorageGRPCServerAddress(),
-		//grpc.WithUnaryInterceptor( interceptors.AccessLogInterceptor @ToDo: enable interceptor ),
+		grpc.WithUnaryInterceptor(interceptors.AccessLogInterceptor),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 

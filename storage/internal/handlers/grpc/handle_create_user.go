@@ -2,22 +2,37 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"storage/internal/domain"
 	pb "storage/pkg/storage_grpc"
+	"strconv"
 )
 
-func (s *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+func (h *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	var response pb.CreateUserResponse
 
-	// @ToDo: replace stub data for real data
+	userInput := domain.User{
+		Email:    request.CreateUser.Email,
+		Password: request.CreateUser.Password,
+	}
+	id, err := h.userService.SaveUser(userInput)
+
+	if err != nil {
+		h.logger.Error("user dit not save to database: " + err.Error())
+		return nil, err
+	}
+
 	var user pb.User
-	user.Id = "1234567890"
-	user.Email = "test@gmail.com"
+	user.Id = strconv.Itoa(id)
+	user.Email = userInput.Email
+
+	/* @ToDo: add
 	user.RegistrationDate = &timestamp.Timestamp{}
 	user.LastLogin = &timestamp.Timestamp{}
+	*/
+
 	response.User = &user
 
-	s.logger.Info("successful created user. ", request)
+	h.logger.Info("successful created user. ", request)
 
 	return &response, nil
 }
