@@ -30,6 +30,9 @@ func main() {
 	databaseLoginPasswordRepository := databases.GetLoginPasswordRepository(databaseService.GetDatabaseConnection())
 	loginPasswordService := service.GetLoginPasswordService(databaseLoginPasswordRepository)
 
+	databaseCreditcardRepository := databases.GetCreditCardRepository(databaseService.GetDatabaseConnection())
+	creditCardService := service.GetCreditCardService(databaseCreditcardRepository)
+
 	userIdFromContextGetterService := service.GetUserIdFromContextGetterService()
 
 	handler := grpcHandler.GetStorageHandler(
@@ -37,6 +40,7 @@ func main() {
 		databaseUserService,
 		userIdFromContextGetterService,
 		loginPasswordService,
+		creditCardService,
 	)
 
 	servers.RunGrpcServer(config, logger, handler)

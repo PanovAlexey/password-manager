@@ -136,7 +136,7 @@ message GetCreditCardByIdResponse{
 }
 
 message PatchCreditCardByIdRequest{
-  CreateCreditCard CreateCreditCard = 1;
+  CreditCard CreditCard = 1;
 }
 
 message PatchCreditCardByIdResponse{

@@ -15,6 +15,7 @@ type StorageHandler struct {
 	userService             service.UserService
 	userIdFromContextGetter service.UserIdFromContextGetter
 	loginPasswordService    service.LoginPassword
+	creditCardService       service.CreditCard
 	pb.UnimplementedStorageServer
 }
 
@@ -23,11 +24,13 @@ func GetStorageHandler(
 	userService service.UserService,
 	userIdFromContextGetter service.UserIdFromContextGetter,
 	loginPasswordService service.LoginPassword,
+	creditCardService service.CreditCard,
 ) *StorageHandler {
 	return &StorageHandler{
 		logger:                  logger,
 		userService:             userService,
 		userIdFromContextGetter: userIdFromContextGetter,
 		loginPasswordService:    loginPasswordService,
+		creditCardService:       creditCardService,
 	}
 }

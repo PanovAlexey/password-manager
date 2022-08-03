@@ -2,28 +2,52 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	pb "storage/pkg/storage_grpc"
+	"strconv"
+	"time"
 )
 
 func (h *StorageHandler) GetCreditCardList(ctx context.Context, request *pb.GetCreditCardListRequest) (*pb.GetCreditCardListResponse, error) {
 	var response pb.GetCreditCardListResponse
 
-	// @ToDo: replace stub data for real data
-	var creditCard pb.CreditCard
-	creditCard.Id = "1234567890"
-	creditCard.Note = "Note text etc for example"
-	creditCard.Name = "Stub 2 binary record for vk.com"
-	creditCard.UserId = "234324-324324-32"
-	creditCard.Cvv = "4242"
-	creditCard.Owner = "Mark Cukenberg"
-	creditCard.Expiration = "11/24"
-	creditCard.Number = "44443343434333292"
-	creditCard.CreatedDate = &timestamp.Timestamp{}
-	creditCard.LastAccess = &timestamp.Timestamp{}
-	response.CreditCardList = append(response.CreditCardList, &creditCard)
+	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	creditCardEntityList, err := h.creditCardService.GetCreditCardList(userId)
 
-	h.logger.Info("successful got credit card list. ", request)
+	if err != nil {
+		return nil, errors.New("credit card getting list error: " + err.Error())
+	}
+
+	for _, creditCardEntity := range creditCardEntityList {
+		creditCard := pb.CreditCard{}
+		creditCard.Id = strconv.FormatInt(creditCardEntity.Id.Int64, 10)
+		creditCard.Name = creditCardEntity.Name
+		// creditCard.Note = creditCardEntity.Note
+		// creditCard.Login = creditCardEntity.Login
+		// creditCard.Password = creditCardEntity.Password
+
+		createDateTime, err := time.Parse(time.RFC3339, creditCardEntity.CreatedAt)
+
+		if err != nil {
+			return nil, err
+		}
+
+		creditCard.CreatedDate = timestamppb.New(createDateTime)
+
+		if creditCardEntity.LastAccessAt.Valid {
+			lastAccessAtTime, err := time.Parse(time.RFC3339, creditCardEntity.LastAccessAt.String)
+			creditCard.LastAccess = timestamppb.New(lastAccessAtTime)
+
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		response.CreditCardList = append(response.CreditCardList, &creditCard)
+	}
+
+	h.logger.Info("successful got credit card list. UserId=", userId)
 
 	return &response, nil
 }

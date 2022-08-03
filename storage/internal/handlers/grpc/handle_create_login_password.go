@@ -35,6 +35,7 @@ func (h *StorageHandler) CreateLoginPassword(ctx context.Context, request *pb.Cr
 	loginPassword.Name = loginPasswordEntity.Name
 	loginPassword.Login = loginPasswordEntity.Login
 	loginPassword.Password = loginPasswordEntity.Password
+	loginPassword.UserId = loginPasswordEntity.UserId
 
 	createDateTime, err := time.Parse(time.RFC3339, loginPasswordEntity.CreatedAt)
 	loginPassword.CreatedDate = timestamppb.New(createDateTime)

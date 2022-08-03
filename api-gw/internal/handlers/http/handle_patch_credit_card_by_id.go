@@ -35,7 +35,7 @@ func (h *httpHandler) HandlePatchCreditCardById(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	createCreditCard := pb.CreateCreditCard{
+	createCreditCard := pb.CreditCard{
 		Name:       createCreditCardDto.Name,
 		Number:     createCreditCardDto.Number,
 		Expiration: createCreditCardDto.Expiration,
@@ -47,7 +47,7 @@ func (h *httpHandler) HandlePatchCreditCardById(w http.ResponseWriter, r *http.R
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).PatchCreditCardById(
 		r.Context(),
 		&pb.PatchCreditCardByIdRequest{
-			CreateCreditCard: &createCreditCard,
+			CreditCard: &createCreditCard,
 		},
 	)
 

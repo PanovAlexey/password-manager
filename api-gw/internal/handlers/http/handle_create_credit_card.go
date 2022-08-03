@@ -19,7 +19,9 @@ func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Requ
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		h.logger.Error("error creating credit cart by id: "+err.Error(), id, userId)
+		info := "error creating credit cart by id: " + err.Error()
+		h.logger.Error(info, id, userId)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -31,7 +33,9 @@ func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Requ
 		len(createCreditCardDto.Number) == 0 {
 
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error("error creating credit card by wrong request: "+err.Error(), bodyJSON)
+		info := "error creating credit card by wrong request: " + err.Error()
+		h.logger.Error(info, bodyJSON)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -52,8 +56,10 @@ func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Requ
 	)
 
 	if err != nil {
-		h.logger.Error("error creating credit card by id: "+err.Error(), id, userId)
+		info := "error creating credit card by id: " + err.Error()
+		h.logger.Error(info, id, userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -61,8 +67,10 @@ func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Requ
 	result, err := json.Marshal(response)
 
 	if err != nil {
-		h.logger.Error("error marshalling credit card: "+err.Error(), id, userId)
+		info := "error marshalling credit card: " + err.Error()
+		h.logger.Error(info, id, userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 

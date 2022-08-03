@@ -175,3 +175,191 @@ func (s UserData) UpdateLoginPassword(request pb.LoginPassword, ctx context.Cont
 
 	return loginPassword, nil
 }
+
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+
+func (s UserData) AddCreditCard(request pb.CreateCreditCard, ctx context.Context) (pb.CreditCard, error) {
+	var creditCard pb.CreditCard
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).CreateCreditCard(
+		ctx,
+		&storagePb.CreateCreditCardRequest{
+			CreateCreditCard: &storagePb.CreateCreditCard{
+				Name:       request.Name,
+				Number:     request.Number,
+				Expiration: request.Expiration,
+				Cvv:        request.Cvv,
+				Owner:      request.Owner,
+				Note:       request.Note,
+				UserId:     s.userIdFromContextGetter.getUserIdFromContext(ctx),
+			},
+		},
+	)
+
+	if err != nil {
+		return creditCard, err
+	}
+
+	creditCard.Id = storageResponse.CreditCard.Id
+	creditCard.Name = storageResponse.CreditCard.Name
+	creditCard.Number = storageResponse.CreditCard.Number
+	creditCard.Expiration = storageResponse.CreditCard.Expiration
+	creditCard.Cvv = storageResponse.CreditCard.Cvv
+	creditCard.Owner = storageResponse.CreditCard.Owner
+	creditCard.Note = storageResponse.CreditCard.Note
+	creditCard.LastAccess = storageResponse.CreditCard.LastAccess
+	creditCard.CreatedDate = storageResponse.CreditCard.CreatedDate
+
+	return creditCard, nil
+}
+
+func (s UserData) GetCreditCardById(id string, ctx context.Context) (pb.CreditCard, error) {
+	var creditCard pb.CreditCard
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).GetCreditCardById(
+		ctx,
+		&storagePb.GetCreditCardByIdRequest{
+			Id: id,
+		},
+	)
+
+	if err != nil {
+		return creditCard, err
+	}
+
+	creditCard.Id = storageResponse.CreditCard.Id
+	creditCard.Number = storageResponse.CreditCard.Number
+	creditCard.Expiration = storageResponse.CreditCard.Expiration
+	creditCard.Cvv = storageResponse.CreditCard.Cvv
+	creditCard.Owner = storageResponse.CreditCard.Owner
+	creditCard.Name = storageResponse.CreditCard.Name
+	creditCard.Note = storageResponse.CreditCard.Note
+	creditCard.LastAccess = storageResponse.CreditCard.LastAccess
+	creditCard.CreatedDate = storageResponse.CreditCard.CreatedDate
+
+	return creditCard, nil
+}
+
+func (s UserData) GetCreditCardList(ctx context.Context) ([]pb.CreditCard, error) {
+	var creditCardList []pb.CreditCard
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).GetCreditCardList(
+		ctx,
+		&storagePb.GetCreditCardListRequest{},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var creditCard pb.CreditCard
+
+	for _, creditCardResponse := range storageResponse.CreditCardList {
+		creditCard.Id = creditCardResponse.Id
+		creditCard.Number = creditCardResponse.Number
+		creditCard.Expiration = creditCardResponse.Expiration
+		creditCard.Cvv = creditCardResponse.Cvv
+		creditCard.Owner = creditCardResponse.Owner
+		creditCard.Name = creditCardResponse.Name
+		creditCard.Note = creditCardResponse.Note
+		creditCard.LastAccess = creditCardResponse.LastAccess
+		creditCard.CreatedDate = creditCardResponse.CreatedDate
+
+		creditCardList = append(creditCardList, creditCard)
+	}
+
+	return creditCardList, nil
+}
+
+func (s UserData) DeleteCreditCardById(id string, ctx context.Context) error {
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	_, err := (*s.storageClient.GetClient()).DeleteCreditCardById(
+		ctx,
+		&storagePb.DeleteCreditCardByIdRequest{
+			Id: id,
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s UserData) UpdateCreditCard(request pb.CreditCard, ctx context.Context) (pb.CreditCard, error) {
+	var creditCard pb.CreditCard
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).UpdateCreditCardById(
+		ctx,
+		&storagePb.UpdateCreditCardByIdRequest{
+			CreateCreditCard: &storagePb.CreateCreditCard{
+				Name:       request.Name,
+				Number:     request.Number,
+				Expiration: request.Expiration,
+				Cvv:        request.Cvv,
+				Owner:      request.Owner,
+				Note:       request.Note,
+				UserId:     s.userIdFromContextGetter.getUserIdFromContext(ctx),
+			},
+		},
+	)
+
+	if err != nil {
+		return creditCard, err
+	}
+
+	creditCard.Id = storageResponse.CreditCard.Id
+	creditCard.Name = storageResponse.CreditCard.Name
+	creditCard.Number = storageResponse.CreditCard.Number
+	creditCard.Expiration = storageResponse.CreditCard.Expiration
+	creditCard.Cvv = storageResponse.CreditCard.Cvv
+	creditCard.Owner = storageResponse.CreditCard.Owner
+	creditCard.Note = storageResponse.CreditCard.Note
+	creditCard.LastAccess = storageResponse.CreditCard.LastAccess
+	creditCard.CreatedDate = storageResponse.CreditCard.CreatedDate
+
+	return creditCard, nil
+}
