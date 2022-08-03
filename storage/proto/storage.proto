@@ -77,7 +77,6 @@ message CreateLoginPasswordResponse{
 
 message GetLoginPasswordByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetLoginPasswordByIdResponse{
@@ -117,7 +116,6 @@ message CreateCreditCardResponse{
 
 message GetCreditCardByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetCreditCardByIdResponse{
@@ -156,7 +154,6 @@ message CreateTextRecordResponse{
 
 message GetTextRecordByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetTextRecordByIdResponse{
@@ -196,7 +193,6 @@ message CreateBinaryRecordResponse{
 
 message GetBinaryRecordByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetBinaryRecordByIdResponse{
