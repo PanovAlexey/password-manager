@@ -74,7 +74,6 @@ message CreateLoginPasswordResponse{
 
 message GetLoginPasswordByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetLoginPasswordByIdResponse{

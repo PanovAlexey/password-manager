@@ -14,10 +14,7 @@ func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetLoginPasswordById(
 		r.Context(),
-		&pb.GetLoginPasswordByIdRequest{
-			Id:     id,
-			UserId: userId,
-		},
+		&pb.GetLoginPasswordByIdRequest{Id: id},
 	)
 
 	if err != nil {
