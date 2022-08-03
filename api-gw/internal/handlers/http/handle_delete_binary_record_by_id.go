@@ -14,8 +14,7 @@ func (h *httpHandler) HandleDeleteBinaryRecordById(w http.ResponseWriter, r *htt
 	_, err := (*h.gRPCUserDataManagerClient.GetClient()).DeleteBinaryRecordById(
 		r.Context(),
 		&pb.DeleteBinaryRecordByIdRequest{
-			Id:     id,
-			UserId: userId,
+			Id: id,
 		},
 	)
 

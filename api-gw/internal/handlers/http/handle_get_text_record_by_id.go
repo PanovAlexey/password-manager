@@ -15,8 +15,7 @@ func (h *httpHandler) HandleGetTextRecordById(w http.ResponseWriter, r *http.Req
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetTextRecordById(
 		r.Context(),
 		&pb.GetTextRecordByIdRequest{
-			Id:     id,
-			UserId: userId,
+			Id: id,
 		},
 	)
 

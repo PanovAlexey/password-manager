@@ -1,7 +1,7 @@
 package http
 
 import (
-	"api-gw/internal/handlers/http/dto"
+	"api-gw/internal/domain"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
 	"fmt"
@@ -19,41 +19,40 @@ func (h *httpHandler) HandlePatchLoginPasswordById(w http.ResponseWriter, r *htt
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		h.logger.Error("error patching login-password by id: "+err.Error(), id, userId)
+		info := "error patching login-password by id: " + err.Error()
+		h.logger.Error(info, ". id=", id, ". userId=", userId)
+		w.Write([]byte(info))
 		return
 	}
 
-	createLoginPasswordDto := dto.CreateLoginPassword{}
-	err = json.Unmarshal(bodyJSON, &createLoginPasswordDto)
+	loginPassword := domain.LoginPassword{}
+	err = json.Unmarshal(bodyJSON, &loginPassword)
 
-	if err != nil ||
-		len(createLoginPasswordDto.Name) == 0 ||
-		len(createLoginPasswordDto.Login) == 0 ||
-		len(createLoginPasswordDto.Note) == 0 {
-
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error("error patching login-password by wrong request: "+err.Error(), bodyJSON)
+		info := "error patching login-password by wrong request: " + err.Error()
+		h.logger.Error(info, bodyJSON)
+		w.Write([]byte(info))
 		return
-	}
-
-	createLoginPassword := pb.CreateLoginPassword{
-		Name:     createLoginPasswordDto.Name,
-		Login:    createLoginPasswordDto.Name,
-		Password: createLoginPasswordDto.Password,
-		Note:     createLoginPasswordDto.Note,
 	}
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).PatchLoginPasswordById(
 		r.Context(),
 		&pb.PatchLoginPasswordByIdRequest{
-			CreateLoginPassword: &createLoginPassword,
-			UserId:              userId,
+			LoginPassword: &pb.LoginPassword{
+				Name:     loginPassword.Name,
+				Login:    loginPassword.Login,
+				Password: loginPassword.Password,
+				Note:     loginPassword.Note,
+			},
 		},
 	)
 
 	if err != nil {
-		h.logger.Error("error patching login-password by id: "+err.Error(), id, userId)
+		info := "error patching login-password by id: " + err.Error()
+		h.logger.Error(info, "id=", id, ". userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -61,8 +60,10 @@ func (h *httpHandler) HandlePatchLoginPasswordById(w http.ResponseWriter, r *htt
 	result, err := json.Marshal(response)
 
 	if err != nil {
-		h.logger.Error("error marshalling login-password: "+err.Error(), id, userId)
+		info := "error marshalling login-password: " + err.Error()
+		h.logger.Error(info, ". id=", id, ". userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 

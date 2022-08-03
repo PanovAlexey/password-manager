@@ -6,7 +6,7 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) GetBinaryRecordById(ctx context.Context, request *pb.GetBinaryRecordByIdRequest) (*pb.GetBinaryRecordByIdResponse, error) {
+func (h *StorageHandler) GetBinaryRecordById(ctx context.Context, request *pb.GetBinaryRecordByIdRequest) (*pb.GetBinaryRecordByIdResponse, error) {
 	var response pb.GetBinaryRecordByIdResponse
 
 	// @ToDo: replace stub data for real data
@@ -20,7 +20,7 @@ func (s *StorageHandler) GetBinaryRecordById(ctx context.Context, request *pb.Ge
 	binaryRecord.LastAccess = &timestamp.Timestamp{}
 	response.BinaryRecord = &binaryRecord
 
-	s.logger.Info("successful got binary record by id. ", request)
+	h.logger.Info("successful got binary record by id. ", request)
 
 	return &response, nil
 }

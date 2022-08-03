@@ -6,7 +6,7 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) UpdateTextRecord(ctx context.Context, request *pb.UpdateTextRecordByIdRequest) (*pb.UpdateTextRecordByIdResponse, error) {
+func (h *StorageHandler) UpdateTextRecord(ctx context.Context, request *pb.UpdateTextRecordByIdRequest) (*pb.UpdateTextRecordByIdResponse, error) {
 	var response pb.UpdateTextRecordByIdResponse
 
 	// @ToDo: replace stub data for real data
@@ -19,7 +19,7 @@ func (s *StorageHandler) UpdateTextRecord(ctx context.Context, request *pb.Updat
 	textRecord.LastAccess = &timestamp.Timestamp{}
 	response.TextRecord = &textRecord
 
-	s.logger.Info("successful updated text record. ", request)
+	h.logger.Info("successful updated text record. ", request)
 
 	return &response, nil
 }

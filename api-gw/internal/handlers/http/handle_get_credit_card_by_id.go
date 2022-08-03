@@ -15,8 +15,7 @@ func (h *httpHandler) HandleGetCreditCardById(w http.ResponseWriter, r *http.Req
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetCreditCardById(
 		r.Context(),
 		&pb.GetCreditCardByIdRequest{
-			Id:     id,
-			UserId: userId,
+			Id: id,
 		},
 	)
 

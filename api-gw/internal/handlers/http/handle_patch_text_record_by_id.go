@@ -45,7 +45,6 @@ func (h *httpHandler) HandlePatchTextRecordById(w http.ResponseWriter, r *http.R
 		r.Context(),
 		&pb.PatchTextRecordByIdRequest{
 			CreateTextRecord: &createTextRecord,
-			UserId:           userId,
 		},
 	)
 

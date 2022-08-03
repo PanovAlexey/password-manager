@@ -42,7 +42,7 @@ func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.R
 
 	createLoginPassword := pb.CreateLoginPassword{
 		Name:     createLoginPasswordDto.Name,
-		Login:    createLoginPasswordDto.Name,
+		Login:    createLoginPasswordDto.Login,
 		Password: createLoginPasswordDto.Password,
 		Note:     createLoginPasswordDto.Note,
 	}
@@ -51,7 +51,6 @@ func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.R
 		r.Context(),
 		&pb.CreateLoginPasswordRequest{
 			CreateLoginPassword: &createLoginPassword,
-			UserId:              userId,
 		},
 	)
 

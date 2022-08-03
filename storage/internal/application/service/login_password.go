@@ -12,6 +12,7 @@ type LoginPasswordRepository interface {
 	GetList(userId int) ([]domain.ProtectedItem, error)
 	UpdateLastAccessAt(entityId int64) error
 	Delete(id, userId int) error
+	Update(loginPassword domain.LoginPassword) (*domain.LoginPassword, error)
 }
 
 type LoginPassword struct {
@@ -60,6 +61,18 @@ func (s LoginPassword) AddLoginPassword(loginPassword domain.LoginPassword, user
 	loginPassword.UserId = userId
 
 	return s.loginPasswordRepository.Add(loginPassword)
+}
+
+func (s LoginPassword) UpdateLoginPassword(loginPassword domain.LoginPassword, userId string) (*domain.LoginPassword, error) {
+	loginPassword.UserId = userId
+	loginPasswordResult, err := s.loginPasswordRepository.Update(loginPassword)
+	err = s.loginPasswordRepository.UpdateLastAccessAt(loginPasswordResult.Id.Int64)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return loginPasswordResult, nil
 }
 
 func (s LoginPassword) DeleteLoginPassword(idString, userIdString string) error {

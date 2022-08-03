@@ -16,7 +16,7 @@ func (h *UserDataManagerHandler) DeleteLoginPasswordById(ctx context.Context, re
 		return nil, err
 	}
 
-	h.logger.Info("successful deleted login-password by id. ", request)
+	h.logger.Info("successful deleted login-password by id. ", request.Id)
 
 	return &emptypb.Empty{}, nil
 }

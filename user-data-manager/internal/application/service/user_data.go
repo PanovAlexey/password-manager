@@ -139,3 +139,39 @@ func (s UserData) DeleteLoginPasswordById(id string, ctx context.Context) error 
 
 	return nil
 }
+
+func (s UserData) UpdateLoginPassword(request pb.LoginPassword, ctx context.Context) (pb.LoginPassword, error) {
+	var loginPassword pb.LoginPassword
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).UpdateLoginPasswordById(
+		ctx,
+		&storagePb.UpdateLoginPasswordByIdRequest{
+			CreateLoginPassword: &storagePb.CreateLoginPassword{
+				Name:     request.Name,
+				Login:    request.Login,
+				Password: request.Password,
+				Note:     request.Note,
+				UserId:   s.userIdFromContextGetter.getUserIdFromContext(ctx),
+			},
+		},
+	)
+
+	if err != nil {
+		return loginPassword, err
+	}
+
+	loginPassword.Id = storageResponse.LoginPassword.Id
+	loginPassword.Name = storageResponse.LoginPassword.Name
+	loginPassword.Login = storageResponse.LoginPassword.Login
+	loginPassword.Password = storageResponse.LoginPassword.Password
+	loginPassword.Note = storageResponse.LoginPassword.Note
+	loginPassword.LastAccess = storageResponse.LoginPassword.LastAccess
+	loginPassword.CreatedDate = storageResponse.LoginPassword.CreatedDate
+
+	return loginPassword, nil
+}

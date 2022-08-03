@@ -12,7 +12,7 @@ func (h *httpHandler) HandleGetBinaryRecordList(w http.ResponseWriter, r *http.R
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetBinaryRecordList(
 		r.Context(),
-		&pb.GetBinaryRecordListRequest{UserId: userId},
+		&pb.GetBinaryRecordListRequest{},
 	)
 
 	if err != nil {

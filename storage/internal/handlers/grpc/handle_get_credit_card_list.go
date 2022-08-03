@@ -6,7 +6,7 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) GetCreditCardList(ctx context.Context, request *pb.GetCreditCardListRequest) (*pb.GetCreditCardListResponse, error) {
+func (h *StorageHandler) GetCreditCardList(ctx context.Context, request *pb.GetCreditCardListRequest) (*pb.GetCreditCardListResponse, error) {
 	var response pb.GetCreditCardListResponse
 
 	// @ToDo: replace stub data for real data
@@ -23,7 +23,7 @@ func (s *StorageHandler) GetCreditCardList(ctx context.Context, request *pb.GetC
 	creditCard.LastAccess = &timestamp.Timestamp{}
 	response.CreditCardList = append(response.CreditCardList, &creditCard)
 
-	s.logger.Info("successful got credit card list. ", request)
+	h.logger.Info("successful got credit card list. ", request)
 
 	return &response, nil
 }

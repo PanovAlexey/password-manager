@@ -45,7 +45,6 @@ func (h *httpHandler) HandlePatchBinaryRecordById(w http.ResponseWriter, r *http
 		r.Context(),
 		&pb.PatchBinaryRecordByIdRequest{
 			CreateBinaryRecord: &createBinaryRecord,
-			UserId:             userId,
 		},
 	)
 

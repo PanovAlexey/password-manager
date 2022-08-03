@@ -48,7 +48,6 @@ func (h *httpHandler) HandlePatchCreditCardById(w http.ResponseWriter, r *http.R
 		r.Context(),
 		&pb.PatchCreditCardByIdRequest{
 			CreateCreditCard: &createCreditCard,
-			UserId:           userId,
 		},
 	)
 

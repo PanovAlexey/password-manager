@@ -18,7 +18,7 @@ func (h *UserDataManagerHandler) CreateLoginPassword(ctx context.Context, reques
 
 	response.LoginPassword = &loginPassword
 
-	h.logger.Info("successful created login-password by userId. " + request.UserId)
+	h.logger.Info("successful created login-password. " + loginPassword.Id)
 
 	return &response, nil
 }

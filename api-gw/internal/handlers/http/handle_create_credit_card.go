@@ -48,7 +48,6 @@ func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Requ
 		r.Context(),
 		&pb.CreateCreditCardRequest{
 			CreateCreditCard: &createCreditCard,
-			UserId:           userId,
 		},
 	)
 

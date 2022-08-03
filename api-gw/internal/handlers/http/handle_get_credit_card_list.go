@@ -12,7 +12,7 @@ func (h *httpHandler) HandleGetCreditCardList(w http.ResponseWriter, r *http.Req
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetCreditCardList(
 		r.Context(),
-		&pb.GetCreditCardListRequest{UserId: userId},
+		&pb.GetCreditCardListRequest{},
 	)
 
 	if err != nil {

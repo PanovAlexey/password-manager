@@ -45,7 +45,6 @@ func (h *httpHandler) HandleCreateTextRecord(w http.ResponseWriter, r *http.Requ
 		r.Context(),
 		&pb.CreateTextRecordRequest{
 			CreateTextRecord: &createTextRecord,
-			UserId:           userId,
 		},
 	)
 

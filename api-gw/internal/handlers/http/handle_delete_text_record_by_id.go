@@ -14,8 +14,7 @@ func (h *httpHandler) HandleDeleteTextRecordById(w http.ResponseWriter, r *http.
 	_, err := (*h.gRPCUserDataManagerClient.GetClient()).DeleteTextRecordById(
 		r.Context(),
 		&pb.DeleteTextRecordByIdRequest{
-			Id:     id,
-			UserId: userId,
+			Id: id,
 		},
 	)
 

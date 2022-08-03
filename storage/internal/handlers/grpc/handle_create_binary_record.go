@@ -6,7 +6,7 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) CreateBinaryRecord(ctx context.Context, request *pb.CreateBinaryRecordRequest) (*pb.CreateBinaryRecordResponse, error) {
+func (h *StorageHandler) CreateBinaryRecord(ctx context.Context, request *pb.CreateBinaryRecordRequest) (*pb.CreateBinaryRecordResponse, error) {
 	var response pb.CreateBinaryRecordResponse
 
 	// @ToDo: replace stub data for real data
@@ -20,7 +20,7 @@ func (s *StorageHandler) CreateBinaryRecord(ctx context.Context, request *pb.Cre
 	binaryRecord.LastAccess = &timestamp.Timestamp{}
 	response.BinaryRecord = &binaryRecord
 
-	s.logger.Info("successful created binary record. ", request)
+	h.logger.Info("successful created binary record. ", request)
 
 	return &response, nil
 }

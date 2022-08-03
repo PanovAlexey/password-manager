@@ -7,8 +7,8 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) DeleteCreditCardById(ctx context.Context, request *pb.DeleteCreditCardByIdRequest) (*emptypb.Empty, error) {
-	s.logger.Info("successful deleted credit card by id. ", request)
+func (h *StorageHandler) DeleteCreditCardById(ctx context.Context, request *pb.DeleteCreditCardByIdRequest) (*emptypb.Empty, error) {
+	h.logger.Info("successful deleted credit card by id. ", request)
 	// @ToDo handle error
 	return &emptypb.Empty{}, errors.New("test error")
 }

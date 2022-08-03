@@ -6,7 +6,7 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) CreateTextRecord(ctx context.Context, request *pb.CreateTextRecordRequest) (*pb.CreateTextRecordResponse, error) {
+func (h *StorageHandler) CreateTextRecord(ctx context.Context, request *pb.CreateTextRecordRequest) (*pb.CreateTextRecordResponse, error) {
 	var response pb.CreateTextRecordResponse
 
 	// @ToDo: replace stub data for real data
@@ -20,7 +20,7 @@ func (s *StorageHandler) CreateTextRecord(ctx context.Context, request *pb.Creat
 	textRecord.LastAccess = &timestamp.Timestamp{}
 	response.TextRecord = &textRecord
 
-	s.logger.Info("successful created text record. ", request)
+	h.logger.Info("successful created text record. ", request)
 
 	return &response, nil
 }

@@ -14,8 +14,7 @@ func (h *httpHandler) HandleDeleteLoginPasswordById(w http.ResponseWriter, r *ht
 	_, err := (*h.gRPCUserDataManagerClient.GetClient()).DeleteLoginPasswordById(
 		r.Context(),
 		&pb.DeleteLoginPasswordByIdRequest{
-			Id:     id,
-			UserId: userId,
+			Id: id,
 		},
 	)
 

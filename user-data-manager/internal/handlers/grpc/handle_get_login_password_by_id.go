@@ -14,13 +14,13 @@ func (h *UserDataManagerHandler) GetLoginPasswordById(
 
 	if err != nil {
 		h.logger.Info("getting login-password by id error. "+err.Error(), request)
-		
+
 		return nil, err
 	}
 
 	response.LoginPassword = &loginPassword
 
-	h.logger.Info("successful got login-password by id. ", request)
+	h.logger.Info("successful got login-password by id. ", request.Id)
 
 	return &response, nil
 }

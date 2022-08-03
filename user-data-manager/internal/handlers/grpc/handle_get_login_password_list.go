@@ -27,7 +27,7 @@ func (h *UserDataManagerHandler) GetLoginPasswordList(ctx context.Context, reque
 		response.ProtectedItemList = append(response.ProtectedItemList, &protectedItem)
 	}
 
-	h.logger.Info("successful got login-password list. ", request)
+	h.logger.Info("successful got login-password list. ")
 
 	return &response, nil
 }

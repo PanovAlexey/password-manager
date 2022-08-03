@@ -15,8 +15,7 @@ func (h *httpHandler) HandleGetBinaryRecordById(w http.ResponseWriter, r *http.R
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetBinaryRecordById(
 		r.Context(),
 		&pb.GetBinaryRecordByIdRequest{
-			Id:     id,
-			UserId: userId,
+			Id: id,
 		},
 	)
 

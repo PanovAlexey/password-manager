@@ -56,7 +56,6 @@ message CreateLoginPassword {
 }
 
 message GetLoginPasswordListRequest {
-  string userId = 1;
 }
 
 message GetLoginPasswordListResponse {
@@ -64,8 +63,7 @@ message GetLoginPasswordListResponse {
 }
 
 message CreateLoginPasswordRequest{
-  string userId = 1;
-  CreateLoginPassword CreateLoginPassword = 2;
+  CreateLoginPassword CreateLoginPassword = 1;
 }
 
 message CreateLoginPasswordResponse{
@@ -81,8 +79,7 @@ message GetLoginPasswordByIdResponse{
 }
 
 message PatchLoginPasswordByIdRequest{
-  string userId = 1;
-  CreateLoginPassword CreateLoginPassword = 2;
+  LoginPassword LoginPassword = 1;
 }
 
 message PatchLoginPasswordByIdResponse{
@@ -90,8 +87,7 @@ message PatchLoginPasswordByIdResponse{
 }
 
 message DeleteLoginPasswordByIdRequest{
-  string userId = 1;
-  string id = 2;
+  string id = 1;
 }
 
 
@@ -117,7 +113,6 @@ message CreateCreditCard {
 }
 
 message GetCreditCardListRequest {
-  string userId = 1;
 }
 
 message GetCreditCardListResponse {
@@ -125,8 +120,7 @@ message GetCreditCardListResponse {
 }
 
 message CreateCreditCardRequest{
-  string userId = 1;
-  CreateCreditCard CreateCreditCard = 2;
+  CreateCreditCard CreateCreditCard = 1;
 }
 
 message CreateCreditCardResponse{
@@ -135,7 +129,6 @@ message CreateCreditCardResponse{
 
 message GetCreditCardByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetCreditCardByIdResponse{
@@ -143,8 +136,7 @@ message GetCreditCardByIdResponse{
 }
 
 message PatchCreditCardByIdRequest{
-  string userId = 1;
-  CreateCreditCard CreateCreditCard = 2;
+  CreateCreditCard CreateCreditCard = 1;
 }
 
 message PatchCreditCardByIdResponse{
@@ -152,8 +144,7 @@ message PatchCreditCardByIdResponse{
 }
 
 message DeleteCreditCardByIdRequest{
-  string userId = 1;
-  string id = 2;
+  string id = 1;
 }
 
 
@@ -173,7 +164,6 @@ message CreateTextRecord {
 }
 
 message GetTextRecordListRequest {
-  string userId = 1;
 }
 
 message GetTextRecordListResponse {
@@ -181,8 +171,7 @@ message GetTextRecordListResponse {
 }
 
 message CreateTextRecordRequest{
-  string userId = 1;
-  CreateTextRecord CreateTextRecord = 2;
+  CreateTextRecord CreateTextRecord = 1;
 }
 
 message CreateTextRecordResponse{
@@ -191,7 +180,6 @@ message CreateTextRecordResponse{
 
 message GetTextRecordByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetTextRecordByIdResponse{
@@ -199,8 +187,7 @@ message GetTextRecordByIdResponse{
 }
 
 message PatchTextRecordByIdRequest{
-  string userId = 1;
-  CreateTextRecord CreateTextRecord = 2;
+  CreateTextRecord CreateTextRecord = 1;
 }
 
 message PatchTextRecordByIdResponse{
@@ -208,8 +195,7 @@ message PatchTextRecordByIdResponse{
 }
 
 message DeleteTextRecordByIdRequest{
-  string userId = 1;
-  string id = 2;
+  string id = 1;
 }
 
 
@@ -229,7 +215,6 @@ message CreateBinaryRecord {
 }
 
 message GetBinaryRecordListRequest {
-  string userId = 1;
 }
 
 message GetBinaryRecordListResponse {
@@ -237,8 +222,7 @@ message GetBinaryRecordListResponse {
 }
 
 message CreateBinaryRecordRequest{
-  string userId = 1;
-  CreateBinaryRecord CreateBinaryRecord = 2;
+  CreateBinaryRecord CreateBinaryRecord = 1;
 }
 
 message CreateBinaryRecordResponse{
@@ -247,7 +231,6 @@ message CreateBinaryRecordResponse{
 
 message GetBinaryRecordByIdRequest{
   string id = 1;
-  string userId = 2;
 }
 
 message GetBinaryRecordByIdResponse{
@@ -255,8 +238,7 @@ message GetBinaryRecordByIdResponse{
 }
 
 message PatchBinaryRecordByIdRequest{
-  string userId = 1;
-  CreateBinaryRecord CreateBinaryRecord = 2;
+  CreateBinaryRecord CreateBinaryRecord = 1;
 }
 
 message PatchBinaryRecordByIdResponse{
@@ -264,6 +246,5 @@ message PatchBinaryRecordByIdResponse{
 }
 
 message DeleteBinaryRecordByIdRequest{
-  string userId = 1;
-  string id = 2;
+  string id = 1;
 }

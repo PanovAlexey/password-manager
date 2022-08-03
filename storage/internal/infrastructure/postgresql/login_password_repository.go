@@ -122,7 +122,6 @@ func (r loginPasswordRepository) GetById(id, userId int) (*domain.LoginPassword,
 	}
 
 	return &loginPassword, err
-
 }
 
 func (r loginPasswordRepository) Delete(id, userId int) error {
@@ -139,4 +138,39 @@ func (r loginPasswordRepository) Delete(id, userId int) error {
 	}
 
 	return nil
+}
+
+func (r loginPasswordRepository) Update(loginPassword domain.LoginPassword) (*domain.LoginPassword, error) {
+	query := "UPDATE " +
+		TableLoginPasswordName +
+		" SET name=$1, login=$2, password=$3, note=$4, user_id=$5, last_access_at=$6" +
+		" WHERE id = $7 AND user_id = $8" +
+		" RETURNING id, name, login, password, note, user_id, created_at, last_access_at"
+	err := r.DB.QueryRow(
+		query,
+		loginPassword.Name,
+		loginPassword.Login,
+		loginPassword.Password,
+		loginPassword.Note,
+		loginPassword.UserId,
+		time.Now().Format(time.RFC3339),
+		loginPassword.Id,
+		loginPassword.UserId,
+	).
+		Scan(
+			&loginPassword.Id,
+			&loginPassword.Name,
+			&loginPassword.Login,
+			&loginPassword.Password,
+			&loginPassword.Note,
+			&loginPassword.UserId,
+			&loginPassword.CreatedAt,
+			&loginPassword.LastAccessAt,
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &loginPassword, err
 }

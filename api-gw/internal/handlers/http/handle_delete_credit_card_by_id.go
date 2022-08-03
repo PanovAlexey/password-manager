@@ -14,8 +14,7 @@ func (h *httpHandler) HandleDeleteCreditCardById(w http.ResponseWriter, r *http.
 	_, err := (*h.gRPCUserDataManagerClient.GetClient()).DeleteCreditCardById(
 		r.Context(),
 		&pb.DeleteCreditCardByIdRequest{
-			Id:     id,
-			UserId: userId,
+			Id: id,
 		},
 	)
 

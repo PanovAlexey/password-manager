@@ -6,7 +6,7 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) GetTextRecordList(ctx context.Context, request *pb.GetTextRecordListRequest) (*pb.GetTextRecordListResponse, error) {
+func (h *StorageHandler) GetTextRecordList(ctx context.Context, request *pb.GetTextRecordListRequest) (*pb.GetTextRecordListResponse, error) {
 	var response pb.GetTextRecordListResponse
 
 	// @ToDo: replace stub data for real data
@@ -20,7 +20,7 @@ func (s *StorageHandler) GetTextRecordList(ctx context.Context, request *pb.GetT
 	textRecord.LastAccess = &timestamp.Timestamp{}
 	response.TextRecordList = append(response.TextRecordList, &textRecord)
 
-	s.logger.Info("successful got text record list. ", request)
+	h.logger.Info("successful got text record list. ", request)
 
 	return &response, nil
 }
