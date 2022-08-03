@@ -12,23 +12,28 @@ func (h *httpHandler) HandleGetLoginPasswordList(w http.ResponseWriter, r *http.
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetLoginPasswordList(
 		r.Context(),
-		&pb.GetLoginPasswordListRequest{UserId: userId},
+		&pb.GetLoginPasswordListRequest{},
 	)
 
 	if err != nil {
-		h.logger.Error("error getting login-password list: "+err.Error(), userId)
+		info := "error getting login-password list: " + err.Error()
+		h.logger.Error(info, ". userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
-	h.logger.Info("successful getting login-password list by user id ", userId, response)
 	result, err := json.Marshal(response)
 
 	if err != nil {
-		h.logger.Error("error marshalling login-password list: "+err.Error(), userId, response)
+		info := "error marshalling login-password list: " + err.Error()
+		h.logger.Error(info, ". userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
+
+	h.logger.Info("successful getting login-password list by userId=", userId)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)

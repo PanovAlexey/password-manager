@@ -26,6 +26,11 @@ func (h *StorageHandler) GetLoginPasswordById(ctx context.Context, request *pb.G
 	loginPassword.Password = loginPasswordEntity.Password
 
 	createDateTime, err := time.Parse(time.RFC3339, loginPasswordEntity.CreatedAt)
+
+	if err != nil {
+		return nil, err
+	}
+
 	loginPassword.CreatedDate = timestamppb.New(createDateTime)
 
 	if loginPasswordEntity.LastAccessAt.Valid {

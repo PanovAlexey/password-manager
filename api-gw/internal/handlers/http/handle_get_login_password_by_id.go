@@ -20,7 +20,7 @@ func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		info := "error getting login-password by id: " + err.Error()
-		h.logger.Error(info, id, userId)
+		h.logger.Error(info, id, ". userId=", userId)
 		w.Write([]byte(info))
 		return
 	}

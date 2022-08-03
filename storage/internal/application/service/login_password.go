@@ -9,7 +9,7 @@ import (
 type LoginPasswordRepository interface {
 	Save(loginPassword domain.LoginPassword) (*domain.LoginPassword, error)
 	GetById(id, userId int) (*domain.LoginPassword, error)
-	GetList() ([]domain.LoginPassword, error)
+	GetList(userId int) ([]domain.ProtectedItem, error)
 	UpdateLastAccessAt(entityId int64) error
 }
 
@@ -34,5 +34,23 @@ func (s LoginPassword) GetLoginPasswordById(idString, userIdString string) (*dom
 		return nil, errors.New("parsing user id error: " + err.Error())
 	}
 
-	return s.loginPasswordRepository.GetById(id, userId)
+	loginPassword, err := s.loginPasswordRepository.GetById(id, userId)
+	err = s.loginPasswordRepository.UpdateLastAccessAt(loginPassword.Id.Int64)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return loginPassword, err
+
+}
+
+func (s LoginPassword) GetLoginPasswordList(userIdString string) ([]domain.ProtectedItem, error) {
+	userId, err := strconv.Atoi(userIdString)
+
+	if err != nil {
+		return nil, errors.New("parsing user id error: " + err.Error())
+	}
+
+	return s.loginPasswordRepository.GetList(userId)
 }

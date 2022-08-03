@@ -58,29 +58,30 @@ func (r loginPasswordRepository) UpdateLastAccessAt(entityId int64) error {
 	return err
 }
 
-func (r loginPasswordRepository) GetList() ([]domain.LoginPassword, error) {
-	loginPasswordCollection := []domain.LoginPassword{}
+func (r loginPasswordRepository) GetList(userId int) ([]domain.ProtectedItem, error) {
+	loginPassword := domain.ProtectedItem{}
+	loginPasswordCollection := []domain.ProtectedItem{}
 
-	query := "SELECT id, guid FROM " + TableLoginPasswordName
-	rows, err := r.DB.Query(query)
+	query := "SELECT id, name, created_at, last_access_at FROM " + TableLoginPasswordName + " WHERE user_id = $1"
+	rows, err := r.DB.Query(query, userId)
 
 	if err != nil || rows.Err() != nil {
-		return loginPasswordCollection, err
+		return nil, err
 	}
 
 	defer rows.Close()
 
 	for rows.Next() {
-		var (
-			id   int64
-			guid string
-		)
-
-		if err := rows.Scan(&id, &guid); err != nil {
+		if err := rows.Scan(
+			&loginPassword.Id,
+			&loginPassword.Name,
+			&loginPassword.CreatedAt,
+			&loginPassword.LastAccessAt,
+		); err != nil {
 			return loginPasswordCollection, err
 		}
 
-		loginPasswordCollection = append(loginPasswordCollection, domain.LoginPassword{})
+		loginPasswordCollection = append(loginPasswordCollection, loginPassword)
 	}
 
 	return loginPasswordCollection, nil
@@ -101,4 +102,5 @@ func (r loginPasswordRepository) GetById(id, userId int) (*domain.LoginPassword,
 	}
 
 	return &loginPassword, err
+
 }

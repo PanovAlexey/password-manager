@@ -2,26 +2,52 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	pb "storage/pkg/storage_grpc"
+	"strconv"
+	"time"
 )
 
-func (s *StorageHandler) GetLoginPasswordList(ctx context.Context, request *pb.GetLoginPasswordListRequest) (*pb.GetLoginPasswordListResponse, error) {
+func (h *StorageHandler) GetLoginPasswordList(ctx context.Context, request *pb.GetLoginPasswordListRequest) (*pb.GetLoginPasswordListResponse, error) {
 	var response pb.GetLoginPasswordListResponse
 
-	// @ToDo: replace stub data for real data
-	var loginPassword pb.LoginPassword
-	loginPassword.Id = "1234567890"
-	loginPassword.Note = "Note text etc for example"
-	loginPassword.Name = "Stub 2 binary record for vk.com"
-	loginPassword.UserId = "234324-324324-32"
-	loginPassword.Password = "4242232323232323"
-	loginPassword.Login = "alex@gmail.com"
-	loginPassword.CreatedDate = &timestamp.Timestamp{}
-	loginPassword.LastAccess = &timestamp.Timestamp{}
-	response.LoginPasswordList = append(response.LoginPasswordList, &loginPassword)
+	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	loginPasswordEntityList, err := h.loginPasswordService.GetLoginPasswordList(userId)
 
-	s.logger.Info("successful got login-password list. ", request)
+	if err != nil {
+		return nil, errors.New("login password getting list error: " + err.Error())
+	}
+
+	for _, loginPasswordEntity := range loginPasswordEntityList {
+		loginPassword := pb.LoginPassword{}
+		loginPassword.Id = strconv.FormatInt(loginPasswordEntity.Id.Int64, 10)
+		loginPassword.Name = loginPasswordEntity.Name
+		// loginPassword.Note = loginPasswordEntity.Note
+		// loginPassword.Login = loginPasswordEntity.Login
+		// loginPassword.Password = loginPasswordEntity.Password
+
+		createDateTime, err := time.Parse(time.RFC3339, loginPasswordEntity.CreatedAt)
+
+		if err != nil {
+			return nil, err
+		}
+
+		loginPassword.CreatedDate = timestamppb.New(createDateTime)
+
+		if loginPasswordEntity.LastAccessAt.Valid {
+			lastAccessAtTime, err := time.Parse(time.RFC3339, loginPasswordEntity.LastAccessAt.String)
+			loginPassword.LastAccess = timestamppb.New(lastAccessAtTime)
+
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		response.LoginPasswordList = append(response.LoginPasswordList, &loginPassword)
+	}
+
+	h.logger.Info("successful got login-password list. UserId=", userId)
 
 	return &response, nil
 }

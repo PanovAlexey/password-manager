@@ -49,3 +49,37 @@ func (s UserData) GetLoginPasswordById(id string, ctx context.Context) (pb.Login
 
 	return loginPassword, nil
 }
+
+func (s UserData) GetLoginPasswordList(ctx context.Context) ([]pb.LoginPassword, error) {
+	var loginPasswordList []pb.LoginPassword
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).GetLoginPasswordList(
+		ctx,
+		&storagePb.GetLoginPasswordListRequest{},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var loginPassword pb.LoginPassword
+
+	for _, loginPasswordResponse := range storageResponse.LoginPasswordList {
+		loginPassword.Id = loginPasswordResponse.Id
+		loginPassword.Login = loginPasswordResponse.Login
+		loginPassword.Password = loginPasswordResponse.Password
+		loginPassword.Name = loginPasswordResponse.Name
+		loginPassword.Note = loginPasswordResponse.Note
+		loginPassword.LastAccess = loginPasswordResponse.LastAccess
+		loginPassword.CreatedDate = loginPasswordResponse.CreatedDate
+
+		loginPasswordList = append(loginPasswordList, loginPassword)
+	}
+
+	return loginPasswordList, nil
+}
