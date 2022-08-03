@@ -13,6 +13,8 @@ func (h *UserDataManagerHandler) GetLoginPasswordById(
 	loginPassword, err := h.userDataService.GetLoginPasswordById(request.Id, ctx)
 
 	if err != nil {
+		h.logger.Info("getting login-password by id error. "+err.Error(), request)
+		
 		return nil, err
 	}
 

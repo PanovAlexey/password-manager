@@ -3,6 +3,7 @@ package postgresql
 import (
 	"github.com/jmoiron/sqlx"
 	"storage/internal/domain"
+	"strconv"
 	"time"
 )
 
@@ -14,20 +15,18 @@ func GetLoginPasswordRepository(DB *sqlx.DB) *loginPasswordRepository {
 	return &loginPasswordRepository{DB: DB}
 }
 
-func (r loginPasswordRepository) SaveLoginPassword(loginPassword domain.LoginPassword) (*domain.User, error) {
-	var user domain.User
-
+func (r loginPasswordRepository) Save(loginPassword domain.LoginPassword) (*domain.LoginPassword, error) {
 	query := "INSERT INTO " +
 		TableLoginPasswordName +
 		" (email, password, created_at, last_access_at) VALUES ($1, $2, $3, $4) RETURNING id, email, created_at, last_access_at"
 	err := r.DB.QueryRow(query, loginPassword.Password, time.Now(), time.Now()).
-		Scan(&user.Id, &user.Email, &user.CreatedAt, &user.LastAccessAt)
+		Scan(&loginPassword.Id, &loginPassword.CreatedAt, &loginPassword.LastAccessAt)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &user, err
+	return &loginPassword, err
 }
 
 /*
@@ -49,7 +48,6 @@ func (r loginPasswordRepository) GetLoginPassword(loginPassword domain.LoginPass
 }
 */
 
-/* @ToDo: move to common repository
 func (r loginPasswordRepository) UpdateLastAccessAt(entityId int64) error {
 	_, err := r.DB.Exec(
 		"UPDATE " + TableLoginPasswordName +
@@ -58,7 +56,7 @@ func (r loginPasswordRepository) UpdateLastAccessAt(entityId int64) error {
 	)
 
 	return err
-}*/
+}
 
 func (r loginPasswordRepository) GetList() ([]domain.LoginPassword, error) {
 	loginPasswordCollection := []domain.LoginPassword{}
@@ -88,16 +86,19 @@ func (r loginPasswordRepository) GetList() ([]domain.LoginPassword, error) {
 	return loginPasswordCollection, nil
 }
 
-func (r loginPasswordRepository) GetByID(id int) (domain.LoginPassword, error) {
-	query := "SELECT id FROM " + TableLoginPasswordName + " WHERE id=($1)"
-	row := r.DB.QueryRow(query, id)
+func (r loginPasswordRepository) GetById(id, userId int) (*domain.LoginPassword, error) {
+	var loginPassword domain.LoginPassword
 
-	var userGUID string
-	err := row.Scan(&userGUID)
+	err := r.DB.Get(
+		&loginPassword,
+		"SELECT * FROM "+TableLoginPasswordName+" WHERE id = $1 and user_id = $2 LIMIT 1",
+		id,
+		userId,
+	)
 
 	if err != nil {
-		return domain.LoginPassword{}, err
+		return nil, err
 	}
 
-	return domain.LoginPassword{}, nil
+	return &loginPassword, err
 }

@@ -21,20 +21,24 @@ func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.
 	)
 
 	if err != nil {
-		h.logger.Error("error getting login-password by id: "+err.Error(), id, userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		info := "error getting login-password by id: " + err.Error()
+		h.logger.Error(info, id, userId)
+		w.Write([]byte(info))
 		return
 	}
 
-	h.logger.Info("successful getting login-password by id ", id, userId, response.LoginPassword.Name)
 	result, err := json.Marshal(response)
 
 	if err != nil {
-		h.logger.Error("error marshalling login-password: "+err.Error(), id, userId)
+		info := "error marshalling login-password: " + err.Error()
+		h.logger.Error(info, id, userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
+	h.logger.Info("login password was gotten by id=", id, " and userId=", userId)
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 }
