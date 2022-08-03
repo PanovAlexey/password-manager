@@ -8,7 +8,7 @@ import (
 )
 
 const userTokenKey = "token"
-const userIdKey = "user-id"
+const UserIdKey = "user-id"
 
 type logger interface {
 	Error(args ...interface{})
@@ -102,13 +102,13 @@ func (u UserAuthorization) Register(ctx context.Context, userEmail, userPassword
 
 func (u UserAuthorization) GetUserIdFromContext(ctx context.Context) string {
 	userToken := ""
-	if ctx.Value(userIdKey) != nil {
-		userToken = ctx.Value(userIdKey).(string)
+	if ctx.Value(UserIdKey) != nil {
+		userToken = ctx.Value(UserIdKey).(string)
 	}
 
 	return userToken
 }
 
 func (u UserAuthorization) SetUserIdInContext(userId string, ctx context.Context) context.Context {
-	return context.WithValue(ctx, userIdKey, userId)
+	return context.WithValue(ctx, UserIdKey, userId)
 }

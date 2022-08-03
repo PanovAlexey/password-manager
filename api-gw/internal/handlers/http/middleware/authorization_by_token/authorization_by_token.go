@@ -2,6 +2,7 @@ package authorization_by_token
 
 import (
 	"api-gw/internal/application/service"
+	"google.golang.org/grpc/metadata"
 	"net/http"
 )
 
@@ -25,6 +26,16 @@ func AuthorizationByToken(userAuthorizationService service.UserAuthorization, lo
 				logger.Error("getting user id by token error: " + err.Error())
 			} else {
 				ctx := userAuthorizationService.SetUserIdInContext(userId, r.Context())
+
+				// @ToDo: move to service
+				// Transferring userId to other microservices by grpc
+				ctx = metadata.NewOutgoingContext(
+					ctx,
+					metadata.New(map[string]string{
+						service.UserIdKey: userId,
+					}),
+				)
+
 				r = r.WithContext(ctx)
 			}
 
