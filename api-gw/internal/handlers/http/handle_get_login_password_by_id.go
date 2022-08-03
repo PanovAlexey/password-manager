@@ -9,7 +9,7 @@ import (
 )
 
 func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.Request) {
-	userId := fmt.Sprintf("%v", r.Context().Value("token"))
+	userId := fmt.Sprintf("%v", r.Context().Value("user-id"))
 	id := chi.URLParam(r, "id")
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetLoginPasswordById(
