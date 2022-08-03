@@ -1,6 +1,7 @@
 package postgresql
 
 import (
+	"database/sql"
 	"github.com/jmoiron/sqlx"
 	"storage/internal/domain"
 	"strconv"
@@ -122,4 +123,20 @@ func (r loginPasswordRepository) GetById(id, userId int) (*domain.LoginPassword,
 
 	return &loginPassword, err
 
+}
+
+func (r loginPasswordRepository) Delete(id, userId int) error {
+	result := ""
+	err := r.DB.Get(
+		&result,
+		"DELETE FROM "+TableLoginPasswordName+" WHERE id = $1 AND user_id = $2",
+		id,
+		userId,
+	)
+
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	return nil
 }

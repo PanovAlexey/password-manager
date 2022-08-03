@@ -11,6 +11,7 @@ type LoginPasswordRepository interface {
 	GetById(id, userId int) (*domain.LoginPassword, error)
 	GetList(userId int) ([]domain.ProtectedItem, error)
 	UpdateLastAccessAt(entityId int64) error
+	Delete(id, userId int) error
 }
 
 type LoginPassword struct {
@@ -59,4 +60,20 @@ func (s LoginPassword) AddLoginPassword(loginPassword domain.LoginPassword, user
 	loginPassword.UserId = userId
 
 	return s.loginPasswordRepository.Add(loginPassword)
+}
+
+func (s LoginPassword) DeleteLoginPassword(idString, userIdString string) error {
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		return errors.New("parsing id error: " + err.Error())
+	}
+
+	userId, err := strconv.Atoi(userIdString)
+
+	if err != nil {
+		return errors.New("parsing user id error: " + err.Error())
+	}
+
+	return s.loginPasswordRepository.Delete(id, userId)
 }

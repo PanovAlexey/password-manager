@@ -7,8 +7,15 @@ import (
 	pb "storage/pkg/storage_grpc"
 )
 
-func (s *StorageHandler) DeleteLoginPasswordById(ctx context.Context, request *pb.DeleteLoginPasswordByIdRequest) (*emptypb.Empty, error) {
-	s.logger.Info("successful deleted login-password by id. ", request)
-	// @ToDo handle error
-	return &emptypb.Empty{}, errors.New("test error")
+func (h *StorageHandler) DeleteLoginPasswordById(ctx context.Context, request *pb.DeleteLoginPasswordByIdRequest) (*emptypb.Empty, error) {
+	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	err := h.loginPasswordService.DeleteLoginPassword(request.Id, userId)
+
+	if err != nil {
+		return nil, errors.New("login password deleting by id error: " + err.Error())
+	}
+
+	h.logger.Info("successful deleted login-password by id. ", request)
+
+	return &emptypb.Empty{}, nil
 }

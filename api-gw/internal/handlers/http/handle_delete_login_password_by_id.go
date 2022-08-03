@@ -20,8 +20,10 @@ func (h *httpHandler) HandleDeleteLoginPasswordById(w http.ResponseWriter, r *ht
 	)
 
 	if err != nil {
-		h.logger.Error("error deleting login-password by id: "+err.Error(), id, userId)
+		info := "error deleting login-password by id: " + err.Error()
+		h.logger.Error(info, ". id=", id, ".userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
