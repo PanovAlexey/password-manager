@@ -7,6 +7,7 @@ import (
 )
 
 const TableUsersName = `users`
+const TableLoginPasswordName = `login_password`
 
 type databaseService struct {
 	db *sqlx.DB

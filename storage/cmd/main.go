@@ -2,7 +2,7 @@ package main
 
 import (
 	_ "github.com/lib/pq"
-	services "storage/internal/application/service"
+	"storage/internal/application/service"
 	"storage/internal/config"
 	grpcHandler "storage/internal/handlers/grpc"
 	"storage/internal/infrastructure/logging"
@@ -25,9 +25,11 @@ func main() {
 	defer databaseService.GetDatabaseConnection()
 
 	databaseUserRepository := databases.GetUserRepository(databaseService.GetDatabaseConnection())
-	databaseUserService := services.GetUserService(databaseUserRepository)
+	databaseUserService := service.GetUserService(databaseUserRepository)
 
-	handler := grpcHandler.GetStorageHandler(logger, databaseUserService)
+	userIdFromContextGetterService := service.GetUserIdFromContextGetterService()
+
+	handler := grpcHandler.GetStorageHandler(logger, databaseUserService, userIdFromContextGetterService)
 
 	servers.RunGrpcServer(config, logger, handler)
 }

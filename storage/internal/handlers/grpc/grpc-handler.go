@@ -1,7 +1,7 @@
 package grpc
 
 import (
-	services "storage/internal/application/service"
+	service "storage/internal/application/service"
 	pb "storage/pkg/storage_grpc"
 )
 
@@ -11,14 +11,20 @@ type Logger interface {
 }
 
 type StorageHandler struct {
-	logger      Logger
-	userService services.UserService
+	logger                  Logger
+	userService             service.UserService
+	userIdFromContextGetter service.UserIdFromContextGetter
 	pb.UnimplementedStorageServer
 }
 
-func GetStorageHandler(logger Logger, userService services.UserService) *StorageHandler {
+func GetStorageHandler(
+	logger Logger,
+	userService service.UserService,
+	userIdFromContextGetter service.UserIdFromContextGetter,
+) *StorageHandler {
 	return &StorageHandler{
-		logger:      logger,
-		userService: userService,
+		logger:                  logger,
+		userService:             userService,
+		userIdFromContextGetter: userIdFromContextGetter,
 	}
 }

@@ -16,7 +16,10 @@ type UserDataManagerHandler struct {
 	pb.UnimplementedUserDataManagerServer
 }
 
-func GetUserDataManagerHandler(logger Logger, userDataService service.UserData) *UserDataManagerHandler {
+func GetUserDataManagerHandler(
+	logger Logger,
+	userDataService service.UserData,
+) *UserDataManagerHandler {
 	return &UserDataManagerHandler{
 		logger:          logger,
 		userDataService: userDataService,
