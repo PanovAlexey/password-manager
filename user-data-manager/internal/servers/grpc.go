@@ -16,7 +16,7 @@ type Logger interface {
 	Info(args ...interface{})
 }
 
-func RunGrpcServer(config config.Config, logger Logger) {
+func RunGrpcServer(config config.Config, logger Logger, handler *grpcHandler.UserDataManagerHandler) {
 	logger.Info(config.GetApplicationName() + " grpc server starting...")
 	listen, err := net.Listen("tcp", config.GetGrpcServerAddress())
 
@@ -25,7 +25,7 @@ func RunGrpcServer(config config.Config, logger Logger) {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterUserDataManagerServer(s, grpcHandler.GetUserDataManagerHandler(logger))
+	pb.RegisterUserDataManagerServer(s, handler)
 
 	logger.Info(config.GetApplicationName() + " grpc server started")
 
