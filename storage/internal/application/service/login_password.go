@@ -7,7 +7,7 @@ import (
 )
 
 type LoginPasswordRepository interface {
-	Save(loginPassword domain.LoginPassword) (*domain.LoginPassword, error)
+	Add(loginPassword domain.LoginPassword) (*domain.LoginPassword, error)
 	GetById(id, userId int) (*domain.LoginPassword, error)
 	GetList(userId int) ([]domain.ProtectedItem, error)
 	UpdateLastAccessAt(entityId int64) error
@@ -53,4 +53,10 @@ func (s LoginPassword) GetLoginPasswordList(userIdString string) ([]domain.Prote
 	}
 
 	return s.loginPasswordRepository.GetList(userId)
+}
+
+func (s LoginPassword) AddLoginPassword(loginPassword domain.LoginPassword, userId string) (*domain.LoginPassword, error) {
+	loginPassword.UserId = userId
+
+	return s.loginPasswordRepository.Add(loginPassword)
 }

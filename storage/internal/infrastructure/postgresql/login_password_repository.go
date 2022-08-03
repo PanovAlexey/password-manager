@@ -15,12 +15,31 @@ func GetLoginPasswordRepository(DB *sqlx.DB) *loginPasswordRepository {
 	return &loginPasswordRepository{DB: DB}
 }
 
-func (r loginPasswordRepository) Save(loginPassword domain.LoginPassword) (*domain.LoginPassword, error) {
+func (r loginPasswordRepository) Add(loginPassword domain.LoginPassword) (*domain.LoginPassword, error) {
 	query := "INSERT INTO " +
 		TableLoginPasswordName +
-		" (email, password, created_at, last_access_at) VALUES ($1, $2, $3, $4) RETURNING id, email, created_at, last_access_at"
-	err := r.DB.QueryRow(query, loginPassword.Password, time.Now(), time.Now()).
-		Scan(&loginPassword.Id, &loginPassword.CreatedAt, &loginPassword.LastAccessAt)
+		" (name, login, password, note, user_id, created_at, last_access_at) VALUES" +
+		" ($1, $2, $3, $4, $5, $6, $7) RETURNING id, name, login, password, note, user_id, created_at, last_access_at"
+	err := r.DB.QueryRow(
+		query,
+		loginPassword.Name,
+		loginPassword.Login,
+		loginPassword.Password,
+		loginPassword.Note,
+		loginPassword.UserId,
+		time.Now(),
+		time.Now(),
+	).
+		Scan(
+			&loginPassword.Id,
+			&loginPassword.Name,
+			&loginPassword.Login,
+			&loginPassword.Password,
+			&loginPassword.Note,
+			&loginPassword.UserId,
+			&loginPassword.CreatedAt,
+			&loginPassword.LastAccessAt,
+		)
 
 	if err != nil {
 		return nil, err

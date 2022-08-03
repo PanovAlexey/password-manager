@@ -2,25 +2,23 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
 	pb "user-data-manager/pkg/user_data_manager_grpc"
 )
 
-func (s *UserDataManagerHandler) CreateLoginPassword(ctx context.Context, request *pb.CreateLoginPasswordRequest) (*pb.CreateLoginPasswordResponse, error) {
+func (h *UserDataManagerHandler) CreateLoginPassword(ctx context.Context, request *pb.CreateLoginPasswordRequest) (*pb.CreateLoginPasswordResponse, error) {
 	var response pb.CreateLoginPasswordResponse
 
-	// @ToDo: replace stub data for real data
-	var loginPassword pb.LoginPassword
-	loginPassword.Id = "1234567890"
-	loginPassword.Note = "Note text etc for example"
-	loginPassword.Name = "Stub 2 login password for vk.com"
-	loginPassword.Login = "login"
-	loginPassword.Password = "pass"
-	loginPassword.CreatedDate = &timestamp.Timestamp{}
-	loginPassword.LastAccess = &timestamp.Timestamp{}
+	loginPassword, err := h.userDataService.AddLoginPassword(*request.CreateLoginPassword, ctx)
+
+	if err != nil {
+		h.logger.Info("creating login-password error. "+err.Error(), request)
+
+		return nil, err
+	}
+
 	response.LoginPassword = &loginPassword
 
-	s.logger.Info("successful created login-password. ", request)
+	h.logger.Info("successful created login-password by userId. " + request.UserId)
 
 	return &response, nil
 }

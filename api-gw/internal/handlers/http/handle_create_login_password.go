@@ -18,8 +18,10 @@ func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.R
 	bodyJSON, err := io.ReadAll(r.Body)
 
 	if err != nil {
+		info := "error creating login-password by id: " + err.Error()
+		h.logger.Error(info, id, "userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
-		h.logger.Error("error creating login-password by id: "+err.Error(), id, userId)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -31,8 +33,10 @@ func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.R
 		len(createLoginPasswordDto.Login) == 0 ||
 		len(createLoginPasswordDto.Note) == 0 {
 
+		info := "error creating login-password by wrong request: " + err.Error()
+		h.logger.Error(info, bodyJSON)
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error("error creating login-password by wrong request: "+err.Error(), bodyJSON)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -52,8 +56,10 @@ func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.R
 	)
 
 	if err != nil {
-		h.logger.Error("error creating login-password by id: "+err.Error(), id, userId)
+		info := "error creating login-password by id: " + err.Error()
+		h.logger.Error(info, id, "userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -61,8 +67,10 @@ func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.R
 	result, err := json.Marshal(response)
 
 	if err != nil {
-		h.logger.Error("error marshalling login-password: "+err.Error(), id, userId)
+		info := "error marshalling login-password: " + err.Error()
+		h.logger.Error(info, id, ". userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
