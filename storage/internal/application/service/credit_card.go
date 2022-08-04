@@ -37,6 +37,11 @@ func (s CreditCard) GetCreditCardById(idString, userIdString string) (*domain.Cr
 	}
 
 	creditCard, err := s.creditCardRepository.GetById(id, userId)
+
+	if creditCard == nil || !creditCard.Id.Valid {
+		return nil, errors.New("not found") //@ToDo: replace with custom error
+	}
+
 	err = s.creditCardRepository.UpdateLastAccessAt(creditCard.Id.Int64)
 
 	if err != nil {

@@ -37,6 +37,11 @@ func (s LoginPassword) GetLoginPasswordById(idString, userIdString string) (*dom
 	}
 
 	loginPassword, err := s.loginPasswordRepository.GetById(id, userId)
+
+	if loginPassword == nil || !loginPassword.Id.Valid {
+		return nil, errors.New("not found") //@ToDo: replace with custom error
+	}
+
 	err = s.loginPasswordRepository.UpdateLastAccessAt(loginPassword.Id.Int64)
 
 	if err != nil {
