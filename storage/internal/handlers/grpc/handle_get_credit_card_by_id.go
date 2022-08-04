@@ -11,8 +11,8 @@ import (
 
 func (h *StorageHandler) GetCreditCardById(ctx context.Context, request *pb.GetCreditCardByIdRequest) (*pb.GetCreditCardByIdResponse, error) {
 	var response pb.GetCreditCardByIdResponse
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardEntity, err := h.creditCardService.GetCreditCardById(request.Id, userId)
 
 	if err != nil {

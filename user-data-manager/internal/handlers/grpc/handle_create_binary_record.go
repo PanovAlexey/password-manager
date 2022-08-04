@@ -8,8 +8,8 @@ import (
 func (h *UserDataManagerHandler) CreateBinaryRecord(ctx context.Context, request *pb.CreateBinaryRecordRequest) (*pb.CreateBinaryRecordResponse, error) {
 	var response pb.CreateBinaryRecordResponse
 
-	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userid := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecord, err := h.userDataService.AddBinaryRecord(*request.BinaryRecord, userid, ctx)
 
 	if err != nil {

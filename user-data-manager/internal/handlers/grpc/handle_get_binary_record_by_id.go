@@ -9,7 +9,7 @@ func (h *UserDataManagerHandler) GetBinaryRecordById(
 	ctx context.Context, request *pb.GetBinaryRecordByIdRequest,
 ) (*pb.GetBinaryRecordByIdResponse, error) {
 	var response pb.GetBinaryRecordByIdResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecord, err := h.userDataService.GetBinaryRecordById(request.Id, ctx)
 
 	if err != nil {

@@ -12,8 +12,8 @@ import (
 func (h *StorageHandler) GetLoginPasswordList(ctx context.Context, request *pb.GetLoginPasswordListRequest) (*pb.GetLoginPasswordListResponse, error) {
 	var response pb.GetLoginPasswordListResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordEntityList, err := h.loginPasswordService.GetLoginPasswordList(userId)
 
 	if err != nil {

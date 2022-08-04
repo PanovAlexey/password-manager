@@ -11,6 +11,7 @@ func (h *UserAuthorizationHandler) Register(
 	r *pb.RegisterRequest,
 ) (*pb.RegisterResponse, error) {
 	var registerUser pb.RegisterUser
+	traceId := h.userMetadataFromContextGetterService.GetTraceIdFromContext(ctx)
 	registerUser.Email = r.RegisterUser.Email
 	registerUser.Password = r.RegisterUser.Password
 	registerUser.RepeatPassword = r.RegisterUser.RepeatPassword
@@ -18,19 +19,21 @@ func (h *UserAuthorizationHandler) Register(
 	err := h.userRegistrationService.Validate(registerUser)
 
 	if err != nil {
+		h.logger.Error("user fields validation during registration error: "+err.Error(), ". traceId="+traceId)
 		return nil, err
 	}
 
 	createdUser, err := h.userRegistrationService.Register(registerUser, ctx)
 
 	if err != nil {
+		h.logger.Error("user registration error: "+err.Error(), ". traceId="+traceId)
 		return nil, err
 	}
 
 	token, err := h.jwtAuthorizationService.GetJWTToken(createdUser.Id)
 
 	if err != nil {
-		h.logger.Error("getting JWT token by user id error: "+err.Error(), createdUser.Id)
+		h.logger.Error("getting JWT token by user id error: "+err.Error(), createdUser.Id, ". traceId="+traceId)
 		return nil, errors.New("getting JWT token by user id error: " + err.Error())
 	}
 
@@ -42,7 +45,7 @@ func (h *UserAuthorizationHandler) Register(
 		LastLogin:        createdUser.LastLogin,
 	}
 
-	h.logger.Info("successful registered. ", outputUser)
+	h.logger.Info("successful registered. ", outputUser, ". traceId="+traceId)
 
 	return &pb.RegisterResponse{User: &outputUser}, nil
 }

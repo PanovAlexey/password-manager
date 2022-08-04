@@ -16,8 +16,8 @@ func (h *StorageHandler) CreateTextRecord(
 ) (*pb.CreateTextRecordResponse, error) {
 	var response pb.CreateTextRecordResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordEntity, err := h.textRecordService.AddTextRecord(
 		domain.TextRecord{
 			Name:   request.CreateTextRecord.Name,

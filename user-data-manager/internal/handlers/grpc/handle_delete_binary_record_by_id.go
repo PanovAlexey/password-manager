@@ -11,7 +11,7 @@ func (h *UserDataManagerHandler) DeleteBinaryRecordById(
 	request *pb.DeleteBinaryRecordByIdRequest,
 ) (*emptypb.Empty, error) {
 	err := h.userDataService.DeleteBinaryRecordById(request.Id, ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 
 	if err != nil {
 		h.logger.Info("getting binary record by id error. "+err.Error(), ". traceId="+traceId)

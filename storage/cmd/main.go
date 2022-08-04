@@ -39,12 +39,12 @@ func main() {
 	databaseBinaryRecordRepository := databases.GetBinaryRecordRepository(databaseService.GetDatabaseConnection())
 	binaryRecordService := service.GetBinaryRecordService(databaseBinaryRecordRepository)
 
-	userIdFromContextGetterService := service.GetUserIdFromContextGetterService()
+	userMetadataFromContextGetterService := service.GetUserMetadataFromContextGetterService()
 
 	handler := grpcHandler.GetStorageHandler(
 		logger,
 		databaseUserService,
-		userIdFromContextGetterService,
+		userMetadataFromContextGetterService,
 		loginPasswordService,
 		creditCardService,
 		textRecordService,

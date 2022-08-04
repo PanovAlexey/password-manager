@@ -10,6 +10,7 @@ func (h *UserAuthorizationHandler) GetUserByLogin(
 	ctx context.Context, request *pb.GetUserByLoginRequest,
 ) (*pb.GetUserByLoginResponse, error) {
 	var response pb.GetUserByLoginResponse
+	traceId := h.userMetadataFromContextGetterService.GetTraceIdFromContext(ctx)
 
 	// @ToDo: replace stub data for real data
 	var user pb.User
@@ -20,7 +21,7 @@ func (h *UserAuthorizationHandler) GetUserByLogin(
 	user.Email = "test@ya.ru"
 	response.User = &user
 
-	h.logger.Info("successful got user by login. ", request)
+	h.logger.Info("successful got user by login. ", request.Login, ". traceId="+traceId)
 
 	return &response, nil
 }

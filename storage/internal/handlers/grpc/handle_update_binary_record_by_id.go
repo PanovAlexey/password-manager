@@ -16,8 +16,8 @@ func (h *StorageHandler) UpdateBinaryRecord(
 ) (*pb.UpdateBinaryRecordByIdResponse, error) {
 	var response pb.UpdateBinaryRecordByIdResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecordEntity, err := h.binaryRecordService.UpdateBinaryRecord(
 		domain.BinaryRecord{
 			Name:   request.CreateBinaryRecord.Name,

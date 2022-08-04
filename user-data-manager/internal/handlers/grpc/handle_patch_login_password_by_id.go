@@ -10,8 +10,8 @@ func (h *UserDataManagerHandler) PatchLoginPasswordById(
 	request *pb.PatchLoginPasswordByIdRequest,
 ) (*pb.PatchLoginPasswordByIdResponse, error) {
 	var response pb.PatchLoginPasswordByIdResponse
-	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userid := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPassword, err := h.userDataService.UpdateLoginPassword(*request.LoginPassword, userid, ctx)
 
 	if err != nil {

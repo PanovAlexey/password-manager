@@ -1,6 +1,7 @@
 package trace
 
 import (
+	"api-gw/internal/application/service"
 	"context"
 	"fmt"
 	"google.golang.org/grpc/metadata"
@@ -19,14 +20,12 @@ func Trace(logger Logger) func(http.Handler) http.Handler {
 
 			var traceId string
 			traceId = fmt.Sprintf("%d", time.Now().UTC().UnixNano())
-			traceIdName := "trace-id" //@toDo move it to service
-
-			ctx := context.WithValue(r.Context(), traceIdName, traceId)
+			ctx := context.WithValue(r.Context(), service.TraceIdKey, traceId)
 
 			ctx = metadata.NewOutgoingContext(
 				ctx,
 				metadata.New(map[string]string{
-					traceIdName: traceId,
+					service.TraceIdKey: traceId,
 				}),
 			)
 

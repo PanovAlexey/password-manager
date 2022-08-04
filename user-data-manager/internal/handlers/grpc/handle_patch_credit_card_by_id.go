@@ -10,8 +10,8 @@ func (h *UserDataManagerHandler) PatchCreditCardById(
 	request *pb.PatchCreditCardByIdRequest,
 ) (*pb.PatchCreditCardByIdResponse, error) {
 	var response pb.PatchCreditCardByIdResponse
-	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userid := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCard, err := h.userDataService.UpdateCreditCard(*request.CreditCard, userid, ctx)
 
 	if err != nil {

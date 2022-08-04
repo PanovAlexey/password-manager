@@ -11,8 +11,8 @@ func (h *StorageHandler) DeleteBinaryRecordById(
 	ctx context.Context,
 	request *pb.DeleteBinaryRecordByIdRequest,
 ) (*emptypb.Empty, error) {
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	err := h.binaryRecordService.DeleteBinaryRecord(request.Id, userId)
 
 	if err != nil {

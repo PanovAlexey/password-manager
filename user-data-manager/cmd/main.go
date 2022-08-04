@@ -14,7 +14,7 @@ func main() {
 	logger := logging.GetLogger(config)
 	defer logger.Sync()
 
-	userIdFromContextGetterService := service.GetUserIdFromContextGetterService()
+	userMetadataFromContextGetterService := service.GetUserMetadataFromContextGetterService()
 	storageClient, err := grpc.GetStorageClient(config)
 
 	if err != nil {
@@ -24,7 +24,7 @@ func main() {
 	defer storageClient.GetConnection().Close()
 
 	userDataService := service.GetUserDataService(storageClient)
-	userDataManagerHandler := grpcHandler.GetUserDataManagerHandler(logger, userDataService, userIdFromContextGetterService)
+	userDataManagerHandler := grpcHandler.GetUserDataManagerHandler(logger, userDataService, userMetadataFromContextGetterService)
 
 	servers.RunGrpcServer(config, logger, userDataManagerHandler)
 }

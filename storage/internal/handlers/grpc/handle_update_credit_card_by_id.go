@@ -13,8 +13,8 @@ import (
 func (h *StorageHandler) UpdateCreditCard(ctx context.Context, request *pb.UpdateCreditCardByIdRequest) (*pb.UpdateCreditCardByIdResponse, error) {
 	var response pb.UpdateCreditCardByIdResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardEntity, err := h.creditCardService.UpdateCreditCard(
 		domain.CreditCard{
 			Name:       request.CreateCreditCard.Name,

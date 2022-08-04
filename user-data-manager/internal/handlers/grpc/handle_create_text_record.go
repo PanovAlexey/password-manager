@@ -7,8 +7,8 @@ import (
 
 func (h *UserDataManagerHandler) CreateTextRecord(ctx context.Context, request *pb.CreateTextRecordRequest) (*pb.CreateTextRecordResponse, error) {
 	var response pb.CreateTextRecordResponse
-	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userid := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecord, err := h.userDataService.AddTextRecord(*request.TextRecord, userid, ctx)
 
 	if err != nil {

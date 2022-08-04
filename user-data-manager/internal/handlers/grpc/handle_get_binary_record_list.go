@@ -10,7 +10,7 @@ func (h *UserDataManagerHandler) GetBinaryRecordList(
 	request *pb.GetBinaryRecordListRequest,
 ) (*pb.GetBinaryRecordListResponse, error) {
 	var response pb.GetBinaryRecordListResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecordList, err := h.userDataService.GetBinaryRecordList(ctx)
 
 	if err != nil {

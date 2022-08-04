@@ -8,8 +8,8 @@ import (
 func (h *UserDataManagerHandler) CreateLoginPassword(ctx context.Context, request *pb.CreateLoginPasswordRequest) (*pb.CreateLoginPasswordResponse, error) {
 	var response pb.CreateLoginPasswordResponse
 
-	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userid := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPassword, err := h.userDataService.AddLoginPassword(*request.CreateLoginPassword, userid, ctx)
 
 	if err != nil {

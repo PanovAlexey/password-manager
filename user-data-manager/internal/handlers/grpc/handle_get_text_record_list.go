@@ -10,7 +10,7 @@ func (h *UserDataManagerHandler) GetTextRecordList(
 	request *pb.GetTextRecordListRequest,
 ) (*pb.GetTextRecordListResponse, error) {
 	var response pb.GetTextRecordListResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordList, err := h.userDataService.GetTextRecordList(ctx)
 
 	if err != nil {

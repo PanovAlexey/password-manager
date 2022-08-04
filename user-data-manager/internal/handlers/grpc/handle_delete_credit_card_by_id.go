@@ -7,7 +7,7 @@ import (
 )
 
 func (h *UserDataManagerHandler) DeleteCreditCardById(ctx context.Context, request *pb.DeleteCreditCardByIdRequest) (*emptypb.Empty, error) {
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	err := h.userDataService.DeleteCreditCardById(request.Id, ctx)
 
 	if err != nil {

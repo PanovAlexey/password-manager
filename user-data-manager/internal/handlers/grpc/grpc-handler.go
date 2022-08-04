@@ -11,20 +11,20 @@ type Logger interface {
 }
 
 type UserDataManagerHandler struct {
-	logger                  Logger
-	userDataService         service.UserData
-	userIdFromContextGetter service.UserIdFromContextGetter
+	logger                        Logger
+	userDataService               service.UserData
+	userMetadataFromContextGetter service.UserMetadataFromContextGetter
 	pb.UnimplementedUserDataManagerServer
 }
 
 func GetUserDataManagerHandler(
 	logger Logger,
 	userDataService service.UserData,
-	userIdFromContextGetter service.UserIdFromContextGetter,
+	userMetadataFromContextGetter service.UserMetadataFromContextGetter,
 ) *UserDataManagerHandler {
 	return &UserDataManagerHandler{
-		logger:                  logger,
-		userDataService:         userDataService,
-		userIdFromContextGetter: userIdFromContextGetter,
+		logger:                        logger,
+		userDataService:               userDataService,
+		userMetadataFromContextGetter: userMetadataFromContextGetter,
 	}
 }

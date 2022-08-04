@@ -15,8 +15,8 @@ func (h *StorageHandler) GetTextRecordList(
 ) (*pb.GetTextRecordListResponse, error) {
 	var response pb.GetTextRecordListResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordEntityList, err := h.textRecordService.GetTextRecordList(userId)
 
 	if err != nil {

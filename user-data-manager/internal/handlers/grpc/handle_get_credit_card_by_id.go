@@ -9,7 +9,7 @@ func (h *UserDataManagerHandler) GetCreditCardById(
 	ctx context.Context, request *pb.GetCreditCardByIdRequest,
 ) (*pb.GetCreditCardByIdResponse, error) {
 	var response pb.GetCreditCardByIdResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCard, err := h.userDataService.GetCreditCardById(request.Id, ctx)
 
 	if err != nil {

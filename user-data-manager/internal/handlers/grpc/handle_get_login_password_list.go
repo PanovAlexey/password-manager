@@ -7,7 +7,7 @@ import (
 
 func (h *UserDataManagerHandler) GetLoginPasswordList(ctx context.Context, request *pb.GetLoginPasswordListRequest) (*pb.GetLoginPasswordListResponse, error) {
 	var response pb.GetLoginPasswordListResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordList, err := h.userDataService.GetLoginPasswordList(ctx)
 
 	if err != nil {

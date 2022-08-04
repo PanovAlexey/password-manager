@@ -10,16 +10,17 @@ func (h *UserAuthorizationHandler) GetUserIdByJWT(
 	r *pb.GetUserIdByJWTRequest,
 ) (*pb.GetUserIdByJWTResponse, error) {
 	var response pb.GetUserIdByJWTResponse
+	traceId := h.userMetadataFromContextGetterService.GetTraceIdFromContext(ctx)
 	payload, err := h.jwtAuthorizationService.CheckGetJWTToken(r.Token)
 
 	if err != nil {
-		h.logger.Error(err)
+		h.logger.Error(err, ". traceId="+traceId)
 
 		return nil, err
 	}
 
 	response.UserId = payload.UserId
-	h.logger.Info("successful got user id by token. ", r.Token)
+	h.logger.Info("successful got user id by token. ", r.Token, ". traceId="+traceId)
 
 	return &response, nil
 }

@@ -24,7 +24,13 @@ func main() {
 	defer storageClient.GetConnection().Close()
 
 	userRegistrationService := service.GetUserRegistrationService(storageClient)
-	handler := grpc.GetUserAuthorizationHandler(logger, jwtAuthorizationService, userRegistrationService)
+	userMetadataFromContextGetterService := service.GetUserMetadataFromContextGetterService()
+	handler := grpc.GetUserAuthorizationHandler(
+		logger,
+		jwtAuthorizationService,
+		userRegistrationService,
+		userMetadataFromContextGetterService,
+	)
 
 	servers.RunGrpcServer(config, logger, handler)
 }

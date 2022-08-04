@@ -16,8 +16,8 @@ func (h *StorageHandler) CreateBinaryRecord(
 ) (*pb.CreateBinaryRecordResponse, error) {
 	var response pb.CreateBinaryRecordResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecordEntity, err := h.binaryRecordService.AddBinaryRecord(
 		domain.BinaryRecord{
 			Name:   request.CreateBinaryRecord.Name,

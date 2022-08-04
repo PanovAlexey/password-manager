@@ -7,7 +7,7 @@ import (
 )
 
 func (h *UserDataManagerHandler) DeleteLoginPasswordById(ctx context.Context, request *pb.DeleteLoginPasswordByIdRequest) (*emptypb.Empty, error) {
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	err := h.userDataService.DeleteLoginPasswordById(request.Id, ctx)
 
 	if err != nil {

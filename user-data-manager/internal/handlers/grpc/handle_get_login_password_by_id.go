@@ -9,7 +9,7 @@ func (h *UserDataManagerHandler) GetLoginPasswordById(
 	ctx context.Context, request *pb.GetLoginPasswordByIdRequest,
 ) (*pb.GetLoginPasswordByIdResponse, error) {
 	var response pb.GetLoginPasswordByIdResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPassword, err := h.userDataService.GetLoginPasswordById(request.Id, ctx)
 
 	if err != nil {

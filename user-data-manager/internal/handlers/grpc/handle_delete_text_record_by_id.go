@@ -10,7 +10,7 @@ func (h *UserDataManagerHandler) DeleteTextRecordById(
 	ctx context.Context,
 	request *pb.DeleteTextRecordByIdRequest,
 ) (*emptypb.Empty, error) {
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	err := h.userDataService.DeleteTextRecordById(request.Id, ctx)
 
 	if err != nil {

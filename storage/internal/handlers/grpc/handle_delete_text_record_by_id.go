@@ -8,8 +8,8 @@ import (
 )
 
 func (h *StorageHandler) DeleteTextRecordById(ctx context.Context, request *pb.DeleteTextRecordByIdRequest) (*emptypb.Empty, error) {
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	err := h.textRecordService.DeleteTextRecord(request.Id, userId)
 
 	if err != nil {

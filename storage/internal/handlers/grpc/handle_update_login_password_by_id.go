@@ -13,8 +13,8 @@ import (
 func (h *StorageHandler) UpdateLoginPassword(ctx context.Context, request *pb.UpdateLoginPasswordByIdRequest) (*pb.UpdateLoginPasswordByIdResponse, error) {
 	var response pb.UpdateLoginPasswordByIdResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordEntity, err := h.loginPasswordService.UpdateLoginPassword(
 		domain.LoginPassword{
 			Name:     request.CreateLoginPassword.Name,

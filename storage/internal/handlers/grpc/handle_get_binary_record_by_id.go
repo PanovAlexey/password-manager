@@ -15,8 +15,8 @@ func (h *StorageHandler) GetBinaryRecordById(
 ) (*pb.GetBinaryRecordByIdResponse, error) {
 	var response pb.GetBinaryRecordByIdResponse
 
-	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	userId := h.userMetadataFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecordEntity, err := h.binaryRecordService.GetBinaryRecordById(request.Id, userId)
 
 	if err != nil {

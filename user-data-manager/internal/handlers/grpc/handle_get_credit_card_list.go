@@ -7,7 +7,7 @@ import (
 
 func (h *UserDataManagerHandler) GetCreditCardList(ctx context.Context, request *pb.GetCreditCardListRequest) (*pb.GetCreditCardListResponse, error) {
 	var response pb.GetCreditCardListResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardList, err := h.userDataService.GetCreditCardList(ctx)
 
 	if err != nil {

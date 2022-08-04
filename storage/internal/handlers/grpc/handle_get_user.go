@@ -11,7 +11,7 @@ import (
 
 func (h *StorageHandler) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	var response pb.GetUserResponse
-	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	traceId := h.userMetadataFromContextGetter.GetTraceIdFromContext(ctx)
 
 	userLogin := domain.UserLogin{
 		Email:    request.GetUser.Email,

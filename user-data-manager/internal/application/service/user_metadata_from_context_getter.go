@@ -5,14 +5,14 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-type UserIdFromContextGetter struct {
+type UserMetadataFromContextGetter struct {
 }
 
-func GetUserIdFromContextGetterService() UserIdFromContextGetter {
-	return UserIdFromContextGetter{}
+func GetUserMetadataFromContextGetterService() UserMetadataFromContextGetter {
+	return UserMetadataFromContextGetter{}
 }
 
-func (s UserIdFromContextGetter) GetUserIdFromContext(ctx context.Context) string {
+func (s UserMetadataFromContextGetter) GetUserIdFromContext(ctx context.Context) string {
 	userId := ""
 
 	md, ok := metadata.FromIncomingContext(ctx)
@@ -28,7 +28,7 @@ func (s UserIdFromContextGetter) GetUserIdFromContext(ctx context.Context) strin
 	return userId
 }
 
-func (s UserIdFromContextGetter) GetTraceIdFromContext(ctx context.Context) string {
+func (s UserMetadataFromContextGetter) GetTraceIdFromContext(ctx context.Context) string {
 	traceId := ""
 
 	md, ok := metadata.FromIncomingContext(ctx)
