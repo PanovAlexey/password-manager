@@ -16,17 +16,21 @@ func (h *httpHandler) HandleGetTextRecordList(w http.ResponseWriter, r *http.Req
 	)
 
 	if err != nil {
-		h.logger.Error("error getting text record list: "+err.Error(), userId)
+		info := "error getting text record list: " + err.Error()
+		h.logger.Error(info, userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
-	h.logger.Info("successful getting text record list by user id ", userId, response)
+	h.logger.Info("successful getting text record list by user id ", userId)
 	result, err := json.Marshal(response)
 
 	if err != nil {
-		h.logger.Error("error marshalling text record list: "+err.Error(), userId, response)
+		info := "error marshalling text record list: " + err.Error()
+		h.logger.Error(info, ". userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 

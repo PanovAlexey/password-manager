@@ -16,8 +16,10 @@ func (h *httpHandler) HandleGetBinaryRecordList(w http.ResponseWriter, r *http.R
 	)
 
 	if err != nil {
-		h.logger.Error("error getting binary record list: "+err.Error(), userId)
+		info := "error getting binary record list: " + err.Error()
+		h.logger.Error(info, userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
@@ -25,8 +27,10 @@ func (h *httpHandler) HandleGetBinaryRecordList(w http.ResponseWriter, r *http.R
 	result, err := json.Marshal(response)
 
 	if err != nil {
-		h.logger.Error("error marshalling binary record list: "+err.Error(), userId, response)
+		info := "error marshalling binary record list: " + err.Error()
+		h.logger.Error(info, ". userId=", userId)
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(info))
 		return
 	}
 
