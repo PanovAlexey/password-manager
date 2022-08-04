@@ -17,6 +17,7 @@ func (h *StorageHandler) UpdateTextRecord(
 	var response pb.UpdateTextRecordByIdResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordEntity, err := h.textRecordService.UpdateTextRecord(
 		domain.TextRecord{
 			Name:   request.CreateTextRecord.Name,
@@ -51,7 +52,7 @@ func (h *StorageHandler) UpdateTextRecord(
 
 	response.TextRecord = &textRecord
 
-	h.logger.Info("successful updated text record by userId=" + userId)
+	h.logger.Info("successful updated text record by userId="+userId, ". traceId="+traceId)
 
 	return &response, nil
 }

@@ -17,6 +17,7 @@ func (h *StorageHandler) CreateBinaryRecord(
 	var response pb.CreateBinaryRecordResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecordEntity, err := h.binaryRecordService.AddBinaryRecord(
 		domain.BinaryRecord{
 			Name:   request.CreateBinaryRecord.Name,
@@ -52,6 +53,6 @@ func (h *StorageHandler) CreateBinaryRecord(
 
 	response.BinaryRecord = &binaryRecord
 
-	h.logger.Info("successful created binary record by userId=" + userId)
+	h.logger.Info("successful created binary record by userId="+userId, ". traceId="+traceId)
 	return &response, nil
 }

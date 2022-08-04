@@ -12,6 +12,7 @@ import (
 func (h *StorageHandler) GetCreditCardById(ctx context.Context, request *pb.GetCreditCardByIdRequest) (*pb.GetCreditCardByIdResponse, error) {
 	var response pb.GetCreditCardByIdResponse
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardEntity, err := h.creditCardService.GetCreditCardById(request.Id, userId)
 
 	if err != nil {
@@ -47,7 +48,7 @@ func (h *StorageHandler) GetCreditCardById(ctx context.Context, request *pb.GetC
 
 	response.CreditCard = &creditCard
 
-	h.logger.Info("successful got credit card by id. ", request)
+	h.logger.Info("successful got credit card by id. ", ". traceId="+traceId)
 
 	return &response, nil
 }

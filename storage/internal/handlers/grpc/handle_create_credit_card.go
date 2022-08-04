@@ -14,6 +14,7 @@ func (h *StorageHandler) CreateCreditCard(ctx context.Context, request *pb.Creat
 	var response pb.CreateCreditCardResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardEntity, err := h.creditCardService.AddCreditCard(
 		domain.CreditCard{
 			Name:       request.CreateCreditCard.Name,
@@ -55,7 +56,7 @@ func (h *StorageHandler) CreateCreditCard(ctx context.Context, request *pb.Creat
 
 	response.CreditCard = &creditCard
 
-	h.logger.Info("successful created credit card by userId=" + userId)
+	h.logger.Info("successful created credit card by userId="+userId, ". traceId="+traceId)
 
 	return &response, nil
 }

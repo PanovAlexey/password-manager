@@ -9,13 +9,14 @@ import (
 
 func (h *StorageHandler) DeleteCreditCardById(ctx context.Context, request *pb.DeleteCreditCardByIdRequest) (*emptypb.Empty, error) {
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	err := h.creditCardService.DeleteCreditCard(request.Id, userId)
 
 	if err != nil {
 		return nil, errors.New("credit card deleting by id error: " + err.Error())
 	}
 
-	h.logger.Info("successful deleted credit card by id. ", request)
+	h.logger.Info("successful deleted credit card by id. ", ". traceId="+traceId)
 
 	return &emptypb.Empty{}, nil
 }

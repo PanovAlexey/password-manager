@@ -17,6 +17,7 @@ func (h *StorageHandler) CreateTextRecord(
 	var response pb.CreateTextRecordResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordEntity, err := h.textRecordService.AddTextRecord(
 		domain.TextRecord{
 			Name:   request.CreateTextRecord.Name,
@@ -52,6 +53,7 @@ func (h *StorageHandler) CreateTextRecord(
 
 	response.TextRecord = &textRecord
 
-	h.logger.Info("successful created text record by userId=" + userId)
+	h.logger.Info("successful created text record by userId="+userId, ". traceId="+traceId)
+
 	return &response, nil
 }

@@ -8,6 +8,7 @@ import (
 
 func (h *StorageHandler) UpdateUser(ctx context.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	var response pb.UpdateUserResponse
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 
 	// @ToDo: replace stub data for real data
 	var user pb.User
@@ -17,7 +18,7 @@ func (h *StorageHandler) UpdateUser(ctx context.Context, request *pb.UpdateUserR
 	user.LastLogin = &timestamp.Timestamp{}
 	response.User = &user
 
-	h.logger.Info("successful updated user. ", request)
+	h.logger.Info("successful updated user. ", ". traceId="+traceId)
 
 	return &response, nil
 }

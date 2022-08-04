@@ -27,3 +27,19 @@ func (s UserIdFromContextGetter) GetUserIdFromContext(ctx context.Context) strin
 
 	return userId
 }
+
+func (s UserIdFromContextGetter) GetTraceIdFromContext(ctx context.Context) string {
+	traceId := ""
+
+	md, ok := metadata.FromIncomingContext(ctx)
+
+	if ok {
+		values := md.Get("trace-id")
+
+		if len(values) > 0 {
+			traceId = values[0]
+		}
+	}
+
+	return traceId
+}

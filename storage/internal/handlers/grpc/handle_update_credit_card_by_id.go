@@ -14,6 +14,7 @@ func (h *StorageHandler) UpdateCreditCard(ctx context.Context, request *pb.Updat
 	var response pb.UpdateCreditCardByIdResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardEntity, err := h.creditCardService.UpdateCreditCard(
 		domain.CreditCard{
 			Name:       request.CreateCreditCard.Name,
@@ -54,7 +55,7 @@ func (h *StorageHandler) UpdateCreditCard(ctx context.Context, request *pb.Updat
 
 	response.CreditCard = &creditCard
 
-	h.logger.Info("successful updated credit card by userId=" + userId)
+	h.logger.Info("successful updated credit card by userId="+userId, ". traceId="+traceId)
 
 	return &response, nil
 }

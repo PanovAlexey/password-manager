@@ -13,6 +13,7 @@ func (h *StorageHandler) GetCreditCardList(ctx context.Context, request *pb.GetC
 	var response pb.GetCreditCardListResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardEntityList, err := h.creditCardService.GetCreditCardList(userId)
 
 	if err != nil {
@@ -47,7 +48,7 @@ func (h *StorageHandler) GetCreditCardList(ctx context.Context, request *pb.GetC
 		response.CreditCardList = append(response.CreditCardList, &creditCard)
 	}
 
-	h.logger.Info("successful got credit card list. UserId=", userId)
+	h.logger.Info("successful got credit card list. UserId="+userId, ". traceId="+traceId)
 
 	return &response, nil
 }

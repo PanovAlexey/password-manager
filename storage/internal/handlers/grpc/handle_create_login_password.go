@@ -14,6 +14,7 @@ func (h *StorageHandler) CreateLoginPassword(ctx context.Context, request *pb.Cr
 	var response pb.CreateLoginPasswordResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordEntity, err := h.loginPasswordService.AddLoginPassword(
 		domain.LoginPassword{
 			Name:     request.CreateLoginPassword.Name,
@@ -51,7 +52,7 @@ func (h *StorageHandler) CreateLoginPassword(ctx context.Context, request *pb.Cr
 
 	response.LoginPassword = &loginPassword
 
-	h.logger.Info("successful created login-password by userId=" + userId)
+	h.logger.Info("successful created login-password by userId="+userId, ". traceId="+traceId)
 
 	return &response, nil
 }

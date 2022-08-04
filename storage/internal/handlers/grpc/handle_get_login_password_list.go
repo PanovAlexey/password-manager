@@ -13,6 +13,7 @@ func (h *StorageHandler) GetLoginPasswordList(ctx context.Context, request *pb.G
 	var response pb.GetLoginPasswordListResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordEntityList, err := h.loginPasswordService.GetLoginPasswordList(userId)
 
 	if err != nil {
@@ -47,7 +48,7 @@ func (h *StorageHandler) GetLoginPasswordList(ctx context.Context, request *pb.G
 		response.LoginPasswordList = append(response.LoginPasswordList, &loginPassword)
 	}
 
-	h.logger.Info("successful got login-password list. UserId=", userId)
+	h.logger.Info("successful got login-password list. UserId="+userId, ". traceId="+traceId)
 
 	return &response, nil
 }

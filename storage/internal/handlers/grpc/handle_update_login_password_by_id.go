@@ -14,6 +14,7 @@ func (h *StorageHandler) UpdateLoginPassword(ctx context.Context, request *pb.Up
 	var response pb.UpdateLoginPasswordByIdResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordEntity, err := h.loginPasswordService.UpdateLoginPassword(
 		domain.LoginPassword{
 			Name:     request.CreateLoginPassword.Name,
@@ -50,7 +51,7 @@ func (h *StorageHandler) UpdateLoginPassword(ctx context.Context, request *pb.Up
 
 	response.LoginPassword = &loginPassword
 
-	h.logger.Info("successful updated login-password by userId=" + userId)
+	h.logger.Info("successful updated login-password by userId="+userId, ". traceId="+traceId)
 
 	return &response, nil
 }

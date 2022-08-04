@@ -16,6 +16,7 @@ func (h *StorageHandler) GetTextRecordById(
 	var response pb.GetTextRecordByIdResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordEntity, err := h.textRecordService.GetTextRecordById(request.Id, userId)
 
 	if err != nil {
@@ -48,7 +49,7 @@ func (h *StorageHandler) GetTextRecordById(
 
 	response.TextRecord = &textRecord
 
-	h.logger.Info("successful got text record by id. ", request)
+	h.logger.Info("successful got text record by id. ", ". traceId="+traceId)
 
 	return &response, nil
 }

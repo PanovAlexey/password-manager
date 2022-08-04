@@ -16,6 +16,7 @@ func (h *StorageHandler) GetTextRecordList(
 	var response pb.GetTextRecordListResponse
 
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordEntityList, err := h.textRecordService.GetTextRecordList(userId)
 
 	if err != nil {
@@ -47,7 +48,7 @@ func (h *StorageHandler) GetTextRecordList(
 		response.TextRecordList = append(response.TextRecordList, &textRecord)
 	}
 
-	h.logger.Info("successful got text record list. UserId=", userId)
+	h.logger.Info("successful got text record list. UserId=", userId, ". traceId="+traceId)
 
 	return &response, nil
 }

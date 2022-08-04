@@ -11,6 +11,7 @@ import (
 
 func (h *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	var response pb.CreateUserResponse
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 
 	userInput := domain.UserLogin{
 		Email:    request.CreateUser.Email,
@@ -19,7 +20,7 @@ func (h *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserR
 	userEntity, err := h.userService.SaveUser(userInput)
 
 	if err != nil {
-		h.logger.Error("user dit not save to database: " + err.Error())
+		h.logger.Error("user dit not save to database: "+err.Error(), ". traceId="+traceId)
 		return nil, err
 	}
 
@@ -41,7 +42,7 @@ func (h *StorageHandler) CreateUser(ctx context.Context, request *pb.CreateUserR
 
 	response.User = &user
 
-	h.logger.Info("successful created user. ", request)
+	h.logger.Info("successful created user. ", ". traceId="+traceId)
 
 	return &response, nil
 }

@@ -12,6 +12,7 @@ import (
 func (h *StorageHandler) GetLoginPasswordById(ctx context.Context, request *pb.GetLoginPasswordByIdRequest) (*pb.GetLoginPasswordByIdResponse, error) {
 	var response pb.GetLoginPasswordByIdResponse
 	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordEntity, err := h.loginPasswordService.GetLoginPasswordById(request.Id, userId)
 
 	if err != nil {
@@ -44,7 +45,7 @@ func (h *StorageHandler) GetLoginPasswordById(ctx context.Context, request *pb.G
 
 	response.LoginPassword = &loginPassword
 
-	h.logger.Info("successful got login-password by id. ", request)
+	h.logger.Info("successful got login-password by id. ", ". traceId="+traceId)
 
 	return &response, nil
 }
