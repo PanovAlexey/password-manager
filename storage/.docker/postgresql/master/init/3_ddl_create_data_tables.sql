@@ -57,7 +57,7 @@ create table if not exists binary_record
 (
     id serial constraint binary_record_pk primary key,
     name varchar(255) not null,
-    binary text not null,
+    binary_data text not null,
     note text not null,
     user_id int not null constraint binary_record_user_id_fk references users,
     created_at timestamp not null,

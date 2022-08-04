@@ -49,7 +49,6 @@ func (s CreditCard) GetCreditCardById(idString, userIdString string) (*domain.Cr
 	}
 
 	return creditCard, err
-
 }
 
 func (s CreditCard) GetCreditCardList(userIdString string) ([]domain.ProtectedItem, error) {
