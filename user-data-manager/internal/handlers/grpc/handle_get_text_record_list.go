@@ -10,11 +10,11 @@ func (h *UserDataManagerHandler) GetTextRecordList(
 	request *pb.GetTextRecordListRequest,
 ) (*pb.GetTextRecordListResponse, error) {
 	var response pb.GetTextRecordListResponse
-
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecordList, err := h.userDataService.GetTextRecordList(ctx)
 
 	if err != nil {
-		h.logger.Info("getting text record list error. "+err.Error(), request)
+		h.logger.Info("getting text record list error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (h *UserDataManagerHandler) GetTextRecordList(
 		response.ProtectedItemList = append(response.ProtectedItemList, &protectedItem)
 	}
 
-	h.logger.Info("successful got text record list. ")
+	h.logger.Info("successful got text record list. ", ". traceId="+traceId)
 
 	return &response, nil
 }

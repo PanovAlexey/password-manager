@@ -29,12 +29,7 @@ func AuthorizationByToken(userAuthorizationService service.UserAuthorization, lo
 
 				// @ToDo: move to service
 				// Transferring userId to other microservices by grpc
-				ctx = metadata.NewOutgoingContext(
-					ctx,
-					metadata.New(map[string]string{
-						service.UserIdKey: userId,
-					}),
-				)
+				ctx = metadata.AppendToOutgoingContext(ctx, service.UserIdKey, userId)
 
 				r = r.WithContext(ctx)
 			}

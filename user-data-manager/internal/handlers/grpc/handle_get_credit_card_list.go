@@ -7,11 +7,11 @@ import (
 
 func (h *UserDataManagerHandler) GetCreditCardList(ctx context.Context, request *pb.GetCreditCardListRequest) (*pb.GetCreditCardListResponse, error) {
 	var response pb.GetCreditCardListResponse
-
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	creditCardList, err := h.userDataService.GetCreditCardList(ctx)
 
 	if err != nil {
-		h.logger.Info("getting credit card list error. "+err.Error(), request)
+		h.logger.Info("getting credit card list error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (h *UserDataManagerHandler) GetCreditCardList(ctx context.Context, request 
 		response.ProtectedItemList = append(response.ProtectedItemList, &protectedItem)
 	}
 
-	h.logger.Info("successful got credit card list. ")
+	h.logger.Info("successful got credit card list. ", ". traceId="+traceId)
 
 	return &response, nil
 }

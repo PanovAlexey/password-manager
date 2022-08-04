@@ -9,6 +9,7 @@ import (
 
 const userTokenKey = "token"
 const UserIdKey = "user-id"
+const TraceIdKey = "trace-id"
 
 type logger interface {
 	Error(args ...interface{})

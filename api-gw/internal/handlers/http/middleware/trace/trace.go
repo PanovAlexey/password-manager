@@ -3,6 +3,7 @@ package trace
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc/metadata"
 	"net/http"
 	"time"
 )
@@ -21,6 +22,14 @@ func Trace(logger Logger) func(http.Handler) http.Handler {
 			traceIdName := "trace-id" //@toDo move it to service
 
 			ctx := context.WithValue(r.Context(), traceIdName, traceId)
+
+			ctx = metadata.NewOutgoingContext(
+				ctx,
+				metadata.New(map[string]string{
+					traceIdName: traceId,
+				}),
+			)
+
 			r = r.WithContext(ctx)
 
 			next.ServeHTTP(w, r)

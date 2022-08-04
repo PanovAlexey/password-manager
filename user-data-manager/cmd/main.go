@@ -23,8 +23,8 @@ func main() {
 
 	defer storageClient.GetConnection().Close()
 
-	userDataService := service.GetUserDataService(userIdFromContextGetterService, storageClient)
-	userDataManagerHandler := grpcHandler.GetUserDataManagerHandler(logger, userDataService)
+	userDataService := service.GetUserDataService(storageClient)
+	userDataManagerHandler := grpcHandler.GetUserDataManagerHandler(logger, userDataService, userIdFromContextGetterService)
 
 	servers.RunGrpcServer(config, logger, userDataManagerHandler)
 }

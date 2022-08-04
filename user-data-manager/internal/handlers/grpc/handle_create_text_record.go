@@ -7,18 +7,19 @@ import (
 
 func (h *UserDataManagerHandler) CreateTextRecord(ctx context.Context, request *pb.CreateTextRecordRequest) (*pb.CreateTextRecordResponse, error) {
 	var response pb.CreateTextRecordResponse
-
-	textRecord, err := h.userDataService.AddTextRecord(*request.TextRecord, ctx)
+	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	textRecord, err := h.userDataService.AddTextRecord(*request.TextRecord, userid, ctx)
 
 	if err != nil {
-		h.logger.Info("creating text record error. "+err.Error(), request)
+		h.logger.Info("creating text record error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
 
 	response.TextRecord = &textRecord
 
-	h.logger.Info("successful created text record. " + textRecord.Id)
+	h.logger.Info("successful created text record. "+textRecord.Id, ". traceId="+traceId)
 
 	return &response, nil
 }

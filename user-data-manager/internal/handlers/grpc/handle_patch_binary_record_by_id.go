@@ -10,16 +10,18 @@ func (h *UserDataManagerHandler) PatchBinaryRecordById(
 	request *pb.PatchBinaryRecordByIdRequest,
 ) (*pb.PatchBinaryRecordByIdResponse, error) {
 	var response pb.PatchBinaryRecordByIdResponse
-	binaryRecord, err := h.userDataService.UpdateBinaryRecord(*request.BinaryRecord, ctx)
+	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	binaryRecord, err := h.userDataService.UpdateBinaryRecord(*request.BinaryRecord, userid, ctx)
 
 	if err != nil {
-		h.logger.Info("updating binary record error. "+err.Error(), request)
+		h.logger.Info("updating binary record error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
 
 	response.BinaryRecord = &binaryRecord
-	h.logger.Info("successful updated binary record. " + request.BinaryRecord.Id)
+	h.logger.Info("successful updated binary record. "+request.BinaryRecord.Id, ". traceId="+traceId)
 
 	return &response, nil
 }

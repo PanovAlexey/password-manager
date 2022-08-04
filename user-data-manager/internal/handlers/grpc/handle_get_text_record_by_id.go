@@ -9,18 +9,18 @@ func (h *UserDataManagerHandler) GetTextRecordById(
 	ctx context.Context, request *pb.GetTextRecordByIdRequest,
 ) (*pb.GetTextRecordByIdResponse, error) {
 	var response pb.GetTextRecordByIdResponse
-
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	textRecord, err := h.userDataService.GetTextRecordById(request.Id, ctx)
 
 	if err != nil {
-		h.logger.Info("getting text record by id error. "+err.Error(), request)
+		h.logger.Info("getting text record by id error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
 
 	response.TextRecord = &textRecord
 
-	h.logger.Info("successful got text record by id. ", request.Id)
+	h.logger.Info("successful got text record by id. ", request.Id, ". traceId="+traceId)
 
 	return &response, nil
 }

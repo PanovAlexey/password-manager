@@ -8,17 +8,19 @@ import (
 func (h *UserDataManagerHandler) CreateCreditCard(ctx context.Context, request *pb.CreateCreditCardRequest) (*pb.CreateCreditCardResponse, error) {
 	var response pb.CreateCreditCardResponse
 
-	creditCard, err := h.userDataService.AddCreditCard(*request.CreateCreditCard, ctx)
+	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	creditCard, err := h.userDataService.AddCreditCard(*request.CreateCreditCard, userid, ctx)
 
 	if err != nil {
-		h.logger.Info("creating credit card error. "+err.Error(), request)
+		h.logger.Info("creating credit card error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
 
 	response.CreditCard = &creditCard
 
-	h.logger.Info("successful created credit card. " + creditCard.Id)
+	h.logger.Info("successful created credit card. "+creditCard.Id, ". traceId="+traceId)
 
 	return &response, nil
 }

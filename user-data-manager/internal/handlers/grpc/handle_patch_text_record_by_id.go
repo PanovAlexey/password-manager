@@ -10,16 +10,18 @@ func (h *UserDataManagerHandler) PatchTextRecordById(
 	request *pb.PatchTextRecordByIdRequest,
 ) (*pb.PatchTextRecordByIdResponse, error) {
 	var response pb.PatchTextRecordByIdResponse
-	textRecord, err := h.userDataService.UpdateTextRecord(*request.TextRecord, ctx)
+	userid := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
+	textRecord, err := h.userDataService.UpdateTextRecord(*request.TextRecord, userid, ctx)
 
 	if err != nil {
-		h.logger.Info("updating text record error. "+err.Error(), request)
+		h.logger.Info("updating text record error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
 
 	response.TextRecord = &textRecord
-	h.logger.Info("successful updated text record. " + request.TextRecord.Id)
+	h.logger.Info("successful updated text record. "+request.TextRecord.Id, ". traceId="+traceId)
 
 	return &response, nil
 }

@@ -7,11 +7,11 @@ import (
 
 func (h *UserDataManagerHandler) GetLoginPasswordList(ctx context.Context, request *pb.GetLoginPasswordListRequest) (*pb.GetLoginPasswordListResponse, error) {
 	var response pb.GetLoginPasswordListResponse
-
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	loginPasswordList, err := h.userDataService.GetLoginPasswordList(ctx)
 
 	if err != nil {
-		h.logger.Info("getting login-password list error. "+err.Error(), request)
+		h.logger.Info("getting login-password list error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (h *UserDataManagerHandler) GetLoginPasswordList(ctx context.Context, reque
 		response.ProtectedItemList = append(response.ProtectedItemList, &protectedItem)
 	}
 
-	h.logger.Info("successful got login-password list. ")
+	h.logger.Info("successful got login-password list. ", ". traceId="+traceId)
 
 	return &response, nil
 }

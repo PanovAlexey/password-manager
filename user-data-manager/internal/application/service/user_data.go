@@ -9,18 +9,16 @@ import (
 )
 
 type UserData struct {
-	userIdFromContextGetter UserIdFromContextGetter
-	storageClient           grpc.StorageClient
+	storageClient grpc.StorageClient
 }
 
-func GetUserDataService(userIdFromContextGetter UserIdFromContextGetter, storageClient grpc.StorageClient) UserData {
+func GetUserDataService(storageClient grpc.StorageClient) UserData {
 	return UserData{
-		userIdFromContextGetter: userIdFromContextGetter,
-		storageClient:           storageClient,
+		storageClient: storageClient,
 	}
 }
 
-func (s UserData) AddLoginPassword(request pb.CreateLoginPassword, ctx context.Context) (pb.LoginPassword, error) {
+func (s UserData) AddLoginPassword(request pb.CreateLoginPassword, userId string, ctx context.Context) (pb.LoginPassword, error) {
 	var loginPassword pb.LoginPassword
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -36,7 +34,7 @@ func (s UserData) AddLoginPassword(request pb.CreateLoginPassword, ctx context.C
 				Login:    request.Login,
 				Password: request.Password,
 				Note:     request.Note,
-				UserId:   s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId:   userId,
 			},
 		},
 	)
@@ -140,7 +138,7 @@ func (s UserData) DeleteLoginPasswordById(id string, ctx context.Context) error 
 	return nil
 }
 
-func (s UserData) UpdateLoginPassword(request pb.LoginPassword, ctx context.Context) (pb.LoginPassword, error) {
+func (s UserData) UpdateLoginPassword(request pb.LoginPassword, userId string, ctx context.Context) (pb.LoginPassword, error) {
 	var loginPassword pb.LoginPassword
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -156,7 +154,7 @@ func (s UserData) UpdateLoginPassword(request pb.LoginPassword, ctx context.Cont
 				Login:    request.Login,
 				Password: request.Password,
 				Note:     request.Note,
-				UserId:   s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId:   userId,
 			},
 		},
 	)
@@ -176,7 +174,7 @@ func (s UserData) UpdateLoginPassword(request pb.LoginPassword, ctx context.Cont
 	return loginPassword, nil
 }
 
-func (s UserData) AddCreditCard(request pb.CreateCreditCard, ctx context.Context) (pb.CreditCard, error) {
+func (s UserData) AddCreditCard(request pb.CreateCreditCard, userId string, ctx context.Context) (pb.CreditCard, error) {
 	var creditCard pb.CreditCard
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -194,7 +192,7 @@ func (s UserData) AddCreditCard(request pb.CreateCreditCard, ctx context.Context
 				Cvv:        request.Cvv,
 				Owner:      request.Owner,
 				Note:       request.Note,
-				UserId:     s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId:     userId,
 			},
 		},
 	)
@@ -304,7 +302,7 @@ func (s UserData) DeleteCreditCardById(id string, ctx context.Context) error {
 	return nil
 }
 
-func (s UserData) UpdateCreditCard(request pb.CreditCard, ctx context.Context) (pb.CreditCard, error) {
+func (s UserData) UpdateCreditCard(request pb.CreditCard, userId string, ctx context.Context) (pb.CreditCard, error) {
 	var creditCard pb.CreditCard
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -322,7 +320,7 @@ func (s UserData) UpdateCreditCard(request pb.CreditCard, ctx context.Context) (
 				Cvv:        request.Cvv,
 				Owner:      request.Owner,
 				Note:       request.Note,
-				UserId:     s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId:     userId,
 			},
 		},
 	)
@@ -344,7 +342,7 @@ func (s UserData) UpdateCreditCard(request pb.CreditCard, ctx context.Context) (
 	return creditCard, nil
 }
 
-func (s UserData) AddTextRecord(request pb.TextRecord, ctx context.Context) (pb.TextRecord, error) {
+func (s UserData) AddTextRecord(request pb.TextRecord, userId string, ctx context.Context) (pb.TextRecord, error) {
 	var textRecord pb.TextRecord
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -359,7 +357,7 @@ func (s UserData) AddTextRecord(request pb.TextRecord, ctx context.Context) (pb.
 				Name:   request.Name,
 				Text:   request.Text,
 				Note:   request.Note,
-				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId: userId,
 			},
 		},
 	)
@@ -460,7 +458,7 @@ func (s UserData) DeleteTextRecordById(id string, ctx context.Context) error {
 	return nil
 }
 
-func (s UserData) UpdateTextRecord(request pb.TextRecord, ctx context.Context) (pb.TextRecord, error) {
+func (s UserData) UpdateTextRecord(request pb.TextRecord, userId string, ctx context.Context) (pb.TextRecord, error) {
 	var textRecord pb.TextRecord
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -475,7 +473,7 @@ func (s UserData) UpdateTextRecord(request pb.TextRecord, ctx context.Context) (
 				Name:   request.Name,
 				Text:   request.Text,
 				Note:   request.Note,
-				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId: userId,
 			},
 		},
 	)
@@ -494,7 +492,7 @@ func (s UserData) UpdateTextRecord(request pb.TextRecord, ctx context.Context) (
 	return textRecord, nil
 }
 
-func (s UserData) AddBinaryRecord(request pb.BinaryRecord, ctx context.Context) (pb.BinaryRecord, error) {
+func (s UserData) AddBinaryRecord(request pb.BinaryRecord, userId string, ctx context.Context) (pb.BinaryRecord, error) {
 	var binaryRecord pb.BinaryRecord
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -509,7 +507,7 @@ func (s UserData) AddBinaryRecord(request pb.BinaryRecord, ctx context.Context) 
 				Name:   request.Name,
 				Binary: request.Binary,
 				Note:   request.Note,
-				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId: userId,
 			},
 		},
 	)
@@ -610,7 +608,7 @@ func (s UserData) DeleteBinaryRecordById(id string, ctx context.Context) error {
 	return nil
 }
 
-func (s UserData) UpdateBinaryRecord(request pb.BinaryRecord, ctx context.Context) (pb.BinaryRecord, error) {
+func (s UserData) UpdateBinaryRecord(request pb.BinaryRecord, userId string, ctx context.Context) (pb.BinaryRecord, error) {
 	var binaryRecord pb.BinaryRecord
 
 	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
@@ -625,7 +623,7 @@ func (s UserData) UpdateBinaryRecord(request pb.BinaryRecord, ctx context.Contex
 				Name:   request.Name,
 				Binary: request.Binary,
 				Note:   request.Note,
-				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+				UserId: userId,
 			},
 		},
 	)

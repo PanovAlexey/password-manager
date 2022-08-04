@@ -7,16 +7,16 @@ import (
 )
 
 func (h *UserDataManagerHandler) DeleteLoginPasswordById(ctx context.Context, request *pb.DeleteLoginPasswordByIdRequest) (*emptypb.Empty, error) {
-
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	err := h.userDataService.DeleteLoginPasswordById(request.Id, ctx)
 
 	if err != nil {
-		h.logger.Info("getting login-password by id error. "+err.Error(), request)
+		h.logger.Info("getting login-password by id error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
 
-	h.logger.Info("successful deleted login-password by id. ", request.Id)
+	h.logger.Info("successful deleted login-password by id. ", request.Id, ". traceId="+traceId)
 
 	return &emptypb.Empty{}, nil
 }

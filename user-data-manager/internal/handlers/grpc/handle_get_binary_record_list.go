@@ -10,11 +10,11 @@ func (h *UserDataManagerHandler) GetBinaryRecordList(
 	request *pb.GetBinaryRecordListRequest,
 ) (*pb.GetBinaryRecordListResponse, error) {
 	var response pb.GetBinaryRecordListResponse
-
+	traceId := h.userIdFromContextGetter.GetTraceIdFromContext(ctx)
 	binaryRecordList, err := h.userDataService.GetBinaryRecordList(ctx)
 
 	if err != nil {
-		h.logger.Info("getting binary record list error. "+err.Error(), request)
+		h.logger.Info("getting binary record list error. "+err.Error(), ". traceId="+traceId)
 
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (h *UserDataManagerHandler) GetBinaryRecordList(
 		response.ProtectedItemList = append(response.ProtectedItemList, &protectedItem)
 	}
 
-	h.logger.Info("successful got binary record list. ")
+	h.logger.Info("successful got binary record list. ", ". traceId="+traceId)
 
 	return &response, nil
 }
