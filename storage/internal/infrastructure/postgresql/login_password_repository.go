@@ -71,7 +71,7 @@ func (r loginPasswordRepository) GetLoginPassword(loginPassword domain.LoginPass
 func (r loginPasswordRepository) UpdateLastAccessAt(entityId int64) error {
 	_, err := r.DB.Exec(
 		"UPDATE " + TableLoginPasswordName +
-			" SET last_access_at='" + time.Now().Format(time.RFC3339) +
+			" SET last_access_at='" + time.Now().Format(time.RFC3339) + // @ToDo: Replace with prepared queries
 			"' WHERE id=" + strconv.FormatInt(entityId, 10),
 	)
 
@@ -143,8 +143,8 @@ func (r loginPasswordRepository) Delete(id, userId int) error {
 func (r loginPasswordRepository) Update(loginPassword domain.LoginPassword) (*domain.LoginPassword, error) {
 	query := "UPDATE " +
 		TableLoginPasswordName +
-		" SET name=$1, login=$2, password=$3, note=$4, user_id=$5, last_access_at=$6" +
-		" WHERE id = $7 AND user_id = $8" +
+		" SET name=$1, login=$2, password=$3, note=$4, last_access_at=$5" +
+		" WHERE id = $6 AND user_id = $7" +
 		" RETURNING id, name, login, password, note, user_id, created_at, last_access_at"
 	err := r.DB.QueryRow(
 		query,
@@ -152,7 +152,6 @@ func (r loginPasswordRepository) Update(loginPassword domain.LoginPassword) (*do
 		loginPassword.Login,
 		loginPassword.Password,
 		loginPassword.Note,
-		loginPassword.UserId,
 		time.Now().Format(time.RFC3339),
 		loginPassword.Id,
 		loginPassword.UserId,

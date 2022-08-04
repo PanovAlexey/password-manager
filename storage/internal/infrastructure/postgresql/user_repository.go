@@ -51,7 +51,7 @@ func (r userRepository) GetUser(userLogin domain.UserLogin) (*domain.User, error
 func (r userRepository) UpdateLastAccessAt(entityId int64) error {
 	_, err := r.DB.Exec(
 		"UPDATE " + TableUsersName +
-			" SET last_access_at='" + time.Now().Format(time.RFC3339) +
+			" SET last_access_at='" + time.Now().Format(time.RFC3339) + // @ToDo: Replace with prepared queries
 			"' WHERE id=" + strconv.FormatInt(entityId, 10),
 	)
 

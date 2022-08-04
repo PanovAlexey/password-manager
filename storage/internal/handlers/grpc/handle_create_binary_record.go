@@ -2,25 +2,56 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"storage/internal/domain"
 	pb "storage/pkg/storage_grpc"
+	"strconv"
+	"time"
 )
 
-func (h *StorageHandler) CreateBinaryRecord(ctx context.Context, request *pb.CreateBinaryRecordRequest) (*pb.CreateBinaryRecordResponse, error) {
+func (h *StorageHandler) CreateBinaryRecord(
+	ctx context.Context,
+	request *pb.CreateBinaryRecordRequest,
+) (*pb.CreateBinaryRecordResponse, error) {
 	var response pb.CreateBinaryRecordResponse
 
-	// @ToDo: replace stub data for real data
+	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	binaryRecordEntity, err := h.binaryRecordService.AddBinaryRecord(
+		domain.BinaryRecord{
+			Name:   request.CreateBinaryRecord.Name,
+			Binary: request.CreateBinaryRecord.Binary,
+			UserId: request.CreateBinaryRecord.UserId,
+			Note:   request.CreateBinaryRecord.Note,
+		},
+		userId,
+	)
+
+	if err != nil {
+		return nil, errors.New("binary record creating error: " + err.Error())
+	}
+
 	var binaryRecord pb.BinaryRecord
-	binaryRecord.Id = "1234567890"
-	binaryRecord.Note = "Note text etc for example"
-	binaryRecord.Name = "Stub 2 binary record for vk.com"
-	binaryRecord.UserId = "234324-324324-32"
-	binaryRecord.Binary = "01010101010101"
-	binaryRecord.CreatedDate = &timestamp.Timestamp{}
-	binaryRecord.LastAccess = &timestamp.Timestamp{}
+	binaryRecord.Id = strconv.FormatInt(binaryRecordEntity.Id.Int64, 10)
+	binaryRecord.Note = binaryRecordEntity.Note
+	binaryRecord.Name = binaryRecordEntity.Name
+	binaryRecord.Binary = binaryRecordEntity.Binary
+	binaryRecord.UserId = binaryRecordEntity.UserId
+
+	createDateTime, err := time.Parse(time.RFC3339, binaryRecordEntity.CreatedAt)
+	binaryRecord.CreatedDate = timestamppb.New(createDateTime)
+
+	if binaryRecordEntity.LastAccessAt.Valid {
+		lastAccessAtTime, err := time.Parse(time.RFC3339, binaryRecordEntity.LastAccessAt.String)
+		binaryRecord.LastAccess = timestamppb.New(lastAccessAtTime)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	response.BinaryRecord = &binaryRecord
 
-	h.logger.Info("successful created binary record. ", request)
-
+	h.logger.Info("successful created binary record by userId=" + userId)
 	return &response, nil
 }

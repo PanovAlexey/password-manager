@@ -56,7 +56,7 @@ func (r creditCardRepository) Add(creditCard domain.CreditCard) (*domain.CreditC
 func (r creditCardRepository) UpdateLastAccessAt(entityId int64) error {
 	_, err := r.DB.Exec(
 		"UPDATE " + TableCreditCardName +
-			" SET last_access_at='" + time.Now().Format(time.RFC3339) +
+			" SET last_access_at='" + time.Now().Format(time.RFC3339) + // @ToDo: Replace with prepared queries
 			"' WHERE id=" + strconv.FormatInt(entityId, 10),
 	)
 
@@ -128,8 +128,8 @@ func (r creditCardRepository) Delete(id, userId int) error {
 func (r creditCardRepository) Update(creditCard domain.CreditCard) (*domain.CreditCard, error) {
 	query := "UPDATE " +
 		TableCreditCardName +
-		" SET name=$1, number=$2, expiration=$3, cvv=$4, owner=$5, note=$6, user_id=$7, last_access_at=$8" +
-		" WHERE id = $9 AND user_id = $10" +
+		" SET name=$1, number=$2, expiration=$3, cvv=$4, owner=$5, note=$6, last_access_at=$7" +
+		" WHERE id = $8 AND user_id = $9" +
 		" RETURNING id, name, number, expiration, cvv, owner, note, user_id, created_at, last_access_at"
 	err := r.DB.QueryRow(
 		query,
@@ -139,7 +139,6 @@ func (r creditCardRepository) Update(creditCard domain.CreditCard) (*domain.Cred
 		creditCard.Cvv,
 		creditCard.Owner,
 		creditCard.Note,
-		creditCard.UserId,
 		time.Now().Format(time.RFC3339),
 		creditCard.Id,
 		creditCard.UserId,

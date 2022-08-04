@@ -30,8 +30,14 @@ func main() {
 	databaseLoginPasswordRepository := databases.GetLoginPasswordRepository(databaseService.GetDatabaseConnection())
 	loginPasswordService := service.GetLoginPasswordService(databaseLoginPasswordRepository)
 
-	databaseCreditcardRepository := databases.GetCreditCardRepository(databaseService.GetDatabaseConnection())
-	creditCardService := service.GetCreditCardService(databaseCreditcardRepository)
+	databaseCreditCardRepository := databases.GetCreditCardRepository(databaseService.GetDatabaseConnection())
+	creditCardService := service.GetCreditCardService(databaseCreditCardRepository)
+
+	databaseTextRecordRepository := databases.GetTextRecordRepository(databaseService.GetDatabaseConnection())
+	textRecordService := service.GetTextRecordService(databaseTextRecordRepository)
+
+	databaseBinaryRecordRepository := databases.GetBinaryRecordRepository(databaseService.GetDatabaseConnection())
+	binaryRecordService := service.GetBinaryRecordService(databaseBinaryRecordRepository)
 
 	userIdFromContextGetterService := service.GetUserIdFromContextGetterService()
 
@@ -41,6 +47,8 @@ func main() {
 		userIdFromContextGetterService,
 		loginPasswordService,
 		creditCardService,
+		textRecordService,
+		binaryRecordService,
 	)
 
 	servers.RunGrpcServer(config, logger, handler)

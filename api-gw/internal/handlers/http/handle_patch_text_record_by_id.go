@@ -35,7 +35,7 @@ func (h *httpHandler) HandlePatchTextRecordById(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	createTextRecord := pb.CreateTextRecord{
+	createTextRecord := pb.TextRecord{
 		Name: createTextRecordDto.Name,
 		Text: createTextRecordDto.Text,
 		Note: createTextRecordDto.Note,
@@ -44,7 +44,7 @@ func (h *httpHandler) HandlePatchTextRecordById(w http.ResponseWriter, r *http.R
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).PatchTextRecordById(
 		r.Context(),
 		&pb.PatchTextRecordByIdRequest{
-			CreateTextRecord: &createTextRecord,
+			TextRecord: &createTextRecord,
 		},
 	)
 

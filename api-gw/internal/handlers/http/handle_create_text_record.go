@@ -35,7 +35,7 @@ func (h *httpHandler) HandleCreateTextRecord(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	createTextRecord := pb.CreateTextRecord{
+	createTextRecord := pb.TextRecord{
 		Name: createTextRecordDto.Name,
 		Text: createTextRecordDto.Text,
 		Note: createTextRecordDto.Note,
@@ -44,7 +44,7 @@ func (h *httpHandler) HandleCreateTextRecord(w http.ResponseWriter, r *http.Requ
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).CreateTextRecord(
 		r.Context(),
 		&pb.CreateTextRecordRequest{
-			CreateTextRecord: &createTextRecord,
+			TextRecord: &createTextRecord,
 		},
 	)
 

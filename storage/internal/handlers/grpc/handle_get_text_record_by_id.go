@@ -2,22 +2,50 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	pb "storage/pkg/storage_grpc"
+	"strconv"
+	"time"
 )
 
-func (h *StorageHandler) GetTextRecordById(ctx context.Context, request *pb.GetTextRecordByIdRequest) (*pb.GetTextRecordByIdResponse, error) {
+func (h *StorageHandler) GetTextRecordById(
+	ctx context.Context,
+	request *pb.GetTextRecordByIdRequest,
+) (*pb.GetTextRecordByIdResponse, error) {
 	var response pb.GetTextRecordByIdResponse
 
-	// @ToDo: replace stub data for real data
+	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	textRecordEntity, err := h.textRecordService.GetTextRecordById(request.Id, userId)
+
+	if err != nil {
+		return nil, errors.New("text record getting by id error: " + err.Error())
+	}
+
 	var textRecord pb.TextRecord
-	textRecord.Id = "1234567890"
-	textRecord.Note = "Note text etc for example"
-	textRecord.Name = "Stub 2 binary record for vk.com"
-	textRecord.UserId = "234324-324324-32"
-	textRecord.Text = "Temporary text..."
-	textRecord.CreatedDate = &timestamp.Timestamp{}
-	textRecord.LastAccess = &timestamp.Timestamp{}
+	textRecord.Id = strconv.FormatInt(textRecordEntity.Id.Int64, 10)
+	textRecord.Note = textRecordEntity.Note
+	textRecord.Name = textRecordEntity.Name
+	textRecord.Text = textRecordEntity.Text
+	textRecord.UserId = textRecordEntity.UserId
+
+	createDateTime, err := time.Parse(time.RFC3339, textRecordEntity.CreatedAt)
+
+	if err != nil {
+		return nil, err
+	}
+
+	textRecord.CreatedDate = timestamppb.New(createDateTime)
+
+	if textRecordEntity.LastAccessAt.Valid {
+		lastAccessAtTime, err := time.Parse(time.RFC3339, textRecordEntity.LastAccessAt.String)
+		textRecord.LastAccess = timestamppb.New(lastAccessAtTime)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	response.TextRecord = &textRecord
 
 	h.logger.Info("successful got text record by id. ", request)

@@ -176,26 +176,6 @@ func (s UserData) UpdateLoginPassword(request pb.LoginPassword, ctx context.Cont
 	return loginPassword, nil
 }
 
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-
 func (s UserData) AddCreditCard(request pb.CreateCreditCard, ctx context.Context) (pb.CreditCard, error) {
 	var creditCard pb.CreditCard
 
@@ -362,4 +342,304 @@ func (s UserData) UpdateCreditCard(request pb.CreditCard, ctx context.Context) (
 	creditCard.CreatedDate = storageResponse.CreditCard.CreatedDate
 
 	return creditCard, nil
+}
+
+func (s UserData) AddTextRecord(request pb.TextRecord, ctx context.Context) (pb.TextRecord, error) {
+	var textRecord pb.TextRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).CreateTextRecord(
+		ctx,
+		&storagePb.CreateTextRecordRequest{
+			CreateTextRecord: &storagePb.CreateTextRecord{
+				Name:   request.Name,
+				Text:   request.Text,
+				Note:   request.Note,
+				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+			},
+		},
+	)
+
+	if err != nil {
+		return textRecord, err
+	}
+
+	textRecord.Id = storageResponse.TextRecord.Id
+	textRecord.Name = storageResponse.TextRecord.Name
+	textRecord.Text = storageResponse.TextRecord.Text
+	textRecord.Note = storageResponse.TextRecord.Note
+	textRecord.LastAccess = storageResponse.TextRecord.LastAccess
+	textRecord.CreatedDate = storageResponse.TextRecord.CreatedDate
+
+	return textRecord, nil
+}
+
+func (s UserData) GetTextRecordById(id string, ctx context.Context) (pb.TextRecord, error) {
+	var textRecord pb.TextRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).GetTextRecordById(
+		ctx,
+		&storagePb.GetTextRecordByIdRequest{
+			Id: id,
+		},
+	)
+
+	if err != nil {
+		return textRecord, err
+	}
+
+	textRecord.Id = storageResponse.TextRecord.Id
+	textRecord.Text = storageResponse.TextRecord.Text
+	textRecord.Name = storageResponse.TextRecord.Name
+	textRecord.Note = storageResponse.TextRecord.Note
+	textRecord.LastAccess = storageResponse.TextRecord.LastAccess
+	textRecord.CreatedDate = storageResponse.TextRecord.CreatedDate
+
+	return textRecord, nil
+}
+
+func (s UserData) GetTextRecordList(ctx context.Context) ([]pb.TextRecord, error) {
+	var textRecordList []pb.TextRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).GetTextRecordList(
+		ctx,
+		&storagePb.GetTextRecordListRequest{},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var textRecord pb.TextRecord
+
+	for _, textRecordResponse := range storageResponse.TextRecordList {
+		textRecord.Id = textRecordResponse.Id
+		textRecord.Text = textRecordResponse.Text
+		textRecord.Name = textRecordResponse.Name
+		textRecord.Note = textRecordResponse.Note
+		textRecord.LastAccess = textRecordResponse.LastAccess
+		textRecord.CreatedDate = textRecordResponse.CreatedDate
+
+		textRecordList = append(textRecordList, textRecord)
+	}
+
+	return textRecordList, nil
+}
+
+func (s UserData) DeleteTextRecordById(id string, ctx context.Context) error {
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	_, err := (*s.storageClient.GetClient()).DeleteTextRecordById(
+		ctx,
+		&storagePb.DeleteTextRecordByIdRequest{
+			Id: id,
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s UserData) UpdateTextRecord(request pb.TextRecord, ctx context.Context) (pb.TextRecord, error) {
+	var textRecord pb.TextRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).UpdateTextRecordById(
+		ctx,
+		&storagePb.UpdateTextRecordByIdRequest{
+			CreateTextRecord: &storagePb.CreateTextRecord{
+				Name:   request.Name,
+				Text:   request.Text,
+				Note:   request.Note,
+				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+			},
+		},
+	)
+
+	if err != nil {
+		return textRecord, err
+	}
+
+	textRecord.Id = storageResponse.TextRecord.Id
+	textRecord.Name = storageResponse.TextRecord.Name
+	textRecord.Text = storageResponse.TextRecord.Text
+	textRecord.Note = storageResponse.TextRecord.Note
+	textRecord.LastAccess = storageResponse.TextRecord.LastAccess
+	textRecord.CreatedDate = storageResponse.TextRecord.CreatedDate
+
+	return textRecord, nil
+}
+
+func (s UserData) AddBinaryRecord(request pb.BinaryRecord, ctx context.Context) (pb.BinaryRecord, error) {
+	var binaryRecord pb.BinaryRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).CreateBinaryRecord(
+		ctx,
+		&storagePb.CreateBinaryRecordRequest{
+			CreateBinaryRecord: &storagePb.CreateBinaryRecord{
+				Name:   request.Name,
+				Binary: request.Binary,
+				Note:   request.Note,
+				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+			},
+		},
+	)
+
+	if err != nil {
+		return binaryRecord, err
+	}
+
+	binaryRecord.Id = storageResponse.BinaryRecord.Id
+	binaryRecord.Name = storageResponse.BinaryRecord.Name
+	binaryRecord.Binary = storageResponse.BinaryRecord.Binary
+	binaryRecord.Note = storageResponse.BinaryRecord.Note
+	binaryRecord.LastAccess = storageResponse.BinaryRecord.LastAccess
+	binaryRecord.CreatedDate = storageResponse.BinaryRecord.CreatedDate
+
+	return binaryRecord, nil
+}
+
+func (s UserData) GetBinaryRecordById(id string, ctx context.Context) (pb.BinaryRecord, error) {
+	var binaryRecord pb.BinaryRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).GetBinaryRecordById(
+		ctx,
+		&storagePb.GetBinaryRecordByIdRequest{
+			Id: id,
+		},
+	)
+
+	if err != nil {
+		return binaryRecord, err
+	}
+
+	binaryRecord.Id = storageResponse.BinaryRecord.Id
+	binaryRecord.Binary = storageResponse.BinaryRecord.Binary
+	binaryRecord.Name = storageResponse.BinaryRecord.Name
+	binaryRecord.Note = storageResponse.BinaryRecord.Note
+	binaryRecord.LastAccess = storageResponse.BinaryRecord.LastAccess
+	binaryRecord.CreatedDate = storageResponse.BinaryRecord.CreatedDate
+
+	return binaryRecord, nil
+}
+
+func (s UserData) GetBinaryRecordList(ctx context.Context) ([]pb.BinaryRecord, error) {
+	var binaryRecordList []pb.BinaryRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).GetBinaryRecordList(
+		ctx,
+		&storagePb.GetBinaryRecordListRequest{},
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var binaryRecord pb.BinaryRecord
+
+	for _, binaryRecordResponse := range storageResponse.BinaryRecordList {
+		binaryRecord.Id = binaryRecordResponse.Id
+		binaryRecord.Binary = binaryRecordResponse.Binary
+		binaryRecord.Name = binaryRecordResponse.Name
+		binaryRecord.Note = binaryRecordResponse.Note
+		binaryRecord.LastAccess = binaryRecordResponse.LastAccess
+		binaryRecord.CreatedDate = binaryRecordResponse.CreatedDate
+
+		binaryRecordList = append(binaryRecordList, binaryRecord)
+	}
+
+	return binaryRecordList, nil
+}
+
+func (s UserData) DeleteBinaryRecordById(id string, ctx context.Context) error {
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	_, err := (*s.storageClient.GetClient()).DeleteBinaryRecordById(
+		ctx,
+		&storagePb.DeleteBinaryRecordByIdRequest{
+			Id: id,
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s UserData) UpdateBinaryRecord(request pb.BinaryRecord, ctx context.Context) (pb.BinaryRecord, error) {
+	var binaryRecord pb.BinaryRecord
+
+	// @ToDo: find out what magic is going on here. Without a context refresh, context comes to storage service empty.
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx = metadata.NewOutgoingContext(ctx, md)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	storageResponse, err := (*s.storageClient.GetClient()).UpdateBinaryRecordById(
+		ctx,
+		&storagePb.UpdateBinaryRecordByIdRequest{
+			CreateBinaryRecord: &storagePb.CreateBinaryRecord{
+				Name:   request.Name,
+				Binary: request.Binary,
+				Note:   request.Note,
+				UserId: s.userIdFromContextGetter.getUserIdFromContext(ctx),
+			},
+		},
+	)
+
+	if err != nil {
+		return binaryRecord, err
+	}
+
+	binaryRecord.Id = storageResponse.BinaryRecord.Id
+	binaryRecord.Name = storageResponse.BinaryRecord.Name
+	binaryRecord.Binary = storageResponse.BinaryRecord.Binary
+	binaryRecord.Note = storageResponse.BinaryRecord.Note
+	binaryRecord.LastAccess = storageResponse.BinaryRecord.LastAccess
+	binaryRecord.CreatedDate = storageResponse.BinaryRecord.CreatedDate
+
+	return binaryRecord, nil
 }

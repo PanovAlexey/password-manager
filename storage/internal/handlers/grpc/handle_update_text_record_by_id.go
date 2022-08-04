@@ -2,24 +2,56 @@ package grpc
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes/timestamp"
+	"errors"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"storage/internal/domain"
 	pb "storage/pkg/storage_grpc"
+	"strconv"
+	"time"
 )
 
-func (h *StorageHandler) UpdateTextRecord(ctx context.Context, request *pb.UpdateTextRecordByIdRequest) (*pb.UpdateTextRecordByIdResponse, error) {
+func (h *StorageHandler) UpdateTextRecord(
+	ctx context.Context,
+	request *pb.UpdateTextRecordByIdRequest,
+) (*pb.UpdateTextRecordByIdResponse, error) {
 	var response pb.UpdateTextRecordByIdResponse
 
-	// @ToDo: replace stub data for real data
+	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	textRecordEntity, err := h.textRecordService.UpdateTextRecord(
+		domain.TextRecord{
+			Name:   request.CreateTextRecord.Name,
+			Text:   request.CreateTextRecord.Text,
+			UserId: request.CreateTextRecord.UserId,
+			Note:   request.CreateTextRecord.Note,
+		},
+		userId,
+	)
+
+	if err != nil {
+		return nil, errors.New("text record updating error: " + err.Error())
+	}
+
 	var textRecord pb.TextRecord
-	textRecord.Id = "1234567890"
-	textRecord.Name = "War and peace. Tolstoy."
-	textRecord.Text = "Temporary text etc..."
-	textRecord.UserId = "324"
-	textRecord.CreatedDate = &timestamp.Timestamp{}
-	textRecord.LastAccess = &timestamp.Timestamp{}
+	textRecord.Id = strconv.FormatInt(textRecordEntity.Id.Int64, 10)
+	textRecord.Note = textRecordEntity.Note
+	textRecord.Name = textRecordEntity.Name
+	textRecord.Text = textRecordEntity.Text
+
+	createDateTime, err := time.Parse(time.RFC3339, textRecordEntity.CreatedAt)
+	textRecord.CreatedDate = timestamppb.New(createDateTime)
+
+	if textRecordEntity.LastAccessAt.Valid {
+		lastAccessAtTime, err := time.Parse(time.RFC3339, textRecordEntity.LastAccessAt.String)
+		textRecord.LastAccess = timestamppb.New(lastAccessAtTime)
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	response.TextRecord = &textRecord
 
-	h.logger.Info("successful updated text record. ", request)
+	h.logger.Info("successful updated text record by userId=" + userId)
 
 	return &response, nil
 }

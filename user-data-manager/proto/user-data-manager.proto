@@ -157,12 +157,6 @@ message TextRecord {
   string note = 6;
 }
 
-message CreateTextRecord {
-  string name = 1;
-  string text = 2;
-  string note = 3;
-}
-
 message GetTextRecordListRequest {
 }
 
@@ -171,7 +165,7 @@ message GetTextRecordListResponse {
 }
 
 message CreateTextRecordRequest{
-  CreateTextRecord CreateTextRecord = 1;
+  TextRecord TextRecord = 1;
 }
 
 message CreateTextRecordResponse{
@@ -187,7 +181,7 @@ message GetTextRecordByIdResponse{
 }
 
 message PatchTextRecordByIdRequest{
-  CreateTextRecord CreateTextRecord = 1;
+  TextRecord TextRecord = 1;
 }
 
 message PatchTextRecordByIdResponse{
@@ -208,12 +202,6 @@ message BinaryRecord {
   string note = 6;
 }
 
-message CreateBinaryRecord {
-  string name = 1;
-  string binary = 2;
-  string note = 3;
-}
-
 message GetBinaryRecordListRequest {
 }
 
@@ -222,7 +210,7 @@ message GetBinaryRecordListResponse {
 }
 
 message CreateBinaryRecordRequest{
-  CreateBinaryRecord CreateBinaryRecord = 1;
+  BinaryRecord BinaryRecord = 1;
 }
 
 message CreateBinaryRecordResponse{
@@ -238,7 +226,7 @@ message GetBinaryRecordByIdResponse{
 }
 
 message PatchBinaryRecordByIdRequest{
-  CreateBinaryRecord CreateBinaryRecord = 1;
+  BinaryRecord BinaryRecord = 1;
 }
 
 message PatchBinaryRecordByIdResponse{

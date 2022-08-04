@@ -8,7 +8,14 @@ import (
 )
 
 func (h *StorageHandler) DeleteTextRecordById(ctx context.Context, request *pb.DeleteTextRecordByIdRequest) (*emptypb.Empty, error) {
+	userId := h.userIdFromContextGetter.GetUserIdFromContext(ctx)
+	err := h.textRecordService.DeleteTextRecord(request.Id, userId)
+
+	if err != nil {
+		return nil, errors.New("text record deleting by id error: " + err.Error())
+	}
+
 	h.logger.Info("successful deleted text record by id. ", request)
-	// @ToDo handle error
-	return &emptypb.Empty{}, errors.New("test error")
+
+	return &emptypb.Empty{}, nil
 }

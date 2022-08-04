@@ -35,7 +35,7 @@ func (h *httpHandler) HandlePatchBinaryRecordById(w http.ResponseWriter, r *http
 		return
 	}
 
-	createBinaryRecord := pb.CreateBinaryRecord{
+	createBinaryRecord := pb.BinaryRecord{
 		Name:   createBinaryRecordDto.Name,
 		Binary: createBinaryRecordDto.Binary,
 		Note:   createBinaryRecordDto.Note,
@@ -44,7 +44,7 @@ func (h *httpHandler) HandlePatchBinaryRecordById(w http.ResponseWriter, r *http
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).PatchBinaryRecordById(
 		r.Context(),
 		&pb.PatchBinaryRecordByIdRequest{
-			CreateBinaryRecord: &createBinaryRecord,
+			BinaryRecord: &createBinaryRecord,
 		},
 	)
 
