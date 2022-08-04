@@ -1,6 +1,7 @@
 package http
 
 import (
+	"api-gw/internal/application/service"
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
@@ -11,7 +12,7 @@ import (
 )
 
 func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.Request) {
-	userId := fmt.Sprintf("%v", r.Context().Value("token"))
+	userId := fmt.Sprintf("%v", r.Context().Value(service.UserIdKey))
 	id := chi.URLParam(r, "id")
 
 	defer r.Body.Close()

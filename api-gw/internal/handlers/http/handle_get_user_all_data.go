@@ -1,6 +1,7 @@
 package http
 
 import (
+	"api-gw/internal/application/service"
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
@@ -10,7 +11,7 @@ import (
 
 func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Request) {
 	UserData := dto.UserData{}
-	userId := fmt.Sprintf("%v", r.Context().Value("token"))
+	userId := fmt.Sprintf("%v", r.Context().Value(service.UserIdKey))
 
 	binaryRecordListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetBinaryRecordList(
 		r.Context(),
@@ -25,7 +26,6 @@ func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	h.logger.Info("successful getting binary record list by user id ", userId)
 	UserData.BinaryRecordCollection = binaryRecordListResponse.ProtectedItemList
 
 	textRecordListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetTextRecordList(
@@ -41,7 +41,6 @@ func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	h.logger.Info("successful getting text record list by user id ", userId)
 	UserData.TextRecordCollection = textRecordListResponse.ProtectedItemList
 
 	creditCardListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetCreditCardList(
@@ -57,7 +56,6 @@ func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	h.logger.Info("successful getting credit card list by user id ", userId)
 	UserData.CreditCardCollection = creditCardListResponse.ProtectedItemList
 
 	loginPasswordListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetLoginPasswordList(

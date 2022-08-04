@@ -1,6 +1,7 @@
 package http
 
 import (
+	"api-gw/internal/application/service"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
 	"fmt"
@@ -9,7 +10,7 @@ import (
 )
 
 func (h *httpHandler) HandleGetBinaryRecordById(w http.ResponseWriter, r *http.Request) {
-	userId := fmt.Sprintf("%v", r.Context().Value("token"))
+	userId := fmt.Sprintf("%v", r.Context().Value(service.UserIdKey))
 	id := chi.URLParam(r, "id")
 
 	response, err := (*h.gRPCUserDataManagerClient.GetClient()).GetBinaryRecordById(

@@ -1,6 +1,7 @@
 package http
 
 import (
+	"api-gw/internal/application/service"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"fmt"
 	"github.com/go-chi/chi/v5"
@@ -8,7 +9,7 @@ import (
 )
 
 func (h *httpHandler) HandleDeleteLoginPasswordById(w http.ResponseWriter, r *http.Request) {
-	userId := fmt.Sprintf("%v", r.Context().Value("token"))
+	userId := fmt.Sprintf("%v", r.Context().Value(service.UserIdKey))
 	id := chi.URLParam(r, "id")
 
 	_, err := (*h.gRPCUserDataManagerClient.GetClient()).DeleteLoginPasswordById(
