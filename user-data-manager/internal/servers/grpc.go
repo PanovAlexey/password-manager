@@ -18,7 +18,7 @@ type Logger interface {
 
 func RunGrpcServer(config config.Config, logger Logger, handler *grpcHandler.UserDataManagerHandler) {
 	logger.Info(config.GetApplicationName() + " grpc server starting...")
-	listen, err := net.Listen("tcp", config.GetGrpcServerAddress())
+	listen, err := net.Listen("tcp", ":"+config.GetGrpcServerPort())
 
 	if err != nil {
 		logger.Error("grpc listening error: " + err.Error())

@@ -1,6 +1,82 @@
 version: "3.7"
 
 services:
+  password-manager-api-gw:
+    container_name: password-manager-api-gw
+    image: golang:1.18-alpine
+    depends_on:
+      - password-manager-user-auth
+    ports:
+      - ${GW_SERVER_PORT}:${GW_SERVER_PORT}
+    environment:
+      GW_APPLICATION_NAME: ${GW_APPLICATION_NAME}
+      GW_SERVER_ADDRESS: ${GW_SERVER_ADDRESS}
+      GW_SERVICE_USER_DATA_MANAGER_GRPC_ADDRESS: ${GW_SERVICE_USER_DATA_MANAGER_GRPC_ADDRESS}
+      GW_SERVICE_USER_AUTHORIZATION_GRPC_ADDRESS: ${GW_SERVICE_USER_AUTHORIZATION_GRPC_ADDRESS}
+      GW_TIMEOUT_HTTP_SHUTDOWN: ${GW_TIMEOUT_HTTP_SHUTDOWN}
+    networks:
+      - password-manager-network
+    volumes:
+      - ./api-gw:/app
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+
+  password-manager-user-data:
+    container_name: password-manager-user-data
+    image: golang:1.18-alpine
+    depends_on:
+      - password-manager-storage
+    ports:
+      - ${UDM_GRPC_SERVER_PORT}:${UDM_GRPC_SERVER_PORT}
+    environment:
+      UDM_GRPC_SERVER_ADDRESS: ${UDM_GRPC_SERVER_ADDRESS}
+      UDM_APPLICATION_NAME: ${UDM_APPLICATION_NAME}
+      UDM_SERVICE_STORAGE_GRPC_SERVER_ADDRESS: ${UDM_SERVICE_STORAGE_GRPC_SERVER_ADDRESS}
+    networks:
+      - password-manager-network
+    volumes:
+      - ./user-data-manager:/app
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+
+  password-manager-storage:
+    container_name: password-manager-storage
+    image: golang:1.18-alpine
+    depends_on:
+      - password-manager-storage-master-postgres
+    ports:
+      - ${STORAGE_GRPC_SERVER_PORT}:${STORAGE_GRPC_SERVER_PORT}
+    environment:
+      STORAGE_DB_MASTER_PORT: ${STORAGE_DB_MASTER_PORT}
+      STORAGE_DB_USERNAME: ${STORAGE_DB_USERNAME}
+      STORAGE_DB_PASSWORD: ${STORAGE_DB_PASSWORD}
+      STORAGE_DB_MASTER_DATABASE: ${STORAGE_DB_MASTER_DATABASE}
+      STORAGE_APPLICATION_NAME: ${STORAGE_APPLICATION_NAME}
+    networks:
+      - password-manager-network
+    volumes:
+      - ./storage:/app
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+
+  password-manager-user-auth:
+    container_name: password-manager-user-auth
+    image: golang:1.18-alpine
+    depends_on:
+      - password-manager-user-data
+    ports:
+      - 3202:${UA_GRPC_SERVER_PORT}
+    environment:
+      UA_APPLICATION_NAME: ${UA_APPLICATION_NAME}
+      GW_SERVER_ADDRESS: ${GW_SERVER_ADDRESS}
+      UA_SERVICE_STORAGE_GRPC_SERVER_ADDRESS: ${UA_SERVICE_STORAGE_GRPC_SERVER_ADDRESS}
+    networks:
+      - password-manager-network
+    volumes:
+      - ./user:/app
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+
   password-manager-storage-master-postgres:
     container_name: password-manager-storage-master-postgres
     build:
@@ -16,7 +92,7 @@ services:
       - ./storage/.docker/postgresql/master/pgdata:/var/lib/postgresql/data
       - ./storage/.docker/postgresql/master/init:/docker-entrypoint-initdb.d
     ports:
-      - "${STORAGE_DB_MASTER_PORT}:5432"
+      - "54320:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${STORAGE_DB_USERNAME} -p ${STORAGE_DB_PASSWORD} -d ${STORAGE_DB_MASTER_DATABASE}" ]
       timeout: 45s
@@ -28,9 +104,9 @@ services:
           cpus: '2'
           memory: 1G
     networks:
-      - password_manager_network
+      - password-manager-network
 
 networks:
-  password_manager_network:
-    name: password_manager_network
+  password-manager-network:
+    name: password-manager-network
     driver: bridge

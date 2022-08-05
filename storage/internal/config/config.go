@@ -9,12 +9,13 @@ import (
 var configSingleton *Config
 
 type Config struct {
-	applicationName   string
-	grpcServerAddress string
-	databaseUser      string
-	databasePassword  string
-	databasePort      string
-	databaseName      string
+	applicationName  string
+	grpcServerPort   string
+	databaseUser     string
+	databasePassword string
+	databasePort     string
+	databaseAddress  string
+	databaseName     string
 }
 
 func New() Config {
@@ -41,8 +42,8 @@ func (c Config) GetApplicationName() string {
 	return c.applicationName
 }
 
-func (c Config) GetGrpcServerAddress() string {
-	return c.grpcServerAddress
+func (c Config) GetGrpcServerPort() string {
+	return c.grpcServerPort
 }
 
 func (c Config) GetDatabaseUser() string {
@@ -57,14 +58,19 @@ func (c Config) GetDatabasePort() string {
 	return c.databasePort
 }
 
+func (c Config) GetDatabaseAddress() string {
+	return c.databaseAddress
+}
+
 func (c Config) GetDatabaseName() string {
 	return c.databaseName
 }
 
 func initConfigByEnv(config Config) Config {
 	config.applicationName = getEnv("STORAGE_APPLICATION_NAME")
-	config.grpcServerAddress = getEnv("STORAGE_GRPC_SERVER_ADDRESS")
+	config.grpcServerPort = getEnv("STORAGE_GRPC_SERVER_PORT")
 	config.databasePort = getEnv("STORAGE_DB_MASTER_PORT")
+	config.databaseAddress = getEnv("STORAGE_DB_MASTER_ADDRESS")
 	config.databaseName = getEnv("STORAGE_DB_MASTER_DATABASE")
 
 	return config
@@ -83,8 +89,8 @@ func initConfigByDefault(config Config) Config {
 		config.applicationName = "Storage"
 	}
 
-	if len(config.grpcServerAddress) < 1 {
-		config.grpcServerAddress = "localhost:3205"
+	if len(config.grpcServerPort) < 1 {
+		config.grpcServerPort = "3205"
 	}
 
 	if len(config.databaseUser) < 1 {
@@ -96,7 +102,11 @@ func initConfigByDefault(config Config) Config {
 	}
 
 	if len(config.databasePort) < 1 {
-		config.databasePort = "54320"
+		config.databasePort = "5432"
+	}
+
+	if len(config.databaseAddress) < 1 {
+		config.databaseAddress = "password-manager-storage-master-postgres"
 	}
 
 	if len(config.databaseName) < 1 {

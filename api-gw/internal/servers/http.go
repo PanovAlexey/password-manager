@@ -29,7 +29,7 @@ func RunHttpServer(handler HandlerInterface, config config.Config, logger Logger
 
 	srv := new(mainHttpServer)
 	srv.httpServer = &http.Server{
-		Addr:    config.GetServerAddress(),
+		Addr:    ":" + config.GetServerPort(),
 		Handler: handler.NewRouter(),
 	}
 
@@ -39,6 +39,8 @@ func RunHttpServer(handler HandlerInterface, config config.Config, logger Logger
 	go func() {
 		logger.Info(srv.httpServer.ListenAndServe())
 	}()
+
+	logger.Info(config.GetApplicationName() + " http server started")
 
 	logger.Info("Signal detected: ", <-sigs)
 

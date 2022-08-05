@@ -11,7 +11,7 @@ var configSingleton *Config
 
 type Config struct {
 	applicationName              string
-	serverAddress                string
+	serverPort                   string
 	userDataManagerGRPCAddress   string
 	userAuthorizationGRPCAddress string
 	timeoutHttpShutdown          int // seconds
@@ -37,8 +37,8 @@ func (c Config) GetApplicationName() string {
 	return c.applicationName
 }
 
-func (c Config) GetServerAddress() string {
-	return c.serverAddress
+func (c Config) GetServerPort() string {
+	return c.serverPort
 }
 
 func (c Config) GetUserDataManagerGRPCServerAddress() string {
@@ -55,7 +55,7 @@ func (c Config) GetTimeoutHttpShutdown() int {
 
 func initConfigByEnv(config Config) Config {
 	config.applicationName = getEnv("GW_APPLICATION_NAME")
-	config.serverAddress = getEnv("GW_SERVER_ADDRESS")
+	config.serverPort = getEnv("GW_SERVER_PORT")
 	config.userDataManagerGRPCAddress = getEnv("GW_SERVICE_USER_DATA_MANAGER_GRPC_ADDRESS")
 	config.userAuthorizationGRPCAddress = getEnv("GW_SERVICE_USER_AUTHORIZATION_GRPC_ADDRESS")
 
@@ -81,16 +81,16 @@ func initConfigByDefault(config Config) Config {
 		config.applicationName = "API Gateway"
 	}
 
-	if len(config.serverAddress) < 1 {
-		config.serverAddress = "localhost:8080"
+	if len(config.serverPort) < 1 {
+		config.serverPort = "8081"
 	}
 
 	if len(config.userDataManagerGRPCAddress) < 1 {
-		config.userDataManagerGRPCAddress = "localhost:3200"
+		config.userDataManagerGRPCAddress = "password-manager-user-data:3200"
 	}
 
 	if len(config.userAuthorizationGRPCAddress) < 1 {
-		config.userAuthorizationGRPCAddress = "localhost:3202"
+		config.userAuthorizationGRPCAddress = "password-manager-user-auth:3202"
 	}
 
 	if config.timeoutHttpShutdown == 0 {

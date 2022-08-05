@@ -36,7 +36,7 @@ func (s databaseService) GetDatabaseConnection() *sqlx.DB {
 func (s databaseService) initDatabaseConnection(c config.Config) (*sqlx.DB, error) {
 	db, err := sqlx.Connect(
 		"postgres",
-		"postgresql://"+c.GetDatabaseUser()+":"+c.GetDatabasePassword()+"@0.0.0.0:"+c.GetDatabasePort()+"/"+c.GetDatabaseName()+"?sslmode=disable",
+		"postgresql://"+c.GetDatabaseUser()+":"+c.GetDatabasePassword()+"@"+c.GetDatabaseAddress()+":"+c.GetDatabasePort()+"/"+c.GetDatabaseName()+"?sslmode=disable",
 	)
 
 	if err != nil {
