@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  password-manager-user-data:
+    container_name: password-manager-user-data
+    image: golang:1.18-alpine
+    #depends_on:
+    #  - password-manager-storage
+    ports:
+      - ${UDM_GRPC_SERVER_PORT}:${UDM_GRPC_SERVER_PORT}
+    environment:
+      UDM_APPLICATION_NAME: ${UDM_APPLICATION_NAME}
+      UDM_SERVICE_STORAGE_GRPC_SERVER_ADDRESS: ${UDM_SERVICE_STORAGE_GRPC_SERVER_ADDRESS}
+    networks:
+      - password-manager-network
+    volumes:
+      - ../user-data-manager:/app
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+
+networks:
+  password-manager-network:
+    external:
+      name:  password-manager-network
+    driver: bridge
