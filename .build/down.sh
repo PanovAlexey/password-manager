@@ -1,0 +1,5 @@
+sh -c "cd ./database && docker-compose down"
+sh -c "cd ./storage && docker-compose down"
+sh -c "cd ./user && docker-compose down"
+sh -c "cd ./user-data-manager && docker-compose down"
+sh -c "cd ./api-gw && docker-compose down"
