@@ -1,5 +1,6 @@
 package domain
 
+//@ToDo: delete it and use pb entities
 type LoginPassword struct {
 	Id           string
 	Note         string
