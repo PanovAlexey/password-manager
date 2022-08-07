@@ -24,7 +24,7 @@ func (h *httpHandler) HandleGetLoginPasswordList(w http.ResponseWriter, r *http.
 		return
 	}
 
-	result, err := json.Marshal(response)
+	result, err := json.Marshal(response.ProtectedItemList)
 
 	if err != nil {
 		info := "error marshalling login-password list: " + err.Error()

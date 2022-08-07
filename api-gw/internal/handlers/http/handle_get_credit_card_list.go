@@ -25,7 +25,7 @@ func (h *httpHandler) HandleGetCreditCardList(w http.ResponseWriter, r *http.Req
 	}
 
 	h.logger.Info("successful getting credit card list by user id ", userId)
-	result, err := json.Marshal(response)
+	result, err := json.Marshal(response.ProtectedItemList)
 
 	if err != nil {
 		info := "error marshalling credit card list: " + err.Error()

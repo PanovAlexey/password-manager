@@ -25,7 +25,7 @@ func (h *httpHandler) HandleGetBinaryRecordList(w http.ResponseWriter, r *http.R
 	}
 
 	h.logger.Info("successful getting binary record list by user id ", userId, response)
-	result, err := json.Marshal(response)
+	result, err := json.Marshal(response.ProtectedItemList)
 
 	if err != nil {
 		info := "error marshalling binary record list: " + err.Error()
