@@ -11,10 +11,8 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	userId := h.userAuthorizationService.GetUserIdFromContext(r.Context())
 
 	if !h.userAuthorizationService.IsUserIdEmpty(userId) {
-		info := "error registration: already logged in. "
-		h.logger.Debug(info, userId)
 		w.WriteHeader(http.StatusForbidden)
-		w.Write([]byte(info))
+		h.showError(w, "error registration: already logged in. ")
 		return
 	}
 
@@ -23,9 +21,7 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		info := "error registration: " + err.Error()
-		h.logger.Error(info)
-		w.Write([]byte(info))
+		h.showError(w, "error registration: "+err.Error())
 		return
 	}
 
@@ -34,9 +30,7 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		info := "error user registration by wrong request: "
-		h.logger.Error(info, err, string(bodyJSON))
-		w.Write([]byte(info))
+		h.showError(w, "error user registration by wrong request: "+err.Error())
 		return
 	}
 
@@ -44,11 +38,8 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	if len(registerUserDto.Email) == 0 ||
 		len(registerUserDto.Password) == 0 ||
 		len(registerUserDto.RepeatPassword) == 0 {
-
-		info := "error user registration by wrong request: incorrect fields value"
 		w.WriteHeader(http.StatusBadRequest)
-		h.logger.Error(info, string(bodyJSON))
-		w.Write([]byte(info))
+		h.showError(w, "error user registration by wrong request: incorrect fields value")
 		return
 	}
 
@@ -60,10 +51,8 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		info := "error user registration: " + err.Error()
-		h.logger.Error(info)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(info))
+		h.showError(w, "error user registration: "+err.Error())
 		return
 	}
 
@@ -71,10 +60,8 @@ func (h *httpHandler) HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	result, err := json.Marshal(userToken)
 
 	if err != nil {
-		info := "error marshalling user: " + err.Error()
-		h.logger.Error(info, userToken)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(info))
+		h.showError(w, "error marshalling user: "+err.Error())
 		return
 	}
 

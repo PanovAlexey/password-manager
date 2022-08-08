@@ -7,6 +7,7 @@ import (
 	"api-gw/internal/handlers/http/middleware/json"
 	middleware_custom "api-gw/internal/handlers/http/middleware/trace"
 	"api-gw/internal/infrastructure/clients/grpc"
+	encodingJson "encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
@@ -91,4 +92,14 @@ func (h *httpHandler) NewRouter() chi.Router {
 	})
 
 	return router
+}
+
+func (h *httpHandler) showError(w http.ResponseWriter, errorText string, args ...interface{}) {
+	h.logger.Debug(errorText, args)
+
+	err := encodingJson.NewEncoder(w).Encode(errorText)
+
+	if err != nil {
+		h.logger.Error("unknown error while preparing response " + err.Error())
+	}
 }

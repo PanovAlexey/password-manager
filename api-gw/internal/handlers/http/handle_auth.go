@@ -11,10 +11,8 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	userId := h.userAuthorizationService.GetUserIdFromContext(r.Context())
 
 	if !h.userAuthorizationService.IsUserIdEmpty(userId) {
-		info := "error authorization: already logged in. "
-		h.logger.Debug(info, userId)
 		w.WriteHeader(http.StatusForbidden)
-		w.Write([]byte(info))
+		h.showError(w, "error authorization: already logged in. ")
 		return
 	}
 
@@ -23,9 +21,7 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		info := "error auth: " + err.Error()
-		h.logger.Error(info)
-		w.Write([]byte(info))
+		h.showError(w, "error auth: "+err.Error())
 		return
 	}
 
@@ -34,9 +30,7 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		info := "error user auth by wrong request: " + err.Error()
-		h.logger.Error(info, string(bodyJSON))
-		w.Write([]byte(info))
+		h.showError(w, "error user auth by wrong request: "+err.Error())
 		return
 	}
 
@@ -45,9 +39,7 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 		len(authUserDto.Password) == 0 {
 
 		w.WriteHeader(http.StatusBadRequest)
-		info := "error user auth by wrong request: fields values are incorrect. "
-		h.logger.Error(info, string(bodyJSON))
-		w.Write([]byte(info))
+		h.showError(w, "error user auth by wrong request: fields values are incorrect. ")
 		return
 	}
 
@@ -58,10 +50,8 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		info := "error user auth: " + err.Error()
-		h.logger.Error(info)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(info))
+		h.showError(w, "error user auth: "+err.Error())
 		return
 	}
 
@@ -69,10 +59,8 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	result, err := json.Marshal(userToken)
 
 	if err != nil {
-		info := "error marshalling user: " + err.Error()
-		h.logger.Error(info, userToken)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(info))
+		h.showError(w, "error marshalling user: "+err.Error())
 		return
 	}
 
