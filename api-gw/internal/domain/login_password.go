@@ -1,6 +1,5 @@
 package domain
 
-//@ToDo: delete it and use pb entities
 type LoginPassword struct {
 	Id           string
 	Note         string
@@ -8,6 +7,6 @@ type LoginPassword struct {
 	Login        string
 	Password     string
 	UserId       string
-	CreatedAt    string
-	LastAccessAt string
+	CreatedAt    string `json:"created_at"`
+	LastAccessAt string `json:"last_access_at"`
 }

@@ -2,15 +2,17 @@ package http
 
 import (
 	"api-gw/internal/application/service"
+	"api-gw/internal/domain"
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Request) {
-	UserData := dto.UserData{}
+	userData := dto.UserData{}
 	userId := fmt.Sprintf("%v", r.Context().Value(service.UserIdKey))
 
 	binaryRecordListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetBinaryRecordList(
@@ -26,7 +28,14 @@ func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	UserData.BinaryRecordCollection = binaryRecordListResponse.ProtectedItemList
+	for _, item := range binaryRecordListResponse.ProtectedItemList {
+		userData.BinaryRecordCollection = append(userData.BinaryRecordCollection, domain.ProtectedItem{
+			Id:           item.Id,
+			Name:         item.Name,
+			CreatedAt:    item.CreatedDate.AsTime().Format(time.RFC3339),
+			LastAccessAt: item.LastAccess.AsTime().Format(time.RFC3339),
+		})
+	}
 
 	textRecordListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetTextRecordList(
 		r.Context(),
@@ -41,7 +50,14 @@ func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	UserData.TextRecordCollection = textRecordListResponse.ProtectedItemList
+	for _, item := range textRecordListResponse.ProtectedItemList {
+		userData.TextRecordCollection = append(userData.TextRecordCollection, domain.ProtectedItem{
+			Id:           item.Id,
+			Name:         item.Name,
+			CreatedAt:    item.CreatedDate.AsTime().Format(time.RFC3339),
+			LastAccessAt: item.LastAccess.AsTime().Format(time.RFC3339),
+		})
+	}
 
 	creditCardListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetCreditCardList(
 		r.Context(),
@@ -56,7 +72,14 @@ func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	UserData.CreditCardCollection = creditCardListResponse.ProtectedItemList
+	for _, item := range creditCardListResponse.ProtectedItemList {
+		userData.TextRecordCollection = append(userData.CreditCardCollection, domain.ProtectedItem{
+			Id:           item.Id,
+			Name:         item.Name,
+			CreatedAt:    item.CreatedDate.AsTime().Format(time.RFC3339),
+			LastAccessAt: item.LastAccess.AsTime().Format(time.RFC3339),
+		})
+	}
 
 	loginPasswordListResponse, err := (*h.gRPCUserDataManagerClient.GetClient()).GetLoginPasswordList(
 		r.Context(),
@@ -71,9 +94,16 @@ func (h *httpHandler) HandleGetUserAllData(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	UserData.LoginPasswordCollection = loginPasswordListResponse.ProtectedItemList
+	for _, item := range loginPasswordListResponse.ProtectedItemList {
+		userData.LoginPasswordCollection = append(userData.LoginPasswordCollection, domain.ProtectedItem{
+			Id:           item.Id,
+			Name:         item.Name,
+			CreatedAt:    item.CreatedDate.AsTime().Format(time.RFC3339),
+			LastAccessAt: item.LastAccess.AsTime().Format(time.RFC3339),
+		})
+	}
 
-	result, err := json.Marshal(UserData)
+	result, err := json.Marshal(userData)
 
 	if err != nil {
 		info := "error marshalling user data: " + err.Error()

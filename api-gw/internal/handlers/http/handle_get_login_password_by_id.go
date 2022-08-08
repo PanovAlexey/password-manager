@@ -2,11 +2,13 @@ package http
 
 import (
 	"api-gw/internal/application/service"
+	"api-gw/internal/domain"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
+	"time"
 )
 
 func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.Request) {
@@ -20,19 +22,25 @@ func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		info := "error getting login-password by id: " + err.Error()
-		h.logger.Error(info, id, ". userId=", userId)
-		w.Write([]byte(info))
+		h.showError(w, "error getting login-password by id: "+err.Error())
 		return
 	}
 
-	result, err := json.Marshal(response)
+	loginPassword := domain.LoginPassword{
+		Id:           response.LoginPassword.Id,
+		Name:         response.LoginPassword.Name,
+		Login:        response.LoginPassword.Login,
+		Password:     response.LoginPassword.Password,
+		Note:         response.LoginPassword.Note,
+		CreatedAt:    response.LoginPassword.CreatedDate.AsTime().Format(time.RFC3339),
+		LastAccessAt: response.LoginPassword.LastAccess.AsTime().Format(time.RFC3339),
+	}
+
+	result, err := json.Marshal(loginPassword)
 
 	if err != nil {
-		info := "error marshalling login-password: " + err.Error()
-		h.logger.Error(info, id, userId)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(info))
+		h.showError(w, "error marshalling login-password: "+err.Error())
 		return
 	}
 
