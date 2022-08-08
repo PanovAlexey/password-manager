@@ -2,6 +2,7 @@ package http
 
 import (
 	"api-gw/internal/application/service"
+	"api-gw/internal/domain"
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
@@ -9,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"io"
 	"net/http"
+	"time"
 )
 
 func (h *httpHandler) HandleCreateTextRecord(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +58,17 @@ func (h *httpHandler) HandleCreateTextRecord(w http.ResponseWriter, r *http.Requ
 	}
 
 	h.logger.Info("successful creating text record by id ", id, userId, response.TextRecord.Name)
-	result, err := json.Marshal(response)
+
+	textRecord := domain.TextRecord{
+		Id:           response.TextRecord.Id,
+		Name:         response.TextRecord.Name,
+		Text:         response.TextRecord.Text,
+		Note:         response.TextRecord.Note,
+		CreatedAt:    response.TextRecord.CreatedDate.AsTime().Format(time.RFC3339),
+		LastAccessAt: response.TextRecord.LastAccess.AsTime().Format(time.RFC3339),
+	}
+
+	result, err := json.Marshal(textRecord)
 
 	if err != nil {
 		h.logger.Error("error marshalling text record: "+err.Error(), id, userId)

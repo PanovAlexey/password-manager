@@ -2,6 +2,7 @@ package http
 
 import (
 	"api-gw/internal/application/service"
+	"api-gw/internal/domain"
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
@@ -9,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"io"
 	"net/http"
+	"time"
 )
 
 func (h *httpHandler) HandleCreateBinaryRecord(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +58,17 @@ func (h *httpHandler) HandleCreateBinaryRecord(w http.ResponseWriter, r *http.Re
 	}
 
 	h.logger.Info("successful creating binary record by id ", id, userId, response.BinaryRecord.Name)
-	result, err := json.Marshal(response)
+
+	binaryRecord := domain.BinaryRecord{
+		Id:           response.BinaryRecord.Id,
+		Name:         response.BinaryRecord.Name,
+		Binary:       response.BinaryRecord.Binary,
+		Note:         response.BinaryRecord.Note,
+		CreatedAt:    response.BinaryRecord.CreatedDate.AsTime().Format(time.RFC3339),
+		LastAccessAt: response.BinaryRecord.LastAccess.AsTime().Format(time.RFC3339),
+	}
+
+	result, err := json.Marshal(binaryRecord)
 
 	if err != nil {
 		h.logger.Error("error marshalling binary record: "+err.Error(), id, userId)

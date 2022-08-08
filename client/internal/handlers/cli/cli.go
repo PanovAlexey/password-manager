@@ -67,7 +67,7 @@ func (h ConsoleCommandHandler) auth() {
 func (h ConsoleCommandHandler) getItemType() string {
 	prompt := promptui.Select{
 		Label: "Choose type for getting detail info",
-		Items: []string{"login password", "credit card", "text record", "binary record", "quit"},
+		Items: []string{"login password", "credit card", "text record", "binary record", "back"},
 	}
 
 	_, result, err := prompt.Run()
@@ -181,6 +181,7 @@ func (h ConsoleCommandHandler) enterMainCommand() {
 	prompt := promptui.Select{
 		Label: "Select Command",
 		Items: []string{
+			"create-new-item",
 			"get-all-data",
 			"get-login-password",
 			"get-credit-card",
@@ -199,35 +200,7 @@ func (h ConsoleCommandHandler) enterMainCommand() {
 
 	switch result {
 	case "get-all-data":
-		userData, err := h.userDataService.GetAllData(h.config.GetToken())
-
-		if err != nil {
-			fmt.Println(err) //@ToDo: check it
-		}
-
-		h.showList("Login passwords", userData.LoginPasswordCollection)
-		h.showList("Credit cards", userData.CreditCardCollection)
-		h.showList("Binary records", userData.BinaryRecordCollection)
-		h.showList("Text records", userData.TextRecordCollection)
-
-		itemType := h.getItemType()
-
-		switch itemType {
-		case "login password":
-			h.getLoginPassword(userData.LoginPasswordCollection)
-		case "credit card":
-			h.getCreditCard(userData.CreditCardCollection)
-		case "binary record":
-			h.getBinaryRecord(userData.BinaryRecordCollection)
-		case "text record":
-			h.getBinaryRecord(userData.TextRecordCollection)
-		case "quit":
-			h.quit()
-		default:
-			h.RunDialog()
-		}
-
-		h.RunDialog()
+		h.getAllData()
 	case "get-login-password":
 		loginPasswordCollection, err := h.userDataService.GetLoginPasswordCollection(h.config.GetToken())
 
@@ -268,6 +241,8 @@ func (h ConsoleCommandHandler) enterMainCommand() {
 
 		h.showList("Binary records", binaryRecordCollection)
 		h.getBinaryRecord(binaryRecordCollection)
+	case "create-new-item":
+		h.createNewItem()
 	case "quit":
 		h.quit()
 	default:
@@ -277,7 +252,338 @@ func (h ConsoleCommandHandler) enterMainCommand() {
 	h.RunDialog()
 }
 
+func (h ConsoleCommandHandler) getAllData() {
+	userData, err := h.userDataService.GetAllData(h.config.GetToken())
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	h.showList("Login passwords", userData.LoginPasswordCollection)
+	h.showList("Credit cards", userData.CreditCardCollection)
+	h.showList("Binary records", userData.BinaryRecordCollection)
+	h.showList("Text records", userData.TextRecordCollection)
+
+	itemType := h.getItemType()
+
+	switch itemType {
+	case "login password":
+		h.getLoginPassword(userData.LoginPasswordCollection)
+	case "credit card":
+		h.getCreditCard(userData.CreditCardCollection)
+	case "binary record":
+		h.getBinaryRecord(userData.BinaryRecordCollection)
+	case "text record":
+		h.getBinaryRecord(userData.TextRecordCollection)
+	case "create-new-item":
+		h.getBinaryRecord(userData.TextRecordCollection)
+	case "back":
+		h.RunDialog()
+	default:
+		h.RunDialog()
+	}
+
+	h.RunDialog()
+}
+
+func (h ConsoleCommandHandler) createNewItem() {
+	itemType := h.getItemType()
+
+	switch itemType {
+	case "login password":
+		item, err := h.createLoginPassword()
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		h.showLoginPassword(*item)
+	case "credit card":
+		item, err := h.createCreditCard()
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		h.showCreditCard(*item)
+	case "binary record":
+		item, err := h.createBinaryRecord()
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		h.showBinaryRecord(*item)
+	case "text record":
+		item, err := h.createTextRecord()
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		h.showTextRecord(*item)
+	case "back":
+		h.RunDialog()
+	default:
+		h.RunDialog()
+	}
+
+	h.RunDialog()
+}
+
+func (h ConsoleCommandHandler) createLoginPassword() (*domain.LoginPassword, error) {
+	loginPassword := h.getLoginPasswordFields()
+
+	item, err := h.userDataService.CreateLoginPassword(h.config.GetToken(), loginPassword)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return item, err
+}
+
+func (h ConsoleCommandHandler) getLoginPasswordFields() domain.LoginPassword {
+	loginPassword := domain.LoginPassword{}
+
+	fmt.Printf("Enter name:")
+	reader := bufio.NewReader(os.Stdin)
+	name, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	loginPassword.Name = strings.TrimSuffix(name, "\n")
+
+	fmt.Printf("Enter login:")
+	reader = bufio.NewReader(os.Stdin)
+	login, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	loginPassword.Login = strings.TrimSuffix(login, "\n")
+
+	fmt.Printf("Enter password:")
+	reader = bufio.NewReader(os.Stdin)
+	password, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	loginPassword.Password = strings.TrimSuffix(password, "\n")
+
+	fmt.Printf("Enter note:")
+	reader = bufio.NewReader(os.Stdin)
+	note, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	loginPassword.Note = strings.TrimSuffix(note, "\n")
+
+	return loginPassword
+}
+
+func (h ConsoleCommandHandler) createCreditCard() (*domain.CreditCard, error) {
+	creditCard := h.getCreditCardFields()
+
+	item, err := h.userDataService.CreateCreditCard(h.config.GetToken(), creditCard)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return item, err
+}
+
+func (h ConsoleCommandHandler) getCreditCardFields() domain.CreditCard {
+	creditCard := domain.CreditCard{}
+
+	fmt.Printf("Enter name:")
+	reader := bufio.NewReader(os.Stdin)
+	name, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	creditCard.Name = strings.TrimSuffix(name, "\n")
+
+	fmt.Printf("Enter number:")
+	reader = bufio.NewReader(os.Stdin)
+	number, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	creditCard.Number = strings.TrimSuffix(number, "\n")
+
+	fmt.Printf("Enter expiration:")
+	reader = bufio.NewReader(os.Stdin)
+	expiration, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	creditCard.Expiration = strings.TrimSuffix(expiration, "\n")
+
+	fmt.Printf("Enter cvv:")
+	reader = bufio.NewReader(os.Stdin)
+	cvv, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	creditCard.Cvv = strings.TrimSuffix(cvv, "\n")
+
+	fmt.Printf("Enter owner:")
+	reader = bufio.NewReader(os.Stdin)
+	owner, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	creditCard.Cvv = strings.TrimSuffix(owner, "\n")
+
+	fmt.Printf("Enter note:")
+	reader = bufio.NewReader(os.Stdin)
+	note, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	creditCard.Note = strings.TrimSuffix(note, "\n")
+
+	return creditCard
+}
+
+func (h ConsoleCommandHandler) createBinaryRecord() (*domain.BinaryRecord, error) {
+	binaryRecord := h.getBinaryRecordFields()
+
+	item, err := h.userDataService.CreateBinaryRecord(h.config.GetToken(), binaryRecord)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return item, err
+}
+
+func (h ConsoleCommandHandler) getBinaryRecordFields() domain.BinaryRecord {
+	binaryRecord := domain.BinaryRecord{}
+
+	fmt.Printf("Enter name:")
+	reader := bufio.NewReader(os.Stdin)
+	name, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	binaryRecord.Name = strings.TrimSuffix(name, "\n")
+
+	fmt.Printf("Enter binary data:")
+	reader = bufio.NewReader(os.Stdin)
+	binary, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	binaryRecord.Binary = strings.TrimSuffix(binary, "\n")
+
+	fmt.Printf("Enter note:")
+	reader = bufio.NewReader(os.Stdin)
+	note, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	binaryRecord.Note = strings.TrimSuffix(note, "\n")
+
+	return binaryRecord
+}
+
+func (h ConsoleCommandHandler) createTextRecord() (*domain.TextRecord, error) {
+	textRecord := h.getTextRecordFields()
+
+	item, err := h.userDataService.CreateTextRecord(h.config.GetToken(), textRecord)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return item, err
+}
+
+func (h ConsoleCommandHandler) getTextRecordFields() domain.TextRecord {
+	textRecord := domain.TextRecord{}
+
+	fmt.Printf("Enter name:")
+	reader := bufio.NewReader(os.Stdin)
+	name, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	textRecord.Name = strings.TrimSuffix(name, "\n")
+
+	fmt.Printf("Enter text data:")
+	reader = bufio.NewReader(os.Stdin)
+	text, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	textRecord.Text = strings.TrimSuffix(text, "\n")
+
+	fmt.Printf("Enter note:")
+	reader = bufio.NewReader(os.Stdin)
+	note, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Println("An error occured while reading input. Please try again", err)
+		h.RunDialog()
+	}
+
+	textRecord.Note = strings.TrimSuffix(note, "\n")
+
+	return textRecord
+}
+
 func (h ConsoleCommandHandler) getLoginPassword(collection []domain.ProtectedItem) {
+	if len(collection) == 0 {
+		h.RunDialog()
+	}
+
 	itemId := h.getItemIdByCollection(collection)
 
 	if itemId != "" {
@@ -293,6 +599,10 @@ func (h ConsoleCommandHandler) getLoginPassword(collection []domain.ProtectedIte
 }
 
 func (h ConsoleCommandHandler) getCreditCard(collection []domain.ProtectedItem) {
+	if len(collection) == 0 {
+		h.RunDialog()
+	}
+
 	itemId := h.getItemIdByCollection(collection)
 
 	if itemId != "" {
@@ -308,6 +618,10 @@ func (h ConsoleCommandHandler) getCreditCard(collection []domain.ProtectedItem) 
 }
 
 func (h ConsoleCommandHandler) getTextRecord(collection []domain.ProtectedItem) {
+	if len(collection) == 0 {
+		h.RunDialog()
+	}
+
 	itemId := h.getItemIdByCollection(collection)
 
 	if itemId != "" {
@@ -323,6 +637,10 @@ func (h ConsoleCommandHandler) getTextRecord(collection []domain.ProtectedItem) 
 }
 
 func (h ConsoleCommandHandler) getBinaryRecord(collection []domain.ProtectedItem) {
+	if len(collection) == 0 {
+		h.RunDialog()
+	}
+
 	itemId := h.getItemIdByCollection(collection)
 
 	if itemId != "" {

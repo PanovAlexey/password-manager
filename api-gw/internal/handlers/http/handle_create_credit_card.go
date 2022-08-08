@@ -2,6 +2,7 @@ package http
 
 import (
 	"api-gw/internal/application/service"
+	"api-gw/internal/domain"
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
@@ -9,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"io"
 	"net/http"
+	"time"
 )
 
 func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +67,20 @@ func (h *httpHandler) HandleCreateCreditCard(w http.ResponseWriter, r *http.Requ
 	}
 
 	h.logger.Info("successful creating credit card by id ", id, userId, response.CreditCard.Name)
-	result, err := json.Marshal(response)
+
+	creditCard := domain.CreditCard{
+		Id:           response.CreditCard.Id,
+		Name:         response.CreditCard.Name,
+		Number:       response.CreditCard.Number,
+		Cvv:          response.CreditCard.Cvv,
+		Expiration:   response.CreditCard.Expiration,
+		Owner:        response.CreditCard.Owner,
+		Note:         response.CreditCard.Note,
+		CreatedAt:    response.CreditCard.CreatedDate.AsTime().Format(time.RFC3339),
+		LastAccessAt: response.CreditCard.LastAccess.AsTime().Format(time.RFC3339),
+	}
+
+	result, err := json.Marshal(creditCard)
 
 	if err != nil {
 		info := "error marshalling credit card: " + err.Error()

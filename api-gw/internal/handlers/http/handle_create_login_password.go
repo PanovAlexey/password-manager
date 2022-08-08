@@ -2,6 +2,7 @@ package http
 
 import (
 	"api-gw/internal/application/service"
+	"api-gw/internal/domain"
 	"api-gw/internal/handlers/http/dto"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
@@ -9,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"io"
 	"net/http"
+	"time"
 )
 
 func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +66,18 @@ func (h *httpHandler) HandleCreateLoginPassword(w http.ResponseWriter, r *http.R
 	}
 
 	h.logger.Info("successful creating login-password by id ", id, userId, response.LoginPassword.Name)
-	result, err := json.Marshal(response)
+
+	loginPassword := domain.LoginPassword{
+		Id:           response.LoginPassword.Id,
+		Name:         response.LoginPassword.Name,
+		Login:        response.LoginPassword.Login,
+		Password:     response.LoginPassword.Password,
+		Note:         response.LoginPassword.Note,
+		CreatedAt:    response.LoginPassword.CreatedDate.AsTime().Format(time.RFC3339),
+		LastAccessAt: response.LoginPassword.LastAccess.AsTime().Format(time.RFC3339),
+	}
+
+	result, err := json.Marshal(loginPassword)
 
 	if err != nil {
 		info := "error marshalling login-password: " + err.Error()

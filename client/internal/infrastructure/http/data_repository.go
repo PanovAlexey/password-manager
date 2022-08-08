@@ -20,7 +20,7 @@ func (r userDataRepository) CreateLoginPassword(
 	token string,
 	loginPassword domain.LoginPassword,
 ) (*domain.LoginPassword, error) {
-	response, err := r.client.client.Do(r.client.getCreateLoginPasswordRequest(token))
+	response, err := r.client.client.Do(r.client.getCreateLoginPasswordRequest(token, loginPassword))
 
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (r userDataRepository) CreateLoginPassword(
 }
 
 func (r userDataRepository) CreateCreditCard(token string, creditCard domain.CreditCard) (*domain.CreditCard, error) {
-	response, err := r.client.client.Do(r.client.getCreateCreditCardRequest(token))
+	response, err := r.client.client.Do(r.client.getCreateCreditCardRequest(token, creditCard))
 
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (r userDataRepository) CreateCreditCard(token string, creditCard domain.Cre
 }
 
 func (r userDataRepository) CreateTextRecord(token string, textRecord domain.TextRecord) (*domain.TextRecord, error) {
-	response, err := r.client.client.Do(r.client.getCreateTextRecordRequest(token))
+	response, err := r.client.client.Do(r.client.getCreateTextRecordRequest(token, textRecord))
 
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (r userDataRepository) CreateBinaryRecord(
 	token string,
 	binaryRecord domain.BinaryRecord,
 ) (*domain.BinaryRecord, error) {
-	response, err := r.client.client.Do(r.client.getCreateBinaryRecordRequest(token))
+	response, err := r.client.client.Do(r.client.getCreateBinaryRecordRequest(token, binaryRecord))
 
 	if err != nil {
 		return nil, err

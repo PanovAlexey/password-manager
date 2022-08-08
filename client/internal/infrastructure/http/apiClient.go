@@ -140,13 +140,7 @@ func (c ApiClient) getCreditCardRequest(token string) *http.Request {
 	return request
 }
 
-func (c ApiClient) getCreateLoginPasswordRequest(token string) *http.Request {
-	loginPassword := domain.LoginPassword{
-		Name:     "Тут будет имя",
-		Login:    "Тут будет логин",
-		Password: "qwertypass",
-		Note:     "Запись с клиента, ура!",
-	}
+func (c ApiClient) getCreateLoginPasswordRequest(token string, loginPassword domain.LoginPassword) *http.Request {
 	body, err := json.Marshal(loginPassword)
 
 	if err != nil {
@@ -170,12 +164,7 @@ func (c ApiClient) getCreateLoginPasswordRequest(token string) *http.Request {
 	return request
 }
 
-func (c ApiClient) getCreateTextRecordRequest(token string) *http.Request {
-	textRecord := domain.TextRecord{
-		Name: "laboris officia nostrud exercitation",
-		Text: "velit amet id",
-		Note: "Excepteur",
-	}
+func (c ApiClient) getCreateTextRecordRequest(token string, textRecord domain.TextRecord) *http.Request {
 	body, err := json.Marshal(textRecord)
 
 	if err != nil {
@@ -199,12 +188,7 @@ func (c ApiClient) getCreateTextRecordRequest(token string) *http.Request {
 	return request
 }
 
-func (c ApiClient) getCreateBinaryRecordRequest(token string) *http.Request {
-	binaryRecord := domain.BinaryRecord{
-		Name:   "laboris officia nostrud exercitation",
-		Binary: "0101010101010101",
-		Note:   "Excepteur",
-	}
+func (c ApiClient) getCreateBinaryRecordRequest(token string, binaryRecord domain.BinaryRecord) *http.Request {
 	body, err := json.Marshal(binaryRecord)
 
 	if err != nil {
@@ -228,15 +212,7 @@ func (c ApiClient) getCreateBinaryRecordRequest(token string) *http.Request {
 	return request
 }
 
-func (c ApiClient) getCreateCreditCardRequest(token string) *http.Request {
-	creditCard := domain.CreditCard{
-		Name:       "et magna",
-		Number:     "cupidatat laboris ullamco",
-		Expiration: "e3",
-		Cvv:        "c33",
-		Owner:      "dquat",
-		Note:       "fugiat",
-	}
+func (c ApiClient) getCreateCreditCardRequest(token string, creditCard domain.CreditCard) *http.Request {
 	body, err := json.Marshal(creditCard)
 
 	if err != nil {
