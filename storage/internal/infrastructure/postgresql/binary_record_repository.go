@@ -98,6 +98,10 @@ func (r binaryRecordRepository) GetById(id, userId int) (*domain.BinaryRecord, e
 	)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

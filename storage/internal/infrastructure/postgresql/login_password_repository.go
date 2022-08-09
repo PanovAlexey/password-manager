@@ -43,6 +43,10 @@ func (r loginPasswordRepository) Add(loginPassword domain.LoginPassword) (*domai
 		)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

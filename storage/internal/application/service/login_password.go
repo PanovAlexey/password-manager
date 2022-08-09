@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"fmt"
+	customErrors "storage/internal/application/errors"
 	"storage/internal/domain"
 	"strconv"
 )
@@ -39,7 +41,7 @@ func (s LoginPassword) GetLoginPasswordById(idString, userIdString string) (*dom
 	loginPassword, err := s.loginPasswordRepository.GetById(id, userId)
 
 	if loginPassword == nil || !loginPassword.Id.Valid {
-		return nil, errors.New("not found") //@ToDo: replace with custom error
+		return nil, fmt.Errorf("%v: %w", id, customErrors.ErrNotFound)
 	}
 
 	err = s.loginPasswordRepository.UpdateLastAccessAt(loginPassword.Id.Int64)

@@ -1,10 +1,12 @@
 package http
 
 import (
+	customErrors "api-gw/internal/application/errors"
 	"api-gw/internal/application/service"
 	"api-gw/internal/domain"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -23,6 +25,12 @@ func (h *httpHandler) HandleGetCreditCardById(w http.ResponseWriter, r *http.Req
 	)
 
 	if err != nil {
+		if errors.As(err, &customErrors.ErrNotFound) {
+			w.WriteHeader(http.StatusNotFound)
+			h.showError(w, "not found: "+err.Error())
+			return
+		}
+
 		h.logger.Error("error getting credit card by id: "+err.Error(), id, userId)
 		w.WriteHeader(http.StatusInternalServerError)
 		return

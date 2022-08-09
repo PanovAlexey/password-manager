@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"fmt"
+	customErrors "storage/internal/application/errors"
 	"storage/internal/domain"
 	"strconv"
 )
@@ -39,7 +41,7 @@ func (s BinaryRecord) GetBinaryRecordById(idString, userIdString string) (*domai
 	binaryRecord, err := s.binaryRecordRepository.GetById(id, userId)
 
 	if binaryRecord == nil || !binaryRecord.Id.Valid {
-		return nil, errors.New("not found") //@ToDo: replace with custom error
+		return nil, fmt.Errorf("%v: %w", id, customErrors.ErrNotFound)
 	}
 
 	err = s.binaryRecordRepository.UpdateLastAccessAt(binaryRecord.Id.Int64)

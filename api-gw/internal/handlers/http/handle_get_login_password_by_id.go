@@ -1,10 +1,12 @@
 package http
 
 import (
+	customErrors "api-gw/internal/application/errors"
 	"api-gw/internal/application/service"
 	"api-gw/internal/domain"
 	pb "api-gw/pkg/user_data_manager_grpc"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -21,6 +23,12 @@ func (h *httpHandler) HandleGetLoginPasswordById(w http.ResponseWriter, r *http.
 	)
 
 	if err != nil {
+		if errors.As(err, &customErrors.ErrNotFound) {
+			w.WriteHeader(http.StatusNotFound)
+			h.showError(w, "not found: "+err.Error())
+			return
+		}
+
 		w.WriteHeader(http.StatusInternalServerError)
 		h.showError(w, "error getting login-password by id: "+err.Error())
 		return

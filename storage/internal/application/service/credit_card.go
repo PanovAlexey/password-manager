@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"fmt"
+	customErrors "storage/internal/application/errors"
 	"storage/internal/domain"
 	"strconv"
 )
@@ -39,7 +41,7 @@ func (s CreditCard) GetCreditCardById(idString, userIdString string) (*domain.Cr
 	creditCard, err := s.creditCardRepository.GetById(id, userId)
 
 	if creditCard == nil || !creditCard.Id.Valid {
-		return nil, errors.New("not found") //@ToDo: replace with custom error
+		return nil, fmt.Errorf("%v: %w", id, customErrors.ErrNotFound)
 	}
 
 	err = s.creditCardRepository.UpdateLastAccessAt(creditCard.Id.Int64)

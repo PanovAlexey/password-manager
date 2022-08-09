@@ -103,6 +103,10 @@ func (r creditCardRepository) GetById(id, userId int) (*domain.CreditCard, error
 	)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
 		return nil, err
 	}
 

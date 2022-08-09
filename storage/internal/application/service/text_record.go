@@ -2,6 +2,8 @@ package service
 
 import (
 	"errors"
+	"fmt"
+	customErrors "storage/internal/application/errors"
 	"storage/internal/domain"
 	"strconv"
 )
@@ -39,7 +41,7 @@ func (s TextRecord) GetTextRecordById(idString, userIdString string) (*domain.Te
 	textRecord, err := s.textRecordRepository.GetById(id, userId)
 
 	if textRecord == nil || !textRecord.Id.Valid {
-		return nil, errors.New("not found") //@ToDo: replace with custom error
+		return nil, fmt.Errorf("%v: %w", id, customErrors.ErrNotFound)
 	}
 
 	err = s.textRecordRepository.UpdateLastAccessAt(textRecord.Id.Int64)
