@@ -55,6 +55,12 @@ func (h *httpHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if userToken == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		h.showError(w, "user not found")
+		return
+	}
+
 	h.logger.Info("successful user auth ", userToken)
 	result, err := json.Marshal(userToken)
 

@@ -54,6 +54,10 @@ func (s UserRegistration) Auth(login, password string, ctx context.Context) (*do
 		return nil, err
 	}
 
+	if getUserResponse.User == nil {
+		return nil, nil
+	}
+
 	return &domain.User{
 		Id:               getUserResponse.User.Id,
 		Email:            getUserResponse.User.Email,

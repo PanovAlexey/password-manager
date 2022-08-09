@@ -1,6 +1,7 @@
 package postgresql
 
 import (
+	"database/sql"
 	"github.com/jmoiron/sqlx"
 	"storage/internal/domain"
 	"strconv"
@@ -40,6 +41,10 @@ func (r userRepository) GetUser(userLogin domain.UserLogin) (*domain.User, error
 		userLogin.Email,
 		userLogin.Password,
 	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 
 	if err != nil {
 		return nil, err

@@ -15,6 +15,10 @@ func (h *UserAuthorizationHandler) Auth(ctx context.Context, request *pb.AuthReq
 		return nil, err
 	}
 
+	if authUser == nil {
+		return &pb.AuthResponse{User: nil}, nil
+	}
+
 	token, err := h.jwtAuthorizationService.GetJWTToken(authUser.Id)
 
 	if err != nil {

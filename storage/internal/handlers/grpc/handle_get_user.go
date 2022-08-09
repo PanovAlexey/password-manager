@@ -20,8 +20,13 @@ func (h *StorageHandler) GetUser(ctx context.Context, request *pb.GetUserRequest
 	user, err := h.userService.GetUser(userLogin)
 
 	if err != nil {
-		h.logger.Error("user dit not save to database: "+err.Error(), ". traceId="+traceId)
-		return nil, err
+		h.logger.Error("user dit not find in database: "+err.Error(), ". traceId=", traceId)
+		return &response, err
+	}
+
+	if user == nil {
+		h.logger.Error("user is not exist", ". traceId=", traceId)
+		return &response, nil
 	}
 
 	var userOutput pb.User

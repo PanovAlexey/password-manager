@@ -31,6 +31,10 @@ func (s UserService) GetUser(userLogin domain.UserLogin) (*domain.User, error) {
 		return nil, err
 	}
 
+	if user == nil {
+		return nil, nil
+	}
+
 	err = s.userRepository.UpdateLastAccessAt(user.Id.Int64)
 
 	if err != nil {

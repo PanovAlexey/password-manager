@@ -1,13 +1,15 @@
 package service
 
 import (
+	"api-gw/internal/config"
 	"api-gw/internal/infrastructure/clients/grpc"
 	pb "api-gw/pkg/user_authorization_grpc"
 	"context"
+	"log"
 	"net/http"
 )
 
-const userTokenKey = "token"
+const UserTokenKey = "token"
 const UserIdKey = "user-id"
 const TraceIdKey = "trace-id"
 
@@ -28,7 +30,7 @@ func GetUserAuthorizationService(logger logger, userAuthorizationClient grpc.Use
 }
 
 func (u UserAuthorization) GetTokenFromHeader(r *http.Request) string {
-	userTokenHeader := r.Header.Get(userTokenKey)
+	userTokenHeader := r.Header.Get(UserTokenKey)
 
 	return userTokenHeader
 }
@@ -75,6 +77,10 @@ func (u UserAuthorization) Auth(ctx context.Context, userEmail, userPassword str
 
 	if err != nil {
 		return "", err
+	}
+
+	if response.User == nil {
+		return "", nil
 	}
 
 	return response.User.Token, err
