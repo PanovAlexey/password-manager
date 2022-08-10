@@ -1,3 +1,5 @@
+//go:build prod
+
 package main
 
 import (
@@ -5,9 +7,17 @@ import (
 	"client/internal/config"
 	"client/internal/handlers/cli"
 	"client/internal/infrastructure/http"
+	"fmt"
+)
+
+var (
+	Version   string
+	BuildTime string
 )
 
 func main() {
+	fmt.Printf("version=%s, time=%s\n", Version, BuildTime)
+
 	config := config.New()
 
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
