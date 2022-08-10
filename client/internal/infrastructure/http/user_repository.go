@@ -33,7 +33,7 @@ func (r userRepository) Register(user domain.User) (string, error) {
 			return "", errors.New(
 				"registration error. can not parse answer. " +
 					err.Error() +
-					". server side status2: " +
+					". server side status: " +
 					strconv.Itoa(response.StatusCode),
 			)
 		} else {

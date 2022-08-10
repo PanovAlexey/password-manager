@@ -4,8 +4,10 @@ import (
 	"client/internal/config"
 	"client/internal/domain"
 	"client/internal/infrastructure/http"
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func getTestUserWithCorrectFieldsValue() domain.User {
@@ -16,8 +18,17 @@ func getTestUserWithCorrectFieldsValue() domain.User {
 	}
 }
 
+func getTestUserForCreatingDataWithCorrectFieldsValue() domain.User {
+	return domain.User{
+		Email:          "test-data@test.com",
+		Password:       "qwerty",
+		RepeatPassword: "qwerty",
+	}
+}
+
 // create user and getting correct user token for tests
-func createUserOrLogin() string {
+// this user does not have content
+func createNewUserOrLogin() string {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
 	userRepository := http.GetUserRepository(client)
@@ -27,6 +38,23 @@ func createUserOrLogin() string {
 
 	if err != nil || token == "" {
 		token, _ = userService.Auth(getTestUserWithCorrectFieldsValue())
+	}
+
+	return token
+}
+
+// create user and getting correct user token for tests
+// this user has content
+func createUserWithContentOrLogin() string {
+	config := config.New()
+	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
+	userRepository := http.GetUserRepository(client)
+	userService := GetUserService(userRepository)
+
+	token, err := userService.Register(getTestUserForCreatingDataWithCorrectFieldsValue())
+
+	if err != nil || token == "" {
+		token, _ = userService.Auth(getTestUserForCreatingDataWithCorrectFieldsValue())
 	}
 
 	return token
@@ -91,7 +119,8 @@ func TestGetUserService(t *testing.T) {
 func TestUserDataService_CreateBinaryRecord(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	userDataRepository := http.GetUserDataRepository(client)
+	token := createUserWithContentOrLogin()
+	timestampString := time.Now().Format("20060102150405")
 
 	type fields struct {
 		repository dataRepository
@@ -108,11 +137,22 @@ func TestUserDataService_CreateBinaryRecord(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "negative getting binary record for wrong user token",
-			fields:  fields{repository: userDataRepository},
-			args:    args{token: "token"},
-			want:    &domain.BinaryRecord{},
-			wantErr: true,
+			name:   "successful creating binary record",
+			fields: fields{repository: http.GetUserDataRepository(client)},
+			args: args{
+				token: token,
+				binaryRecord: domain.BinaryRecord{
+					Name:   "Test binary record №" + timestampString,
+					Note:   "created by auto tests",
+					Binary: "01010101010101010101010101010101",
+				},
+			},
+			want: &domain.BinaryRecord{
+				Name:   "Test binary record №" + timestampString,
+				Note:   "created by auto tests",
+				Binary: "01010101010101010101010101010101",
+			},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
@@ -125,9 +165,8 @@ func TestUserDataService_CreateBinaryRecord(t *testing.T) {
 				t.Errorf("CreateBinaryRecord() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateBinaryRecord() got = %v, want %v", got, tt.want)
-			}
+			assert.NotEmpty(t, got.Id)
+			assert.Equal(t, tt.want.Name, got.Name)
 		})
 	}
 }
@@ -135,7 +174,8 @@ func TestUserDataService_CreateBinaryRecord(t *testing.T) {
 func TestUserDataService_CreateCreditCard(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	userDataRepository := http.GetUserDataRepository(client)
+	token := createUserWithContentOrLogin()
+	timestampString := time.Now().Format("20060102150405")
 
 	type fields struct {
 		repository dataRepository
@@ -153,13 +193,27 @@ func TestUserDataService_CreateCreditCard(t *testing.T) {
 	}{
 		{
 			name:   "successful creating credit card",
-			fields: fields{repository: userDataRepository},
+			fields: fields{repository: http.GetUserDataRepository(client)},
 			args: args{
-				token:      "token",
-				creditCard: domain.CreditCard{},
+				token: token,
+				creditCard: domain.CreditCard{
+					Name:       "Test credit card №" + timestampString,
+					Note:       "created by auto tests",
+					Number:     "9123 3131 13131 14411",
+					Expiration: "01/29",
+					Owner:      "Mikluho Maclay",
+					Cvv:        "02/29",
+				},
 			},
-			want:    &domain.CreditCard{},
-			wantErr: true,
+			want: &domain.CreditCard{
+				Name:       "Test credit card №" + timestampString,
+				Note:       "created by auto tests",
+				Number:     "9123 3131 13131 14411",
+				Expiration: "01/29",
+				Owner:      "Mikluho Maclay",
+				Cvv:        "02/29",
+			},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
@@ -168,18 +222,24 @@ func TestUserDataService_CreateCreditCard(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.CreateCreditCard(tt.args.token, tt.args.creditCard)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CreateCreditCard() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateCreditCard() got = %v, want %v", got, tt.want)
-			}
+
+			assert.NotEmpty(t, got.Id)
+			assert.Equal(t, tt.want.Name, got.Name)
 		})
 	}
 }
 
 func TestUserDataService_CreateLoginPassword(t *testing.T) {
+	config := config.New()
+	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
+	token := createUserWithContentOrLogin()
+	timestampString := time.Now().Format("20060102150405")
+
 	type fields struct {
 		repository dataRepository
 	}
@@ -194,7 +254,26 @@ func TestUserDataService_CreateLoginPassword(t *testing.T) {
 		want    *domain.LoginPassword
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:   "successful creating login password",
+			fields: fields{repository: http.GetUserDataRepository(client)},
+			args: args{
+				token: token,
+				loginPassword: domain.LoginPassword{
+					Name:     "Test login password №" + timestampString,
+					Note:     "created by auto tests",
+					Login:    "root",
+					Password: "qwerty",
+				},
+			},
+			want: &domain.LoginPassword{
+				Name:     "Test login password №" + timestampString,
+				Note:     "created by auto tests",
+				Login:    "root",
+				Password: "qwerty",
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -202,18 +281,24 @@ func TestUserDataService_CreateLoginPassword(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.CreateLoginPassword(tt.args.token, tt.args.loginPassword)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CreateLoginPassword() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateLoginPassword() got = %v, want %v", got, tt.want)
-			}
+
+			assert.NotEmpty(t, got.Id)
+			assert.Equal(t, tt.want.Name, got.Name)
 		})
 	}
 }
 
 func TestUserDataService_CreateTextRecord(t *testing.T) {
+	config := config.New()
+	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
+	token := createUserWithContentOrLogin()
+	timestampString := time.Now().Format("20060102150405")
+
 	type fields struct {
 		repository dataRepository
 	}
@@ -228,7 +313,24 @@ func TestUserDataService_CreateTextRecord(t *testing.T) {
 		want    *domain.TextRecord
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:   "successful creating text record",
+			fields: fields{repository: http.GetUserDataRepository(client)},
+			args: args{
+				token: token,
+				textRecord: domain.TextRecord{
+					Name: "Test text record №" + timestampString,
+					Note: "created by auto tests",
+					Text: "abcdefghijklmnopqrstuvwxyz",
+				},
+			},
+			want: &domain.TextRecord{
+				Name: "Test text record №" + timestampString,
+				Note: "created by auto tests",
+				Text: "abcdefghijklmnopqrstuvwxyz",
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -236,18 +338,23 @@ func TestUserDataService_CreateTextRecord(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.CreateTextRecord(tt.args.token, tt.args.textRecord)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CreateTextRecord() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateTextRecord() got = %v, want %v", got, tt.want)
-			}
+
+			assert.NotEmpty(t, got.Id)
+			assert.Equal(t, tt.want.Name, got.Name)
 		})
 	}
 }
 
 func TestUserDataService_GetAllData(t *testing.T) {
+	config := config.New()
+	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
+	token := createNewUserOrLogin()
+
 	type fields struct {
 		repository dataRepository
 	}
@@ -261,7 +368,13 @@ func TestUserDataService_GetAllData(t *testing.T) {
 		want    *domain.UserData
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name:    "successful getting all data",
+			fields:  fields{repository: http.GetUserDataRepository(client)},
+			args:    args{token: token},
+			want:    &domain.UserData{},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -269,10 +382,12 @@ func TestUserDataService_GetAllData(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetAllData(tt.args.token)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetAllData() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetAllData() got = %v, want %v", got, tt.want)
 			}
@@ -283,7 +398,7 @@ func TestUserDataService_GetAllData(t *testing.T) {
 func TestUserDataService_GetBinaryRecordById(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -316,10 +431,12 @@ func TestUserDataService_GetBinaryRecordById(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetBinaryRecordById(tt.args.token, tt.args.id)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetBinaryRecordById() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetBinaryRecordById() got = %v, want %v", got, tt.want)
 			}
@@ -330,7 +447,7 @@ func TestUserDataService_GetBinaryRecordById(t *testing.T) {
 func TestUserDataService_GetBinaryRecordCollection(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -359,10 +476,12 @@ func TestUserDataService_GetBinaryRecordCollection(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetBinaryRecordCollection(tt.args.token)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetBinaryRecordCollection() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetBinaryRecordCollection() got = %v, want %v", got, tt.want)
 			}
@@ -373,7 +492,7 @@ func TestUserDataService_GetBinaryRecordCollection(t *testing.T) {
 func TestUserDataService_GetCreditCardById(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -406,10 +525,12 @@ func TestUserDataService_GetCreditCardById(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetCreditCardById(tt.args.token, tt.args.id)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetCreditCardById() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetCreditCardById() got = %v, want %v", got, tt.want)
 			}
@@ -420,7 +541,7 @@ func TestUserDataService_GetCreditCardById(t *testing.T) {
 func TestUserDataService_GetCreditCardCollection(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -449,10 +570,12 @@ func TestUserDataService_GetCreditCardCollection(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetCreditCardCollection(tt.args.token)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetCreditCardCollection() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetCreditCardCollection() got = %v, want %v", got, tt.want)
 			}
@@ -463,7 +586,7 @@ func TestUserDataService_GetCreditCardCollection(t *testing.T) {
 func TestUserDataService_GetLoginPasswordById(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -496,10 +619,12 @@ func TestUserDataService_GetLoginPasswordById(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetLoginPasswordById(tt.args.token, tt.args.id)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetLoginPasswordById() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetLoginPasswordById() got = %v, want %v", got, tt.want)
 			}
@@ -510,7 +635,7 @@ func TestUserDataService_GetLoginPasswordById(t *testing.T) {
 func TestUserDataService_GetLoginPasswordCollection(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -539,10 +664,12 @@ func TestUserDataService_GetLoginPasswordCollection(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetLoginPasswordCollection(tt.args.token)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetLoginPasswordCollection() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetLoginPasswordCollection() got = %v, want %v", got, tt.want)
 			}
@@ -553,7 +680,7 @@ func TestUserDataService_GetLoginPasswordCollection(t *testing.T) {
 func TestUserDataService_GetTextRecordById(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -586,10 +713,12 @@ func TestUserDataService_GetTextRecordById(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetTextRecordById(tt.args.token, tt.args.id)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetTextRecordById() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetTextRecordById() got = %v, want %v", got, tt.want)
 			}
@@ -600,7 +729,7 @@ func TestUserDataService_GetTextRecordById(t *testing.T) {
 func TestUserDataService_GetTextRecordCollection(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository dataRepository
@@ -629,10 +758,12 @@ func TestUserDataService_GetTextRecordCollection(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.GetTextRecordCollection(tt.args.token)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetTextRecordCollection() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetTextRecordCollection() got = %v, want %v", got, tt.want)
 			}
@@ -643,7 +774,7 @@ func TestUserDataService_GetTextRecordCollection(t *testing.T) {
 func TestUserService_Auth(t *testing.T) {
 	config := config.New()
 	client := http.GetApiClient(config.GetServerAddress(), config.GetMaxIdleConnections(), config.GetHttpTimeout())
-	token := createUserOrLogin()
+	token := createNewUserOrLogin()
 
 	type fields struct {
 		repository userRepository
@@ -672,10 +803,12 @@ func TestUserService_Auth(t *testing.T) {
 				repository: tt.fields.repository,
 			}
 			got, err := s.Auth(tt.args.user)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Auth() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if got != tt.want {
 				t.Errorf("Auth() got = %v, want %v", got, tt.want)
 			}
