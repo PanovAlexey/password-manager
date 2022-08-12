@@ -1,0 +1,5 @@
+sh -c "cd ./database && sudo rm -rf .docker/postgresql/master/pgdata/ && docker-compose up -d --build --force-recreate"
+sh -c "cd ./storage && docker-compose up -d --build --force-recreate"
+sh -c "cd ./user && docker-compose up -d --build --force-recreate"
+sh -c "cd ./user-data-manager && docker-compose up -d --build --force-recreate"
+sh -c "cd ./api-gw && docker-compose up -d --build --force-recreate"

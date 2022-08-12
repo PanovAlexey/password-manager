@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  password-manager-storage:
+    container_name: password-manager-storage
+    image: golang:1.18-alpine
+    ports:
+      - ${STORAGE_GRPC_SERVER_PORT}:${STORAGE_GRPC_SERVER_PORT}
+    environment:
+      STORAGE_DB_MASTER_PORT: ${STORAGE_DB_MASTER_PORT}
+      STORAGE_DB_USERNAME: ${STORAGE_DB_USERNAME}
+      STORAGE_DB_PASSWORD: ${STORAGE_DB_PASSWORD}
+      STORAGE_DB_MASTER_DATABASE: ${STORAGE_DB_MASTER_DATABASE}
+      STORAGE_APPLICATION_NAME: ${STORAGE_APPLICATION_NAME}
+    networks:
+      - password-manager-network
+    volumes:
+      - ../storage:/app
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+
+networks:
+  password-manager-network:
+    name: password-manager-network
+    driver: bridge

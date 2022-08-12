@@ -1,0 +1,238 @@
+syntax = "proto3";
+package user_data_manager;
+option go_package = "pkg/user_data_manager_grpc";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service UserDataManager {
+  rpc GetLoginPasswordList(GetLoginPasswordListRequest) returns(GetLoginPasswordListResponse);
+  rpc CreateLoginPassword(CreateLoginPasswordRequest) returns(CreateLoginPasswordResponse);
+  rpc GetLoginPasswordById(GetLoginPasswordByIdRequest) returns(GetLoginPasswordByIdResponse);
+  rpc PatchLoginPasswordById(PatchLoginPasswordByIdRequest) returns(PatchLoginPasswordByIdResponse);
+  rpc DeleteLoginPasswordById(DeleteLoginPasswordByIdRequest) returns(google.protobuf.Empty);
+
+  rpc GetCreditCardList(GetCreditCardListRequest) returns(GetCreditCardListResponse);
+  rpc CreateCreditCard(CreateCreditCardRequest) returns(CreateCreditCardResponse);
+  rpc GetCreditCardById(GetCreditCardByIdRequest) returns(GetCreditCardByIdResponse);
+  rpc PatchCreditCardById(PatchCreditCardByIdRequest) returns(PatchCreditCardByIdResponse);
+  rpc DeleteCreditCardById(DeleteCreditCardByIdRequest) returns(google.protobuf.Empty);
+
+  rpc GetTextRecordList(GetTextRecordListRequest) returns(GetTextRecordListResponse);
+  rpc CreateTextRecord(CreateTextRecordRequest) returns(CreateTextRecordResponse);
+  rpc GetTextRecordById(GetTextRecordByIdRequest) returns(GetTextRecordByIdResponse);
+  rpc PatchTextRecordById(PatchTextRecordByIdRequest) returns(PatchTextRecordByIdResponse);
+  rpc DeleteTextRecordById(DeleteTextRecordByIdRequest) returns(google.protobuf.Empty);
+
+  rpc GetBinaryRecordList(GetBinaryRecordListRequest) returns(GetBinaryRecordListResponse);
+  rpc CreateBinaryRecord(CreateBinaryRecordRequest) returns(CreateBinaryRecordResponse);
+  rpc GetBinaryRecordById(GetBinaryRecordByIdRequest) returns(GetBinaryRecordByIdResponse);
+  rpc PatchBinaryRecordById(PatchBinaryRecordByIdRequest) returns(PatchBinaryRecordByIdResponse);
+  rpc DeleteBinaryRecordById(DeleteBinaryRecordByIdRequest) returns(google.protobuf.Empty);
+}
+
+message ProtectedItem {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+}
+
+message LoginPassword {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string login = 5;
+  string password = 6;
+  string note = 7;
+}
+
+message CreateLoginPassword {
+  string name = 1;
+  string login = 2;
+  string password = 3;
+  string note = 4;
+}
+
+message GetLoginPasswordListRequest {
+}
+
+message GetLoginPasswordListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateLoginPasswordRequest{
+  CreateLoginPassword CreateLoginPassword = 1;
+}
+
+message CreateLoginPasswordResponse{
+  LoginPassword LoginPassword = 1;
+}
+
+message GetLoginPasswordByIdRequest{
+  string id = 1;
+}
+
+message GetLoginPasswordByIdResponse{
+  LoginPassword LoginPassword = 1;
+}
+
+message PatchLoginPasswordByIdRequest{
+  LoginPassword LoginPassword = 1;
+}
+
+message PatchLoginPasswordByIdResponse{
+  LoginPassword LoginPassword = 1;
+}
+
+message DeleteLoginPasswordByIdRequest{
+  string id = 1;
+}
+
+
+message CreditCard {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string number = 5;
+  string expiration = 6;
+  string cvv = 7;
+  string owner = 8;
+  string note = 9;
+}
+
+message CreateCreditCard {
+  string name = 1;
+  string number = 2;
+  string expiration = 3;
+  string cvv = 4;
+  string owner = 5;
+  string note = 6;
+}
+
+message GetCreditCardListRequest {
+}
+
+message GetCreditCardListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateCreditCardRequest{
+  CreateCreditCard CreateCreditCard = 1;
+}
+
+message CreateCreditCardResponse{
+  CreditCard CreditCard = 1;
+}
+
+message GetCreditCardByIdRequest{
+  string id = 1;
+}
+
+message GetCreditCardByIdResponse{
+  CreditCard CreditCard = 1;
+}
+
+message PatchCreditCardByIdRequest{
+  CreditCard CreditCard = 1;
+}
+
+message PatchCreditCardByIdResponse{
+  CreditCard CreditCard = 1;
+}
+
+message DeleteCreditCardByIdRequest{
+  string id = 1;
+}
+
+
+message TextRecord {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string text = 5;
+  string note = 6;
+}
+
+message GetTextRecordListRequest {
+}
+
+message GetTextRecordListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateTextRecordRequest{
+  TextRecord TextRecord = 1;
+}
+
+message CreateTextRecordResponse{
+  TextRecord TextRecord = 1;
+}
+
+message GetTextRecordByIdRequest{
+  string id = 1;
+}
+
+message GetTextRecordByIdResponse{
+  TextRecord TextRecord = 1;
+}
+
+message PatchTextRecordByIdRequest{
+  TextRecord TextRecord = 1;
+}
+
+message PatchTextRecordByIdResponse{
+  TextRecord TextRecord = 1;
+}
+
+message DeleteTextRecordByIdRequest{
+  string id = 1;
+}
+
+
+message BinaryRecord {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_date = 3;
+  google.protobuf.Timestamp last_access = 4;
+  string binary = 5;
+  string note = 6;
+}
+
+message GetBinaryRecordListRequest {
+}
+
+message GetBinaryRecordListResponse {
+  repeated ProtectedItem ProtectedItemList = 1;
+}
+
+message CreateBinaryRecordRequest{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message CreateBinaryRecordResponse{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message GetBinaryRecordByIdRequest{
+  string id = 1;
+}
+
+message GetBinaryRecordByIdResponse{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message PatchBinaryRecordByIdRequest{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message PatchBinaryRecordByIdResponse{
+  BinaryRecord BinaryRecord = 1;
+}
+
+message DeleteBinaryRecordByIdRequest{
+  string id = 1;
+}

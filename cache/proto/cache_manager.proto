@@ -1,0 +1,46 @@
+syntax = "proto3";
+package cache_manager;
+option go_package = "pkg/cache_manager_grpc";
+
+import "google/protobuf/empty.proto";
+
+service CacheManager {
+  rpc GetByKey(GetRequest) returns(GetResponse);
+  rpc Set(SetRequest) returns(SetResponse);
+  rpc Delete(DeleteRequest) returns(google.protobuf.Empty);
+  rpc Clear(google.protobuf.Empty) returns(google.protobuf.Empty);
+  rpc Has(HasRequest) returns(HasResponse);
+}
+
+message GetRequest {
+  string key = 1;
+}
+
+message GetResponse {
+  string key = 1;
+  string value = 2;
+  bool isSet = 3;
+}
+
+message SetRequest {
+  string key = 1;
+  string value = 2;
+  int32 ttlSeconds = 3;
+}
+
+message SetResponse {
+  string key = 1;
+  string value = 2;
+}
+
+message DeleteRequest {
+  string key = 1;
+}
+
+message HasRequest {
+  string key = 1;
+}
+
+message HasResponse {
+  bool isHas = 1;
+}

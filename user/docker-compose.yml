@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  password-manager-user-auth:
+    container_name: password-manager-user-auth
+    image: golang:1.18-alpine
+    #depends_on:
+    #  - password-manager-user-data
+    ports:
+      - ${UA_GRPC_SERVER_PORT}:${UA_GRPC_SERVER_PORT}
+    environment:
+      UA_APPLICATION_NAME: ${UA_APPLICATION_NAME}
+      UA_SERVICE_STORAGE_GRPC_SERVER_ADDRESS: ${UA_SERVICE_STORAGE_GRPC_SERVER_ADDRESS}
+    networks:
+      - password-manager-network
+    volumes:
+      - ../user:/app
+    working_dir: /app
+    command: sh -c "go run cmd/main.go"
+
+networks:
+  password-manager-network:
+    external:
+      name:  password-manager-network
+    driver: bridge

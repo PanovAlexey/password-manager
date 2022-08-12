@@ -1,0 +1,5 @@
+sh -c "cd ./database && docker-compose restart"
+sh -c "cd ./storage && docker-compose restart"
+sh -c "cd ./user && docker-compose restart"
+sh -c "cd ./user-data-manager && docker-compose restart"
+sh -c "cd ./api-gw && docker-compose restart"
